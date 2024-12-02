@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>PTA | Reports</title>
+  <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+  <link rel="stylesheet" type="text/css" href="../stylesheets/home.css" />
+  <link rel="stylesheet" type="text/css" href="../stylesheets/navbar.css" />
+  <link rel="stylesheet" type="text/css" href="../stylesheets/analytics.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+</head>
+
+<body class="container">
+  <div class="navbar">
+    <a href="/home"><img src="/images/logo.png" class="logo" alt="Logo"></a>
+    <ul class="tabs">
+      <!-- Navigation Tabs -->
+      <li class="home"><a href="/home">Home</a></li>
+      <li class="athletes"><a href="/athletes">Athletes</a></li>
+      <li class="clubs"><a href="/clubs">Clubs</a></li>
+      <li class="events"><a href="/events">Events</a></li>
+      <li class="membership"><a href="/membership">Membership</a></li>
+      <li class="forum"><a href="/forum">Forum</a></li>
+      <li class="notifications">
+        <a href="/notifications">Notifications
+          {{#if notifications}}
+          <span class="badge">{{notifications.length}}</span>
+          {{/if}}
+        </a>
+      </li>
+      <li class="analytics"><a href="/analytics">Reports</a></li>
+      <li class="profile-pic">
+        {{#if user.profilepic}}
+        <a href="#" onclick="toggleDropdown()"><img src="{{user.profilepic}}" alt="Profile Picture"
+            class="profile-picture"></a>
+        {{else}}
+        <a href="#" onclick="toggleDropdown()" class="profile-picture"><img src="/images/none.jpg" alt="Profile Picture"
+            class="profile-picture"></a>
+        {{/if}}
+        <div id="dropdown" class="dropdown-content">
+          <a href="profile">Profile</a>
+          <a href="settings">Settings</a>
+          
+          <a href="/">Logout</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="analytics-header">
+    <h1>Reports Overview</h1>
+    <p>Gain insights into club participation, performance, and other key metrics for strategic improvements.</p>
+  </div>
+
+  <div class="download-container">
+    <button id="download-csv" class="download-btn">Download as CSV</button>
+  </div>
+
+  <!-- Analytics Content -->
+  <div class="analytics-container">
+
+    <!-- Top 5 Performers of the Year -->
+    <!-- Top 10 Performers of the Year -->
+    <div class="card top-performers-card">
+      <h2>Top 10 Performers of the Year</h2>
+      <div class="performers">
+        {{#each topPerformers}}
+        <div class="performer-card">
+          <!--<img src="{{this.image}}" alt="Performer Photo" class="performer-photo"> -->
+          <h3>{{this.name}}</h3>
+          <p>Club: {{this.club}}</p>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+
+    <div class="card participation-card">
+      <h2>Clubs Overview</h2>
+      <div id="participationChart" class="chart">
+        {{#each clubsByMonth}}
+        <h3>Joined in: {{@key}}</h3>
+        <div class="club-list">
+          {{#each this}}
+          <div class="club-item">
+            <span class="club-name">{{this.clubname}}</span>
+            <!--<span class="members-count">Members: {{this.members}}</span>-->
+          </div>
+          {{/each}}
+        </div>
+        {{/each}}
+      </div>
+    </div>
+
+    <div class="card participation-card">
+      <h2>Events Overview</h2>
+      <div id="participationChart" class="chart">
+        {{#each eventsByMonth}}
+        <h3>Created in: {{@key}}</h3>
+        <div class="club-list">
+          {{#each this}}
+          <div class="club-item">
+            <span class="club-name">{{this.name}}</span>
+            <span class="club-type">Type: {{this.eventtype}}</span>
+          </div>
+          {{/each}}
+        </div>
+        {{/each}}
+      </div>
+    </div>
+
+    <!-- Administrative Insights -->
+    <div class="card admin-insights-card">
+      <h2>Administrative Insights</h2>
+      <ul class="admin-list">
+        <li>Total Clubs: <span>{{totalClubs}}</span></li>
+        <li>Total Events: <span>{{totalEvents}}</span></li>
+        <li>Total Number of Athletes: <span>{{totalAthletes}}</span></li>
+      </ul>
+    </div>
+
+    <div class="card participants-card">
+      <h2>List of Participants</h2>
+      <ul class="participants-list">
+        <li>Active Members: <span>{{participantCounts.active}}</span></li>
+        <li>Suspended Members: <span>{{participantCounts.suspended}}</span></li>
+        <li>Banned Athletes: <span>{{participantCounts.banned}}</span></li>
+      </ul>
+      <!-- <button onclick="viewParticipantList()">View Full List</button> -->
+    </div>
+
+
+
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <div class="pta-logo">
+        <img src="/images/logo.png" alt="PTA Logo">
+      </div>
+      <div class="contact-info">
+        <p>Philippine Taekwondo Central Headquarters</p>
+        <p>Rizal Memorial Coliseum, Manila, Philippines</p>
+        <p>0977 384 5879</p>
+        <p>pthtkd@gmail.com</p>
+      </div>
+      <div class="social-media">
+        <p>Follow us</p>
+        <div class="icons">
+          <a href="https://www.facebook.com"><img src="/images/homepage/fb.png" alt="Facebook"></a>
+          <a href="https://www.instagram.com"><img src="/images/homepage/ig.png" alt="Instagram"></a>
+          <a href="https://www.twitch.com"><img src="/images/homepage/twitch.webp" alt="Twitch"></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('download-csv').addEventListener('click', () => {
+      window.location.href = '/download-reports';
+    });
+
+
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PTA | Membership Review</title>
+  <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+  <link rel="stylesheet" type="text/css" href="../stylesheets/membership-review.css">
+  <link rel="stylesheet" type="text/css" href="../stylesheets/navbar.css">
+</head>
+
+<body class="container">
+  <header class="membership-header">
+    <nav class="membership-navbar">
+      <a href="home">
+        <img src="/images/logo.png" class="membership-logo" alt="PTA Logo">
+      </a>
+      <div class="profile-menu">
+        {{#if user.profilepic}}
+        <a href="#" onclick="toggleDropdown()" class="memprofile-pic">
+          <img src="{{user.profilepic}}" alt="Profile Picture" class="profile-picture">
+        </a>
+        {{else}}
+        <a href="#" onclick="toggleDropdown()" class="memprofile-pic">
+          <p>:(</p>
+        </a>
+        {{/if}}
+        <div id="dropdown" class="dropdown-content">
+          <a href="profile">Profile</a>
+          <a href="settings">Settings</a>
+          
+          <a href="/">Logout</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="membership-container">
+    <section class="review-header">
+      <h1>Review NCC Application</h1>
+    </section>
+
+    <div class="review-details">
+      <table class="profile-section">
+        <tr>
+          <td><img class="athlete-picture" src="{{registration.portrait}}" alt="Profile Picture"></td>
+          <td>
+            <table class="details-section">
+              {{!-- <tr>
+                <td><strong>ID:</strong></td>
+                <td class="information">{{registration.id}}</td>
+              </tr> --}}
+              <tr>
+                <td><strong>First Name:</strong></td>
+                <td class="information">{{registration.firstname}}</td>
+              </tr>
+              <tr>
+                <td><strong>Middle Initial:</strong></td>
+                <td class="information">{{registration.middlename}}</td>
+              </tr>
+              <tr>
+                <td><strong>Last Name:</strong></td>
+                <td class="information">{{registration.lastname}}</td>
+              </tr>
+              <tr>
+                <td><strong>Gender:</strong></td>
+                <td class="information">{{registration.gender}}</td>
+              </tr>
+              <tr>
+                <td><strong>Birthday:</strong></td>
+                <td class="information">{{formatDate registration.birthday "MMMM D, YYYY"}}</td>
+              </tr>
+              <tr>
+                <td><strong>Phone Number:</strong></td>
+                <td class="information">{{registration.phonenum}}</td>
+              </tr>
+              <tr>
+                <td><strong>Email:</strong></td>
+                <td class="information">{{registration.email}}</td>
+              </tr>
+              <tr>
+                <tr>
+                  <td><strong>Birth Certificate:</strong></td>
+                  <td class="information">
+                  <a href="{{registration.birthcert}}" target="_blank">View Birth Certificate</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Payment Proof:</strong></td>
+                  <td class="information">
+                  <a href="{{registration.paymentproof}}" target="_blank">View Payment Proof</a>
+                  </td>
+                </tr>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+
+      <table class="additional-details">
+        <tr>
+          <td><strong>Last Promotion:</strong></td>
+          <td class="information">{{formatDate registration.lastpromo "MMMM D, YYYY"}}</td>
+        </tr>
+        <tr>
+          <td><strong>Promotion Location:</strong></td>
+          <td class="information">{{registration.promolocation}}</td>
+        </tr>
+        {{!-- <tr>
+          <td><strong>Club:</strong></td>
+          <td class="information">{{registration.club}}</td>
+        </tr> --}}
+        <tr>
+          <td><strong>Region:</strong></td>
+          <td class="information">{{registration.clubregion}}</td>
+        </tr>
+        <tr>
+          <td><strong>Belt Level:</strong></td>
+          <td class="information">{{registration.beltlevel}}</td>
+        </tr>
+        <tr>
+          <td><strong>Instructor First Name:</strong></td>
+          <td class="information">{{registration.instructorfirstname}}</td>
+        </tr>
+        <tr>
+          <td><strong>Instructor Middle Initial:</strong></td>
+          <td class="information">{{registration.instructormi}}</td>
+        </tr>
+        <tr>
+          <td><strong>Instructor Last Name:</strong></td>
+          <td class="information">{{registration.instructorlastname}}</td>
+        </tr>
+        <tr>
+          <td><strong>Instructor Mobile:</strong></td>
+          <td class="information">{{registration.instructormobile}}</td>
+        </tr>
+        <tr>
+          <td><strong>Instructor Email:</strong></td>
+          <td class="information">{{registration.instructoremail}}</td>
+        </tr>
+        {{!-- <tr>
+          <td><strong>Submitted by:</strong></td>
+          <td class="information">{{registration.submittedby}}</td>
+        </tr> --}}
+      </table>
+    </div>
+
+
+    <form action="/update-nccstatus" method="post" class="review-form">
+      <input type="hidden" name="applicationId" value="{{registration.id}}">
+      <section class="application-actions">
+        <h1 class="status">
+          {{#if (eq registration.status 1)}}
+          <span class="status-under-review">Under Review</span>
+          {{else if (eq registration.status 2)}}
+            <span class="status-en-route">Accepted and En-route to Regional Office</span>
+          {{else if (eq registration.status 3)}}
+          <span class="status-shipped">ID Shipped</span>
+          {{else if (eq registration.status 4)}}
+          <span class="status-rejected">Rejected</span><br>
+          Reason:<p class="rejectmsg">{{registration.rejectmsg}}</p>
+          <p class="description">{{registration.description}}</p>
+          {{else if (eq registration.status 5)}}
+          <span class="status-unknown">Expired</span>
+          {{else if (eq registration.status 6)}}
+          <span class="status-unknown">Suspended</span>
+          Reason:<p class="suspendmsg">{{registration.suspendmsg}}</p>
+          <p class="description">{{registration.susdescription}}</p>
+          {{/if}}
+        </h1>
+        {{#if user.ptaverified}}
+          <div class="action-buttons">
+            <button onclick="printIdCard('printableArea')" class="printbtn">Print ID</button>
+            <button type="submit" name="status" value="1">Under Review</button>
+            <button type="submit" name="status" value="2">Accepted and En-route to Regional Office</button>
+            <button type="button" id="idshipped" class="idshipped">ID Shipped</button>
+            {{#if (eq registration.status 3)}}
+              <button type="button" id="suspendbtn" class="suspendbtn">Suspend this Player</button>
+            {{else}}
+              <button type="button" id="rejectbtn" class="rejectbtn">Reject Application</button>
+            {{/if}}
+          </div>
+
+          <div class="confirmrejectscreen" id="confirmrejectscreen" style="display: none;">
+            <h3>Please state reason for rejection.</h3>
+            <select name="rejectmsg" id="rejectmsg">
+              <option value="Incomplete application">Incomplete application</option>
+              <option value="Invalid documents">Invalid documents</option>
+              <option value="Payment issues">Payment issues</option>
+              <option value="Eligibility criteria not met">Eligibility criteria not met</option>
+              <option value="Other">Other</option>
+            </select>
+            <textarea name="description" id="description" cols="30" rows="10">Give a description for the rejection</textarea>
+            <button type="button" class="cancelreject" id="cancelreject">Cancel</button>
+            <button type="submit" value="4" name="status" id="confirm">Confirm</button>
+          </div>
+
+          <div class="confirmsuspendscreen" id="confirmsuspendscreen" style="display: none;">
+            <h3>This action will remove the player's athlete profile suspending them from registering into any games. Please state reason for suspension.</h3>
+            <select name="suspendmsg" id="suspendmsg">
+              <option value="Inappropriate behavior">Inappropriate behavior</option>
+              <option value="Violence">Violence</option>
+              <option value="Cheating">Cheating</option>
+              <option value="Other">Other</option>
+            </select>
+            <textarea name="susdescription" id="susdescription" cols="30" rows="10">Give a description for the suspension</textarea>
+            <button type="button" class="cancelsuspend" id="cancelsuspend">Cancel</button>
+            <button type="submit" value="6" name="status" id="confirm">Confirm</button>
+          </div>
+
+          <div class="confirmscreen" id="confirmscreen" style="display: none;">
+            <h3>Are you sure? The player will be notified that his ID is ready for pickup. His profile will also be added to the list of athletes</h3>
+            <button type="button" class="cancel" id="cancel">Cancel</button>
+            <button type="submit" value="3" name="status" id="confirm">Confirm</button>
+          </div>
+        {{/if}}
+        <div class="back">
+          <button type="button" onclick="window.location.href='/membership-status'" class="backtolist">
+          Back to list
+          </button>
+        </div>
+      </section>
+      <div id="printableArea">
+        <div class="id-card">
+          <img src="/images/logo.png" alt="PTA logo">
+          <img src="{{registration.portrait}}" alt="Athlete Picture">
+          <p><strong>ID:</strong> {{registration.id}}</p>
+          <p><strong>Name:</strong> {{registration.firstname}} {{registration.middlename}} {{registration.lastname}}</p>
+          <p><strong>Division:</strong> {{registration.division}}</p>
+          <p><strong>Chapter:</strong> {{registration.chapter}}</p>
+          <p><strong>Birthdate:</strong> {{formatDate registration.birthday "MMMM D, YYYY"}}</p>
+        </div>
+      </div>
+
+
+    </form>
+
+  </main>
+
+  <script>
+    const confirmscreen = document.getElementById("confirmscreen");
+    const confirmrejectscreen = document.getElementById("confirmrejectscreen");
+    const cancelreject = document.getElementById("cancelreject");
+    const actionButtons = document.querySelector(".action-buttons");
+    const cancel = document.getElementById("cancel");
+    const idshipped = document.getElementById("idshipped");
+    const rejectbtn = document.getElementById("rejectbtn");
+
+    document.addEventListener("DOMContentLoaded", function() {
+      const suspendbtn = document.getElementById("suspendbtn");
+      const confirmsuspendscreen = document.getElementById("confirmsuspendscreen");
+      const cancelsuspend = document.getElementById("cancelsuspend");
+
+      cancelsuspend.addEventListener("click", function (event) {
+        event.preventDefault();
+        confirmsuspendscreen.style.display = "none";
+        actionButtons.style.display = "block";
+      });
+
+      suspendbtn.addEventListener("click", function (event) {
+        event.preventDefault();
+        confirmsuspendscreen.style.display = "block";
+        actionButtons.style.display = "none";
+      });
+    });
+
+    cancel.addEventListener("click", function (event) {
+      event.preventDefault();
+      confirmscreen.style.display = "none";
+      actionButtons.style.display = "block";
+    });
+
+    idshipped.addEventListener("click", function (event) {
+      event.preventDefault();
+      confirmscreen.style.display = "block";
+      actionButtons.style.display = "none";
+    });
+
+    cancelreject.addEventListener("click", function (event) {
+      event.preventDefault();
+      confirmrejectscreen.style.display = "none";
+      actionButtons.style.display = "block";
+    });
+
+    rejectbtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      confirmrejectscreen.style.display = "block";
+      actionButtons.style.display = "none";
+    });
+
+
+
+    function printIdCard(divName) {
+      var printContents = document.getElementById(divName).innerHTML;
+      var originalContents = document.body.innerHTML;
+      document.body.innerHTML = printContents;
+      window.print();
+      // Remove the reload to avoid errors after canceling
+      document.body.innerHTML = originalContents; // Restore the original content after print
+    }
+
+    function toggleDropdown() {
+      document.getElementById("dropdown").classList.toggle("show");
+    }
+  </script>
+</body>
+
+</html>

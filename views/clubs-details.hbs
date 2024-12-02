@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>PTA | Club Details</title>
+  <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
+  <link rel="stylesheet" type="text/css" href="../stylesheets/navbar.css" />
+  <link rel="stylesheet" type="text/css" href="../stylesheets/clubs-details.css" />
+</head>
+
+<body class="container">
+  <div class="header">
+    <div class="navbar">
+      <a href="/home"><img src="/images/logo.png" class="logo" alt="Logo"></a>
+      <ul class="tabs">
+        <li class="home"><a href="/home">Home</a></li>
+        <li class="athletes"><a href="/athletes">Athletes</a></li>
+        <li class="clubs"><a href="/clubs">Clubs</a></li>
+        <li class="events"><a href="/events">Events</a></li>
+        <li class="membership"><a href="/membership">Membership</a></li>
+        <li class="forum"><a href="/forum">Forum</a></li>
+        <li class="notifications">
+          <a href="/notifications">Notifications
+            {{#if notifications}}
+            <span class="badge">{{notifications.length}}</span>
+            {{/if}}
+          </a>
+        </li>
+        <li class="analytics"><a href="/analytics">Reports</a></li>
+        <li class="profile-pic">
+          {{#if user.profilepic}}
+          <a href="#" onclick="toggleDropdown()"><img src="{{user.profilepic}}" alt="Profile Picture"
+              class="profile-picture"></a>
+          {{else}}
+          <a href="#" onclick="toggleDropdown()" class="profile-picture"><img src="/images/none.jpg"
+              alt="Profile Picture" class="profile-picture"></a>
+          {{/if}}
+          <div id="dropdown" class="dropdown-content">
+            <a href="/profile">Profile</a>
+            <a href="/settings">Settings</a>
+            <a href="/">Logout</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="events-container">
+    <img src="{{club.clubpic}}" alt="Club Picture">
+    <div class="clubname">
+      <span class="name">{{club.clubname}}</span>
+      {{#if (ne club.clubname user.club)}}
+      <button type="button" class="joinbtn" onclick="openJoinModal()">Join this club</button>
+      {{/if}}
+
+      <!-- Join Club Modal -->
+      <div id="joinClubModal" class="modal" style="display:none;">
+        <div class="modal-content">
+          <span class="close" onclick="closeJoinModal()">&times;</span><br>
+          <h2>Join Request for <strong>{{club.clubname}}</strong></h2>
+          <form action="/request-join-club" method="POST">
+            <input type="hidden" name="clubid" value="{{club.id}}">
+            <input type="text" name="message" placeholder="Enter your request message" required>
+            <button type="submit" class="joinbtn">Join this club</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="editclubmodal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeEditModal()">&times;</span>
+        <form id="clubform" class="club-form" action="/update-club" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="clubid" value="{{club.id}}">
+
+          <!-- Club Picture Upload -->
+          <div class="clubpic">
+            <input type="hidden" name="existingClubPicture" value="{{club.clubpic}}">
+            <input type="file" name="clubpicture">
+          </div>
+
+          <!-- Club Name -->
+          <div class="form-group">
+            <label for="clubname">Club Name:</label>
+            <input type="text" id="clubname" name="clubname" value="{{club.clubname}}" required>
+          </div>
+
+          <!-- Club Address -->
+          <div class="form-group">
+            <label for="clubaddress">Club Address:</label>
+            <textarea id="clubaddress" name="clubaddress" rows="4" required>{{club.clubaddress}}</textarea>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{club.email}}" required>
+          </div>
+
+          <!-- Phone Number -->
+          <div class="form-group">
+            <label for="phonenum">Phone Number:</label>
+            <input type="text" id="phonenum" name="phonenum" value="{{club.phonenum}}" required>
+          </div>
+
+          <!-- Region -->
+          <div class="form-group">
+            <label for="province">Province:</label>
+            <input type="text" id="province" name="province" value="{{club.province}}" required>
+          </div>
+
+          <!-- Brief Description -->
+          <div class="form-group">
+            <label for="description">Brief Description:</label>
+            <textarea id="description" name="description" rows="4">{{club.description}}</textarea>
+          </div>
+
+          <!-- Cancel and Update Buttons -->
+          <button onclick="closeModal()" class="cancel">Cancel</button>
+          <button type="submit">Update Club</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Invite Members Modal -->
+    <div id="inviteMembersModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeInviteModal()">&times;</span>
+        <h2>Invite Members</h2>
+        <form action="/invite-user" method="POST">
+          <input type="hidden" name="club_id" value="{{club.id}}">
+          <input type="hidden" name="clubname" value="{{club.clubname}}">
+          {{#if allUsers}}
+          <ul class="user-list">
+            {{#each allUsers}}
+            <li>
+              <input type="checkbox" id="user-{{this.id}}" name="invited_user" value="{{this.id}}">
+              <label for="user-{{this.id}}">{{this.firstname}} {{this.lastname}}</label>
+            </li>
+            {{/each}}
+          </ul>
+          {{else}}
+          <p>No users available to invite.</p>
+          {{/if}}
+          <button type="submit" class="invite-button modal-invite-button">Send Invites</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="clubtabs">
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Members</a></li>
+        <li {{#unless (or (eq club.id user.clubid) (eq club.registeredby user.id))}} style="display:none;" {{/unless}}>
+          <a href="#">Announcements</a>
+        </li>
+        <li{{#unless (eq club.registeredby user.id)}} style="display:none;" {{/unless}}><a href="#">Requests</a></li>
+          <li{{#unless (or (eq club.id user.clubid) (eq club.registeredby user.id))}} style="display:none;" {{/unless}}>
+            <a href="#" id="activity-tab">Activity</a></li>
+      </ul>
+    </div>
+
+    <!-- Activities Section (Updated IDs) -->
+    <div class="activitiestab" id="activity-activities-section" style="display: none;">
+
+      <h2>Club Activities</h2>
+      {{#if (eq club.registeredby user.id)}}
+      <button type="button" class="create" onclick="openActivityModal()">+ Create New Activity</button>
+      {{/if}}
+      {{#each clubActivitiesWithUserDetails}}
+      <div class="activity-card">
+        <h3>{{this.name}}</h3>
+        <p><strong>Description:</strong> {{this.description}}</p>
+        <p><strong>Date:</strong> {{formatCreatedAt this.date}}</p>
+        <p><strong>Time:</strong> {{this.time}}</p>
+        {{#if (eq ../club.registeredby ../user.id)}}
+        <button type="button" class="edit"
+          onclick="openEditActivityModal('{{this.id}}', '{{this.name}}', '{{this.description}}', '{{this.date}}', '{{this.time}}')">Edit</button>
+        <form action="/delete-activity/{{this.id}}" method="POST"
+          onsubmit="return confirm('Are you sure you want to delete this activity?');">
+          <input type="hidden" name="clubid" value="{{../club.id}}">
+          <button type="submit" class="delete">Delete</button>
+        </form>
+        {{/if}}
+
+        {{!-- {{#if (eq ../club.registeredby ../user.id)}} --}}
+        <button class="viewattendeesbtn" onclick="openAttendeesModal({{json this.attendees}})">View Attendees</button>
+        {{!-- {{/if}} --}}
+        <div class="rsvp-buttons">
+          <button type="button" class="rsvp-going" onclick="rsvpActivity('{{this.id}}', true)">I'm Going</button>
+          <button type="button" class="rsvp-notgoing" onclick="rsvpActivity('{{this.id}}', false)">I'm Not
+            Going</button>
+        </div>
+      </div>
+      {{/each}}
+
+      <div id="attendeesModal" class="attendees-modal" style="display:none;">
+        <span class="close" onclick="closeAttendeesModal()">&times;</span>
+        <h4>Attendees:</h4>
+        <ul class="attendees-list">
+          <!-- Attendees will be dynamically populated here -->
+        </ul>
+      </div>
+
+      <div id="activityModal" class="modal" style="display: none;">
+        <div class="modal-content">
+          <span class="close" onclick="closeActivityModal()">&times;</span>
+          <h3>Create New Activity</h3>
+          <form action="/create-club-activity" method="POST">
+            <input type="hidden" name="clubid" value="{{club.id}}">
+            <div>
+              <label for="name">Activity Name:</label>
+              <input type="text" name="name" required>
+            </div>
+            <div>
+              <label for="description">Description:</label>
+              <textarea name="description"></textarea>
+            </div>
+            <div>
+              <label for="date">Date:</label>
+              <input type="date" name="date" required>
+            </div>
+            <div>
+              <label for="time">Time:</label>
+              <input type="time" name="time" required>
+            </div>
+            <button type="submit">Create Activity</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Edit Activity Modal -->
+      <!-- Edit Activity Modal -->
+<div id="editActivityModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeEditActivityModal()">&times;</span>
+        <h3>Edit Activity</h3>
+        <form id="editActivityForm" action="" method="POST">
+            <input type="hidden" name="activityid" id="editActivityId">
+            <div class="form-group">
+                <label for="editActivityName">Activity Name:</label>
+                <input type="text" name="name" id="editActivityName" required>
+            </div>
+            <div class="form-group">
+                <label for="editActivityDescription">Description:</label>
+                <textarea name="description" id="editActivityDescription" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="editActivityDate">Date:</label>
+                <input type="date" name="date" id="editActivityDate" required>
+            </div>
+            <div class="form-group">
+                <label for="editActivityTime">Time:</label>
+                <input type="time" name="time" id="editActivityTime" required>
+            </div>
+            <button type="submit" class="update-button">Update Activity</button>
+        </form>
+    </div>
+</div>
+
+     
+    </div>
+
+    <div id="announceModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeannounceModal()">&times;</span>
+        <form id="announcementform" class="announcement-form" action="/create-announcement" method="post">
+          <input type="hidden" name="clubid" value="{{club.id}}">
+
+          <!-- Announcement Title -->
+          <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+          </div>
+
+          <!-- Announcement Subject -->
+          <div class="form-group">
+            <label for="subject">Subject:</label>
+            <input type="text" id="subject" name="subject" required>
+          </div>
+
+          <!-- Announcement Body -->
+          <div class="form-group">
+            <label for="body">Body:</label>
+            <textarea id="body" name="body" rows="5" required></textarea>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit">Post Announcement</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="detailstab">
+      <div class="leftside">
+        <div class="intro">
+          <div class="details">
+            <span>Details</span>
+            {{#if (eq club.registeredby user.id)}}
+            <button class="edit-button" onclick="openEditModal()"></button>
+            <button class="deleteclub-button" onclick="confirmDelete()"></button>
+            <div class="confirmdeletescreen" style="display: none;">
+              Are you sure you <br>want to delete this club?<br>
+              <form action="/delete-club/{{club.id}}" method="post">
+                <button class="yesdelete" type="submit">Yes</button>
+              </form>
+              <button class="nodelete" onclick="cancelDelete()">No</button>
+            </div>
+            {{/if}}
+          </div>
+          <p><strong>Location:</strong> {{club.clubaddress}}</p>
+          <p><strong>Contact Email:</strong> {{club.email}}</p>
+          <p><strong>Phone Number:</strong> {{club.phonenum}}</p>
+          <p><strong>Why join us?: </strong> {{club.description}}</p>
+        </div>
+      </div>
+
+      <div class="rightside">
+        {{#if (eq club.registeredby user.id)}}
+        <button class="invite-button" onclick="openInviteModal()">+ Invite Members</button>
+        {{/if}}
+      </div>
+    </div>
+
+    <!-- Announcements Section -->
+    <div class="announcements-section" id="announcements-section" style="display: none;">
+      {{#if (eq club.registeredby user.id)}}
+      <button class="create-announcement-button" onclick="openannounceModal()">+ Create Announcement</button>
+      {{/if}}
+      <h2>Club Announcements</h2>
+      <div class="announcements-container">
+        {{#each announcements}}
+        <div class="announcement-block">
+          <h3>{{this.title}}</h3>
+          <h4>{{this.subject}}</h4>
+          <p>{{this.body}}</p>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+
+    <div class="clubrequests" style="display: none;">
+      <h2>Club Requests:</h2>
+      <table class="requests-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Message</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each clubRequestsWithUserDetails}}
+          {{#if (eq status 'pending')}}
+          <tr>
+            <td>{{firstname}} {{lastname}}</td>
+            <td>{{message}}</td>
+            <td>
+              <form action="/accept-join-club-request" method="POST" style="display:inline;">
+                <input type="hidden" name="id" value="{{id}}">
+                <input type="hidden" name="userid" value="{{userid}}">
+                <input type="hidden" name="clubid" value="{{clubid}}">
+                <button type="submit" class="accept-btn">Accept</button>
+              </form>
+              <form action="/reject-join-club-request" method="POST" style="display:inline;">
+                <input type="hidden" name="id" value="{{id}}">
+                <input type="hidden" name="userid" value="{{userid}}">
+                <input type="hidden" name="clubid" value="{{clubid}}">
+                <button type="submit" class="reject-btn">Reject</button>
+              </form>
+            </td>
+          </tr>
+          {{/if}}
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="participants-container">
+    <div class="participants-title">
+      Head Instructor: <h2>{{clubOwner.firstname}} {{clubOwner.lastname}}</h2>
+    </div>
+    <div class="participants-title">Members of this club:</div>
+    <table class="participants-table">
+      <thead>
+        <tr>
+          <th>Picture</th>
+          <th>Player</th>
+          <th>Height (cm)</th>
+          <th>Weight (kg)</th>
+          <th>Activities Attended</th>
+          {{#if (eq club.registeredby user.id)}}
+          <th>Performance Feedback</th>
+          {{/if}}
+        </tr>
+      </thead>
+      <tbody>
+        {{#each clubMembersWithAthleteData}}
+        <tr>
+          <td><img src="{{this.profilepic}}" alt="Member Picture"></td>
+          <td>{{this.firstname}} {{this.lastname}}</td>
+          <td>{{this.height}}</td>
+          <td>{{this.weight}}</td>
+          <td>{{this.attended_count}}</td>
+          <td>
+            <button class="view-feedback-button" data-id="{{this.id}}">View Feedback</button>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+  </div>
+
+  <div id="feedback-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-button">&times;</span>
+      <h2>Performance Feedback</h2>
+      <div id="feedback-section"></div>
+      {{#if (eq club.registeredby user.id)}}
+      <textarea id="new-feedback" placeholder="Enter new feedback..."></textarea>
+      <button id="add-feedback">Add Feedback</button>
+      {{/if}}
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <div class="pta-logo">
+        <img src="/images/logo.png" alt="PTA Logo">
+      </div>
+      <div class="contact-info">
+        <p>Philippine Taekwondo Central Headquarters</p>
+        <p>Rizal Memorial Coliseum, Manila, Philippines</p>
+        <p>0977 384 5879</p>
+        <p>pthtkd@gmail.com</p>
+      </div>
+      <div class="social-media">
+        <p>Follow us</p>
+        <div class="icons">
+          <a href="https://www.facebook.com"><img src="/images/homepage/fb.png" alt="Facebook"></a>
+          <a href="https://www.instagram.com"><img src="/images/homepage/ig.png" alt="Instagram"></a>
+          <a href="https://www.twitch.com"><img src="/images/homepage/twitch.webp" alt="Twitch"></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+
+  <script>
+
+    function confirmDelete() {
+      document.querySelector('.confirmdeletescreen').style.display = 'block';
+      document.querySelector('.deleteevent-button').style.display = 'none';
+    }
+
+    function cancelDelete() {
+      document.querySelector('.confirmdeletescreen').style.display = 'none';
+      document.querySelector('.deleteevent-button').style.display = 'block';
+    }
+
+    function toggleDropdown() {
+      document.getElementById("dropdown").classList.toggle("show");
+    }
+
+    window.onclick = function (event) {
+      if (!event.target.matches('.profile-pic img')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        for (var i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const participantsTab = document.querySelector('.clubtabs ul li:nth-child(2) a');
+      const detailsTab = document.querySelector('.clubtabs ul li:nth-child(1) a');
+      const announcementsTab = document.querySelector('.clubtabs ul li:nth-child(3) a');
+      const clubRequestsTab = document.querySelector('.clubtabs ul li:nth-child(4) a');
+      const activitiesTab = document.querySelector('.clubtabs ul li:nth-child(5) a');
+      const leftside = document.querySelector('.leftside');
+      const rightside = document.querySelector('.rightside');
+      const participantsContainer = document.querySelector('.participants-container');
+      const announcementsSection = document.getElementById('announcements-section');
+      const clubRequests = document.querySelector('.clubrequests');
+      const activities = document.querySelector('.activitiestab');
+
+      function showParticipants() {
+        leftside.style.display = 'none';
+        rightside.style.display = 'none';
+        participantsContainer.style.display = 'block';
+        announcementsSection.style.display = 'none';
+        clubRequests.style.display = 'none';
+        activities.style.display = 'none';
+      }
+
+      function showDetails() {
+        leftside.style.display = 'block';
+        rightside.style.display = 'block';
+        participantsContainer.style.display = 'none';
+        announcementsSection.style.display = 'none';
+        clubRequests.style.display = 'none';
+        activities.style.display = 'none';
+      }
+
+      function showAnnouncements() {
+        leftside.style.display = 'none';
+        rightside.style.display = 'none';
+        participantsContainer.style.display = 'none';
+        announcementsSection.style.display = 'block';
+        clubRequests.style.display = 'none';
+        activities.style.display = 'none';
+      }
+
+      function showClubRequests() {
+        leftside.style.display = 'none';
+        rightside.style.display = 'none';
+        participantsContainer.style.display = 'none';
+        announcementsSection.style.display = 'none';
+        clubRequests.style.display = 'block';
+        activities.style.display = 'none';
+      }
+
+      function showActivities() {
+        leftside.style.display = 'none';
+        rightside.style.display = 'none';
+        participantsContainer.style.display = 'none';
+        announcementsSection.style.display = 'none';
+        clubRequests.style.display = 'none';
+        activities.style.display = 'block';
+      }
+
+      participantsTab.addEventListener('click', function () {
+        showParticipants();
+      });
+
+      detailsTab.addEventListener('click', function () {
+        showDetails();
+      });
+
+      announcementsTab.addEventListener('click', function () {
+        showAnnouncements();
+      });
+
+      clubRequestsTab.addEventListener('click', function () {
+        showClubRequests();
+      });
+
+      activitiesTab.addEventListener('click', function () {
+        showActivities();
+      });
+
+    });
+
+    function openEditModal() {
+      document.getElementById('editclubmodal').style.display = 'block';
+    }
+
+    function closeEditModal() {
+      document.getElementById('editclubmodal').style.display = 'none';
+    }
+
+    function openannounceModal() {
+      document.getElementById('announceModal').style.display = 'block';
+    }
+
+    function closeannounceModal() {
+      document.getElementById('announceModal').style.display = 'none';
+    }
+
+    function openJoinModal() {
+      document.getElementById('joinClubModal').style.display = 'block';
+    }
+
+    function closeJoinModal() {
+      document.getElementById('joinClubModal').style.display = 'none';
+    }
+
+    function openAttendeesModal(attendees) {
+      const modal = document.getElementById('attendeesModal');
+      const attendeesList = modal.querySelector('.attendees-list');
+      attendeesList.innerHTML = ''; // Clear previous attendees
+
+      if (attendees.length > 0) {
+        attendees.forEach(attendee => {
+          const listItem = document.createElement('li');
+          listItem.textContent = `${attendee.firstname} ${attendee.lastname}`;
+          attendeesList.appendChild(listItem);
+        });
+      } else {
+        const listItem = document.createElement('li');
+        listItem.textContent = 'No attendees yet.';
+        attendeesList.appendChild(listItem);
+      }
+
+      modal.style.display = 'block'; // Show the modal
+    }
+
+    function closeAttendeesModal() {
+      const modal = document.getElementById('attendeesModal');
+      modal.style.display = 'none'; // Hide the modal
+    }
+
+    window.onclick = function (event) {
+      if (event.target == document.getElementById('announceModal')) {
+        closeannounceModal();
+      }
+    }
+
+    // Function to open and close the Invite Members modal
+    function openInviteModal() {
+      document.getElementById('inviteMembersModal').style.display = 'block';
+    }
+
+    function closeInviteModal() {
+      document.getElementById('inviteMembersModal').style.display = 'none';
+    }
+
+    // Function to open and close the Edit Club modal
+    function openEditModal() {
+      document.getElementById('editclubmodal').style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('editclubmodal').style.display = 'none';
+    }
+
+    function openActivityModal() {
+      document.getElementById("activityModal").style.display = "block";
+    }
+
+    function closeActivityModal() {
+      document.getElementById("activityModal").style.display = "none";
+    }
+
+    // Close the modal if the user clicks outside of it
+    window.onclick = function (event) {
+      const modal = document.getElementById("activityModal");
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    };
+
+    async function rsvpActivity(activityId, going) {
+      try {
+        const response = await fetch("/rsvp-activity", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ activityId, going }),
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          alert(result.message);
+          // Optionally, reload the page or update the UI to reflect the change
+          location.reload();
+        } else {
+          alert(result.error);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+
+    // Function to open and populate the Edit Activity Modal
+    function openEditActivityModal(id, name, description, date, time) {
+      document.getElementById('editActivityId').value = id;
+      document.getElementById('editActivityName').value = name;
+      document.getElementById('editActivityDescription').value = description;
+      document.getElementById('editActivityDate').value = date;
+      document.getElementById('editActivityTime').value = time;
+      document.getElementById('editActivityForm').action = `/update-activity/${id}`;
+      document.getElementById('editActivityModal').style.display = 'block';
+    }
+
+    function closeEditActivityModal() {
+      document.getElementById('editActivityModal').style.display = 'none';
+    }
+
+    function openActivityModal() {
+      document.getElementById("activityModal").style.display = "block";
+    }
+
+    function closeActivityModal() {
+      document.getElementById("activityModal").style.display = "none";
+    }
+
+    document.querySelectorAll('.viewattendeesbtn').forEach((button, index) => {
+      button.addEventListener('click', function () {
+        const attendeesModal = document.querySelectorAll('.attendees-modal')[index];
+        const attendeesCount = attendeesModal.querySelectorAll('ul li').length;
+        attendeesModal.querySelector('.attendeescount').textContent = `Attendees: ${attendeesCount}`;
+        attendeesModal.style.display = 'block';
+      });
+    });
+
+    // Open modal and load feedback
+    document.querySelectorAll('.view-feedback-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const athleteId = button.getAttribute('data-id');
+        openModal(athleteId);
+      });
+    });
+
+    function openModal(athleteId) {
+      const modal = document.getElementById('feedback-modal');
+      modal.style.display = 'flex';
+
+      // Load feedback log for the selected athlete
+      const feedbackLog = JSON.parse(localStorage.getItem(`feedbackLog_${athleteId}`)) || [];
+      displayFeedback(feedbackLog, athleteId);
+
+      // Add event listener for adding new feedback
+      document.getElementById('add-feedback').onclick = () => addFeedback(athleteId);
+    }
+
+    function displayFeedback(feedbackLog, athleteId) {
+      const feedbackSection = document.getElementById('feedback-section');
+      feedbackSection.innerHTML = ''; // Clear existing feedback
+
+      feedbackLog.forEach((entry, index) => {
+        const feedbackEntry = document.createElement('div');
+        feedbackEntry.classList.add('feedback-entry');
+        feedbackEntry.innerHTML = `
+            <strong>${entry.timestamp}</strong><br>
+            <span class="feedback-text">${entry.text}</span>
+            <div class="feedback-actions">
+                <button class="edit-feedback" data-id="${index}">Edit</button>
+                <button class="delete-feedback" data-id="${index}">Delete</button>
+            </div>
+        `;
+        feedbackSection.appendChild(feedbackEntry);
+      });
+
+      // Event listeners for edit and delete buttons
+      document.querySelectorAll('.edit-feedback').forEach(button => {
+        button.addEventListener('click', (e) => {
+          const index = e.target.getAttribute('data-id');
+          editFeedback(athleteId, index);
+        });
+      });
+
+      document.querySelectorAll('.delete-feedback').forEach(button => {
+        button.addEventListener('click', (e) => {
+          const index = e.target.getAttribute('data-id');
+          deleteFeedback(athleteId, index);
+        });
+      });
+    }
+
+    // Function to handle editing feedback
+    function editFeedback(athleteId, index) {
+      const feedbackLog = JSON.parse(localStorage.getItem(`feedbackLog_${athleteId}`)) || [];
+      const feedbackText = prompt("Edit your feedback:", feedbackLog[index].text);
+
+      if (feedbackText !== null) {
+        feedbackLog[index].text = feedbackText;
+        localStorage.setItem(`feedbackLog_${athleteId}`, JSON.stringify(feedbackLog));
+        displayFeedback(feedbackLog, athleteId);
+      }
+    }
+
+    // Function to handle deleting feedback
+    function deleteFeedback(athleteId, index) {
+      let feedbackLog = JSON.parse(localStorage.getItem(`feedbackLog_${athleteId}`)) || [];
+      feedbackLog.splice(index, 1); // Remove the feedback at the given index
+      localStorage.setItem(`feedbackLog_${athleteId}`, JSON.stringify(feedbackLog));
+      displayFeedback(feedbackLog, athleteId); // Refresh the display
+    }
+
+    // Function to open the modal
+    function openModal(athleteId) {
+      const modal = document.getElementById('feedback-modal');
+      modal.style.display = 'flex';
+
+      // Load feedback log for the selected athlete
+      const feedbackLog = JSON.parse(localStorage.getItem(`feedbackLog_${athleteId}`)) || [];
+      displayFeedback(feedbackLog, athleteId);
+
+      // Add event listener for adding new feedback
+      document.getElementById('add-feedback').onclick = () => addFeedback(athleteId);
+    }
+
+    // Close modal when the close button is clicked
+    document.querySelector('.close-button').addEventListener('click', () => {
+      closeModal();
+    });
+
+    // Close modal when clicking outside the modal content
+    window.addEventListener('click', (event) => {
+      const modal = document.getElementById('feedback-modal');
+      if (event.target === modal) {
+        closeModal();
+      }
+    });
+  
+    // Function to close the modal
+    function closeModal() {
+      const modal = document.getElementById('feedback-modal');
+      modal.style.display = 'none';
+      document.getElementById('new-feedback').value = ''; // Clear feedback input
+    }
+    function addFeedback(athleteId) {
+      const feedbackInput = document.getElementById('new-feedback');
+      const feedbackText = feedbackInput.value.trim();
+
+      if (feedbackText) {
+        const feedbackLog = JSON.parse(localStorage.getItem(`feedbackLog_${athleteId}`)) || [];
+        const newEntry = {
+          text: feedbackText,
+          timestamp: new Date().toLocaleString()
+        };
+        feedbackLog.push(newEntry);
+
+        // Save to localStorage and update display
+        localStorage.setItem(`feedbackLog_${athleteId}`, JSON.stringify(feedbackLog));
+        displayFeedback(feedbackLog, athleteId); // Refresh feedback display
+        feedbackInput.value = ''; // Clear the input field
+      } else {
+        alert("Please enter some feedback before adding."); // Error handling for empty feedback
+      }
+    }
+  </script>
+</body>
+
+</html>

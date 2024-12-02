@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>PTA | Notifications</title>
+  <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
+  <link rel="stylesheet" type="text/css" href="../stylesheets/notifications.css" />
+  <link rel="stylesheet" type="text/css" href="../stylesheets/navbar.css" />
+</head>
+
+<body class="container">
+  <div class="header">
+    <div class="navbar">
+      <a href="home"><img src="/images/logo.png" class="logo" alt="Logo"></a>
+      <ul class="tabs">
+        <li class="home"><a href="/home">Home</a></li>
+        <li class="athletes"><a href="/athletes">Athletes</a></li>
+        <li class="clubs"><a href="/clubs">Clubs</a></li>
+        <li class="events"><a href="/events">Events</a></li>
+        <li class="membership"><a href="/membership">Membership</a></li>
+        <li class="forum"><a href="/forum">Forum</a></li>
+        <li class="notifications">
+          <a href="notifications">Notifications
+            {{#if notifications}}
+            <span class="badge">{{notifications.length}}</span>
+            {{/if}}
+          </a>
+        </li>
+        {{#if user.ptaverified}}
+        <li class="analytics"><a href="/analytics">Reports</a></li>
+        {{/if}}
+        <li class="profile-pic">
+          {{#if user.profilepic}}
+          <a href="#" onclick="toggleDropdown()"><img src="{{user.profilepic}}" alt="Profile Picture"
+              class="profile-picture"></a>
+          {{else}}
+          <a href="#" onclick="toggleDropdown()" class="profile-picture"><img src="/images/none.jpg"
+              alt="Profile Picture" class="profile-picture"></a>
+          {{/if}}
+          <div id="dropdown" class="dropdown-content">
+            <a href="profile">Profile</a>
+            <a href="settings">Settings</a>
+            
+            <a href="/">Logout</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="notifications-container padding">
+
+    <div>
+      <h1>Notifications</h1>
+      <span class="clearallbtn">
+        <form action="/delete-all-notifications" method="post">
+          <button type="submit">clear all</button>
+        </form>
+      </span>
+    </div>
+
+    
+
+    <ul class="notifications-list">
+      {{#unless user.athleteverified}}
+        <a style="text-decoration:none" href="/membership">
+          <li class="welcomenotification">
+            <span class="notification-type {{type}}"><strong>Welcome</strong></span>
+              <div class="notification-content">
+                <h2></h2>
+                <p class="msg">Welcome to the PTA Website!</p>
+                <p class="desc">To get started, complete your membership registration and join a club.</p>
+                <span class="notification-time">forever</span>
+              </div>
+          </li>
+        </a>
+      {{/unless}}
+      {{#reverseEach notifications}}
+        {{#if (eq type 'Registration')}}
+          <a style="text-decoration:none" href="/membership-status">
+        {{else if (eq type 'Event')}}
+          <a style="text-decoration:none" href="/events">
+        {{else if (eq type 'Club')}}
+          <a style="text-decoration:none" href="/clubs">
+        {{else if (eq type 'Welcome')}}
+          <a style="text-decoration:none" href="/membership">
+        {{/if}}
+            <li class="notification">
+              <span class="notification-type {{type}}">{{type}}</span>
+              <div class="notification-content">
+                <h2>{{title}}</h2>
+                <p class="msg">{{message}}</p>
+                <p class="desc">{{desc}}</p>
+                <span class="notification-user">{{user}}</span>
+                <span class="notification-time">{{formatCreatedAt created_at}}</span>
+              </div>
+              <form action="/delete-notification/{{id}}" method="post" style="display: inline;">
+                <button class="delete-button" type="submit">&#10005;</button>
+              </form>
+            </li>
+            {{else}}
+            <li class="no-notifs">No notifications available</li>
+          </a>
+      {{/reverseEach}}
+    </ul>
+
+    <ul>
+      {{#each club_invitations}}
+      <li class="notification">
+        <div class="fit center">
+          You have been invited to<span class="focus"> {{this.clubname}}</span>. You have been invited by:<span
+            class="focus"> {{this.invitername}}</span><br>
+          <form action="/accept-invitation/{{this.id}}" method="post" style="display: inline;">
+            <button class="button-3 bg-green margin" type="submit">Accept</button>
+          </form>
+          <form action="/reject-invitation/{{this.id}}" method="post" style="display: inline;">
+            <button class="button-3 bg-red margin" type="submit">Reject</button>
+          </form>
+        </div>
+      </li>
+      {{/each}}
+    </ul>
+
+
+
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (document.querySelectorAll('.notification').length > 0) {
+        let nonotifs = document.querySelectorAll('.no-notifs');
+        nonotifs.forEach(function (element) {
+          element.style.display = 'none';
+        });
+      }
+    });
+
+    function toggleDropdown() {
+      document.getElementById("dropdown").classList.toggle("show");
+    }
+
+    window.onclick = function (event) {
+      if (!event.target.matches('.profile-pic img')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        for (var i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+
+    function toggleEditDropdown() {
+      document.getElementById("editDropdown").classList.toggle("show");
+    }
+  </script>
+</body>
+
+</html>

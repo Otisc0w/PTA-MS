@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Poomsae Scoresheet</title>
+  <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
+  <link rel="stylesheet" type="text/css" href="../stylesheets/navbar.css" />
+  <link rel="stylesheet" type="text/css" href="/stylesheets/scoresheet.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="score-sheet">
+      <h2 class="title">Judge's Score Sheet</h2>
+      <div class="score-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Sub-Category</th>
+              <th>Score Allocation</th>
+              <th>Deductions</th>
+              <th>Final Score</th>
+            </tr>
+          </thead>
+            <form action="submit-poomsae-scores" method="post">
+            <tbody>
+              <tr>
+                <td rowspan="3"><strong>Technical (4.0)</strong></td>
+                <td>Accuracy in basic Movement</td>
+                <td rowspan="3">4.0 (deduct -0.1, -0.3)</td>
+                <td><input type="number" class="deduction-input" name="basicmovement" step="0.1" min="0" max="4" data-max="4"></td>
+                <td class="final-score" data-base="4">4.0</td>
+              </tr>
+              <tr>
+                <td>Accuracy in individual Movement of the Poomsae</td>
+                <td><input type="number" class="deduction-input" name="indivmovement" step="0.1" min="0" max="4" data-max="4"></td>
+                <td class="final-score" data-base="4">4.0</td>
+              </tr>
+              <tr>
+                <td>Balance</td>
+                <td><input type="number" class="deduction-input" name="balance" step="0.1" min="0" max="4" data-max="4"></td>
+                <td class="final-score" data-base="4">4.0</td>
+              </tr>
+              <tr>
+                <td rowspan="3"><strong>Performance (6.0)</strong></td>
+                <td>Power & Speed</td>
+                <td>2.0</td>
+                <td><input type="number" class="deduction-input" name="powerspeed" step="0.1" min="0" max="2" data-max="2"></td>
+                <td class="final-score" data-base="2">2.0</td>
+              </tr>
+              <tr>
+                <td>Coordination of rhythm & Tempo and Softness & Power</td>
+                <td>2.0</td>
+                <td><input type="number" class="deduction-input" name="coord" step="0.1" min="0" max="2" data-max="2"></td>
+                <td class="final-score" data-base="2">2.0</td>
+              </tr>
+              <tr>
+                <td>Expression of Energy</td>
+                <td>2.0</td>
+                <td><input type="number" class="deduction-input" name="energy" step="0.1" min="0" max="2" data-max="2"></td>
+                <td class="final-score" data-base="2">2.0</td>
+              </tr>
+            </tbody>
+            </form>
+        </table>
+        <div class="total-score">
+          <strong>Total Score (10.0):</strong> <span id="total-score">10.0</span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.querySelectorAll('.deduction-input').forEach(input => {
+        input.addEventListener('input', calculateScores);
+      });
+
+      function calculateScores() {
+        let totalScore = 10.0; // Starting score for Poomsae
+
+        document.querySelectorAll('.deduction-input').forEach(input => {
+          const maxScore = parseFloat(input.dataset.max);
+          const deduction = parseFloat(input.value) || 0;
+          const finalScoreElement = input.parentElement.nextElementSibling;
+          const finalScore = Math.max(0, maxScore - deduction); // Avoid negative scores
+
+          // Update the final score display for each row
+          finalScoreElement.textContent = finalScore.toFixed(1);
+
+          // Deduct from the total score
+          totalScore -= deduction;
+        });
+
+        // Update the total score in the UI
+        document.getElementById('total-score').textContent = totalScore.toFixed(1);
+      }
+
+    </script>
+
+  </div>
+</body>
+</html>

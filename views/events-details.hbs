@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>PTA | Events</title>
+  <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
+  <link rel="stylesheet" type="text/css" href="../stylesheets/navbar.css" />
+  <link rel="stylesheet" type="text/css" href="../stylesheets/events-details.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body class="container">
+  <div class="header">
+    <div class="navbar">
+      <a href="/home"><img src="/images/logo.png" class="logo" alt="Logo"></a>
+      <ul class="tabs">
+        <li class="home"><a href="/home">Home</a></li>
+        <li class="athletes"><a href="/athletes">Athletes</a></li>
+        <li class="clubs"><a href="/clubs">Clubs</a></li>
+        <li class="events"><a href="/events">Events</a></li>
+        <li class="membership"><a href="/membership">Membership</a></li>
+        <li class="forum"><a href="/forum">Forum</a></li>
+        <li class="notifications">
+          <a href="/notifications">Notifications
+            {{#if notifications}}
+            <span class="badge">{{notifications.length}}</span>
+            {{/if}}
+          </a>
+        </li>
+        <li class="analytics"><a href="/analytics">Reports</a></li>
+        <li class="profile-pic">
+          {{#if user.profilepic}}
+          <a href="#" onclick="toggleDropdown()"><img src="{{user.profilepic}}" alt="Profile Picture"
+              class="profile-picture"></a>
+          {{else}}
+          <a href="#" onclick="toggleDropdown()" class="profile-picture"><img src="/images/none.jpg"
+              alt="Profile Picture" class="profile-picture"></a>
+          {{/if}}
+          <div id="dropdown" class="dropdown-content">
+            <a href="/profile">Profile</a>
+            <a href="/settings">Settings</a>
+           
+            <a href="/">Logout</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="events-container">
+    <img src="{{event.eventpicture}}" alt="Event Picture">
+    <div class="eventname">
+      <span class="name">{{event.name}}</span>
+    </div>
+
+    <div class="clubtabs">
+      <ul>
+        <li><a href="#" id="details-tab">Details</a></li>
+        <li><a href="#" id="participants-tab">Participants</a></li>
+        <li{{#unless user.ptaverified}} style="display:none;" {{/unless}}><a href="#"
+            id="registrations-tab">Registrations</a></li>
+        <li{{#if (or currentregistrant user.ptaverified)}} style="display:block;" {{else}} style="display:none;"
+          {{/if}}><a href="#" id="announcements-tab">Announcements</a></li>
+        <li {{#unless (eq event.status 'Concluded' )}}style="display: none" {{/unless}}><a href="#"
+              id="results-tab">Results</a></li>
+
+      </ul>
+    </div><br>
+
+    <div class="eventsides">
+      <div class="eventleftside">
+        <div class="intro">
+          <div class="details">
+            <div class="titleandbuttons">
+              <span>Details</span>
+              {{#if user.ptaverified}}
+              {{#if (eq event.status "Concluded")}}
+              <button class="edit-button" disabled style="cursor: not-allowed;"></button>
+              {{else}}
+              <button class="edit-button" onclick="openModal()"></button>
+              {{/if}}
+                 <button class="canceleventbtn" onclick="opencanceleventmodal()">Cancel</button>
+              {{/if}} 
+            </div>
+          </div>
+
+          <p>{{event.description}}</p>
+          <p><strong>Registration Deadline:</strong> {{formatDate event.backoutdl "MMMM D, YYYY"}}</p>
+          <p><strong>Event Date:</strong> {{formatDate event.date "MMMM D, YYYY"}}</p>
+          <p><strong>Time:</strong> {{formatTime event.starttime "h:mm A"}} - {{formatTime event.endtime "h:mm A"}}</p>
+          <p><strong>Location:</strong> {{event.location}}</p>
+          <p><strong>Gender:</strong> {{event.gender}}</p>
+          <p><strong>Belt Level:</strong> {{event.beltlevel}}</p>
+          <p><strong>Age Division:</strong> {{event.agedivision}}</p>
+          <p><strong>Weight Class:</strong> {{event.weightclass}}</p>
+          <p><strong>Event Type:</strong> {{event.eventtype}}</p>
+          <p><strong>Registration Cap:</strong> {{registrationcount}} / {{event.registrationcap}}</p>
+
+        </div>
+      </div>
+
+      <div id="editmodal" class="modal">
+        <div class="modal-content">
+          <span class="close" onclick="closeModal()">&times;</span>
+          <form id="eventform" class="event-form" action="/update-event" method="post" enctype="multipart/form-data">
+
+            <!-- Event Status Dropdown -->
+            {{!-- <div class="form-group">
+              <label for="eventstatus">Event Status:</label>
+              <select id="eventstatus" name="status" onchange="toggleCancellationFields()">
+                <option value="Active" {{#if (eq event.status "Active" )}}selected{{/if}}>Active</option>
+                <option value="Cancelled" {{#if (eq event.status "Cancelled" )}}selected{{/if}}>Cancelled</option>
+              </select>
+            </div> --}}
+
+            <!-- Default Fields (Visible when event status is Active) -->
+            <div id="defaultFields">
+              <label for="eventpicture">Event Picture:</label>
+              <input type="hidden" name="eventid" value="{{event.id}}">
+              <input type="hidden" value="{{event.eventtype}}" name="eventtype">
+              <div class="eventpic">
+                <input type="file" name="eventpicture">
+              </div>
+              <div class="form-group">
+                <label for="name">Event Name:</label>
+                <input type="text" id="name" name="name" value="{{event.name}}" required>
+              </div>
+              <div class="form-group">
+                <label for="description">Event Description:</label>
+                <textarea id="description" name="description" rows="4" required>{{event.description}}</textarea>
+              </div>
+              <div class="form-group">
+                <label for="beltlevel">Belt Level:</label>
+                <select id="beltlevel" name="beltlevel">
+                    <option value="White Belt" {{#if (eq event.beltlevel "White Belt")}}selected{{/if}}>White Belt</option>
+                    <option value="Low Yellow Belt" {{#if (eq event.beltlevel "Low Yellow Belt")}}selected{{/if}}>Low Yellow Belt</option>
+                    <option value="High Yellow Belt" {{#if (eq event.beltlevel "High Yellow Belt")}}selected{{/if}}>High Yellow Belt</option>
+                    <option value="Low Blue Belt" {{#if (eq event.beltlevel "Low Blue Belt")}}selected{{/if}}>Low Blue Belt</option>
+                    <option value="High Blue Belt" {{#if (eq event.beltlevel "High Blue Belt")}}selected{{/if}}>High Blue Belt</option>
+                    <option value="Low Red Belt" {{#if (eq event.beltlevel "Low Red Belt")}}selected{{/if}}>Low Red Belt</option>
+                    <option value="High Red Belt" {{#if (eq event.beltlevel "High Red Belt")}}selected{{/if}}>High Red Belt</option>
+                    <option value="Low Brown Belt" {{#if (eq event.beltlevel "Low Brown Belt")}}selected{{/if}}>Low Brown Belt</option>
+                    <option value="High Brown Belt" {{#if (eq event.beltlevel "High Brown Belt")}}selected{{/if}}>High Brown Belt</option>
+                    <option value="Junior/Poom Black Belt" {{#if (eq event.beltlevel "Junior/Poom Black Belt")}}selected{{/if}}>Junior/Poom Black Belt</option>
+                    <option value="Black/Dan Belt" {{#if (eq event.beltlevel "Black/Dan Belt")}}selected{{/if}}>Black/Dan Belt</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="gender">Gender:</label>
+                <select id="gender" name="gender">
+                  <option value="male" {{#if (eq event.gender "male" )}}selected{{/if}}>Male</option>
+                  <option value="female" {{#if (eq event.gender "female" )}}selected{{/if}}>Female</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="weightclass">Weight Class:</label>
+                <select id="weightclass" name="weightclass">
+                  <option value="54kg">54kg</option>
+                  <option value="58kg">58kg</option>
+                  <option value="68kg">68kg</option>
+                  <option value="74kg">74kg</option>
+                  <option value="80kg">80kg</option>
+                  <option value="87kg">87kg</option>
+                  <option value="87+kg">87+kg</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="agedivision">Age Division:</label>
+                <select id="agedivision" name="agedivision">
+                    <option value="Youth" {{#if (eq event.agedivision "Youth")}}selected{{/if}}>Youth</option>
+                    <option value="Cadet" {{#if (eq event.agedivision "Cadet")}}selected{{/if}}>Cadet</option>
+                    <option value="Junior" {{#if (eq event.agedivision "Junior")}}selected{{/if}}>Junior</option>
+                    <option value="Senior" {{#if (eq event.agedivision "Senior")}}selected{{/if}}>Senior</option>
+                    <option value="Ultra" {{#if (eq event.agedivision "Ultra")}}selected{{/if}}>Ultra</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="date">Event Date:</label>
+                <input type="date" id="date" name="date" value="{{event.date}}">
+              </div>
+              <div class="form-group">
+                <label for="date">Backout Deadline:</label>
+                <input type="date" id="date" name="backoutdl" value="{{event.backoutdl}}">
+              </div>
+              <div class="form-group">
+                <label for="starttime">Start Time:</label>
+                <input type="time" id="starttime" name="starttime" value="{{event.starttime}}" required>
+                <label for="endtime">End Time:</label>
+                <input type="time" id="endtime" name="endtime" value="{{event.endtime}}" required>
+              </div>
+              <div class="form-group">
+                <label for="registrationcap">Registration Cap:</label>
+                <input type="number" id="registrationcap" name="registrationcap" value="{{event.registrationcap}}"
+                  required>
+              </div>
+              <div class="form-group">
+                <label for="location">Location:</label>
+                <input type="text" id="location" name="location" value="{{event.location}}" required>
+              </div>
+              <button onclick="closeModal()" class="cancel">Cancel</button>
+              <button type="submit" class="default-submit-button">Update Event</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div id="canceleventmodal" class="canceleventmodal">
+        <div class="modal-content">
+          <span class="close" onclick="closecanceleventmodal()">&times;</span>
+          <h2>Cancel Event</h2>
+          <form id="cancellationForm" action="/cancel-event/{{event.id}}" method="post">
+          <div class="form-group">
+            <label for="cancelmsg">Cancellation Reason:</label>
+              <select name="cancelreason" id="cancelreason">
+                <option value="Weather">Weather</option>
+                <option value="Health and Safety">Health and Safety</option>
+                <option value="Low Registration">Low Registration</option>
+                <option value="Venue Issues">Venue Issues</option>
+                <option value="Scheduling Conflicts">Scheduling Conflicts</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="cancelmsg">Cancellation Notice:</label>
+              <textarea id="cancelmsg" name="cancelmsg" rows="4" required></textarea>
+            </div>
+            <button type="submit" >Submit Cancellation</button>
+          </form>
+        </div>
+      </div>
+
+      {{!--------------------------------------------------------------------------------- MIDDLE SIDE OF THIS PAGE
+      --------------------------------------------------------------------}}
+
+      <div class="eventmiddleside">
+        <div>
+          {{#if (eq event.status 'Cancelled')}}
+          <h1 style="color: red">This event has been CANCELLED</h1>
+          <p><strong>Reason for Cancellation:</strong> {{event.cancelreason}}</p>
+          <p>{{event.cancelmsg}}</p>
+          {{#if event.rescheduleDate}}
+          <p><strong>Rescheduled Date:</strong> {{event.rescheduleDate}}</p>
+          {{/if}}
+          {{/if}}
+          {{#if (eq event.eventtype 'Poomsae')}}
+          {{#if poomsaetop4}}
+          <h3>Poomsae Winners</h3>
+          <div class="leaderboard-list">
+            {{#each poomsaetop4}}
+            <div class="leaderboard-item {{#if (eq ranking 1)}}first-place{{/if}}">
+              <span class="ranking">{{ranking}}</span>
+              <span class="name">{{name}}</span>
+              <button class="winnersviewathlete"
+                onclick="window.location.href='/athletes-profile/{{athleteid}}'">&#8614;</button>
+            </div>
+            {{/each}}
+          </div>
+          {{/if}}
+
+          {{else if (eq event.eventtype 'Kyorugi')}}
+          {{#if thirdPlace2}}
+          <div class="ranking">
+            <h3>Rankings</h3>
+            <div class="leaderboard-list">
+              <div class="leaderboard-item first-place">
+                <span class="ranking">1st</span>
+                <span class="name">{{champion.name}}</span>
+                <button class="winnersviewathlete"
+                  onclick="window.location.href='/athletes-profile/{{champion.id}}'">&#8614;</button>
+              </div>
+
+              <div class="leaderboard-item ">
+                <span class="ranking">2nd</span>
+                <span class="name">{{secondPlace.name}}</span>
+                <button class="winnersviewathlete"
+                  onclick="window.location.href='/athletes-profile/{{secondPlace.id}}'">&#8614;</button>
+              </div>
+
+              <div class="leaderboard-item">
+                <span class="ranking">3rd</span>
+                <span class="name">{{thirdPlace1.name}}</span>
+                <button class="winnersviewathlete"
+                  onclick="window.location.href='/athletes-profile/{{thirdPlace1.id}}'">&#8614;</button>
+              </div>
+
+              <div class="leaderboard-item">
+                <span class="ranking">3rd</span>
+                <span class="name">{{thirdPlace2.name}}</span>
+                <button class="winnersviewathlete"
+                  onclick="window.location.href='/athletes-profile/{{thirdPlace2.id}}'">&#8614;</button>
+              </div>
+            </div>
+          </div>
+          {{/if}}
+          {{/if}}
+        </div>
+
+        <div class="schedule">
+          {{#if (and user.ptaverified (me registrationcount event.registrationcap ))}}
+          {{#if (eq event.status 'Active')}}
+            {{#if (eq event.eventtype 'Kyorugi')}}
+              <form action="/begin-kyorugi-competition/{{event.id}}" method="post" onsubmit="return confirm('Are you sure you want to begin this competition? This will form initial Kyorugi matches');">
+                <button type="submit" class="begincompe">Begin Competition</button>
+              </form>
+            {{else if (eq event.eventtype 'Poomsae')}}
+              <form action="/begin-poomsae-competition/{{event.id}}" method="post" onsubmit="return confirm('Are you sure you want to begin this competition? This will form lineups for the competition');">
+                <button type="submit" class="begincompe">Begin Competition</button>
+              </form>
+            {{else if (eq event.eventtype 'Promotion')}}
+              <form action="/begin-promotion-event/{{event.id}}" method="post" onsubmit="return confirm('Are you sure you want to begin this competition?');">
+                <button type="submit" class="begincompe">Begin Promotion Event</button>
+              </form>
+            {{/if}}
+          {{else if (eq event.status 'Ongoing')}}
+          {{#if (le event.currentround 1)}}
+          {{#if (eq event.eventtype 'Poomsae')}}
+          <form action="/next-poomsae-round/{{event.id}}" method="post" onsubmit="return confirm('Are you sure you want to proceed to the next round? Check if all players have been scored.');">
+            <button type="submit" class="begincompe">Proceed to next round</button>
+          </form>
+
+          {{else if (eq event.eventtype 'Kyorugi')}}
+          <form action="/next-kyorugi-round/{{event.id}}" method="post" onsubmit="return confirm('Are you sure you want to proceed to the next round? Check if all matches have been scored and have a winner.');">
+            <button type="submit" class="begincompe">Proceed to next round</button>
+          </form>
+
+          {{else if (eq event.eventtype 'Promotion')}}
+          <form action="/conclude-promotion-event/{{event.id}}" method="post" onsubmit="return confirm('WARNING: This action will update players' belt levels and record the event in each players match history');">
+            <button type="submit" class="begincompe">Conclude Event</button>
+          </form>
+          {{/if}}
+          {{else}}
+          {{#if (eq event.eventtype 'Poomsae')}}
+          <form action="/decide-poomsae-winners/{{event.id}}" method="post" onsubmit="return confirm('WARNING: This action will finalize winners and record the competition in each players match history');">
+            <button type="submit" class="begincompe">Decide Winners</button>
+          </form>
+          {{else if (eq event.eventtype 'Kyorugi')}}
+          <form action="/decide-kyorugi-winners/{{event.id}}" method="post" onsubmit="return confirm('WARNING: This action will finalize winners and record the competition in each players match history');">
+            <button type="submit" class="begincompe">Decide Winners</button>
+          </form>
+          {{/if}}
+          {{/if}}
+          {{/if}}
+          {{/if}}
+
+          {{#if (eq event.eventtype 'Poomsae')}}
+          {{#if sortedGroupedByRound}}
+          {{#each sortedGroupedByRound}}
+            <h3>Round: {{@key}}</h3>
+            <table class="schedule-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Schedule</th>
+                  <th>Total Score</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each this}}
+                
+                <tr{{#if (eq ranking 0)}} class="eliminated" {{/if}}>
+                  <td>{{name}}</td>
+                  <td>
+                    {{#if this.schedule}}
+                      {{this.schedule}}
+                    {{else}}
+                      <form class="matchtime" action="/update-performance-sched" method="post">
+                        <input type="hidden" name="id" value="{{id}}">
+                        <input type="hidden" name="eventid" value="{{eventid}}">
+                        <input type="time" class="matchtime" name="schedule">
+                        <button type="submit">OK</button>
+                      </form>
+                    {{/if}}
+                  </td>
+                  <td class="totalscore">{{totalscore}}</td>
+                  <td>
+                    {{#unless (eq ranking 0)}}
+                    {{#if (eq ../../event.status 'Ongoing')}}
+                    <button
+                      onclick="openPoomsaeScoresheet('{{id}}', '{{name}}', '{{totalscore}}', '{{technicalscore}}', '{{performancescore}}')"
+                      class="open-poomsae-scoresheet">Open Scoresheet ->
+                    </button>
+                    {{/if}}
+                    {{else}}
+                    <h3 class="eliminatedtag">Eliminated</h3>
+                    {{/unless}}
+                  </td>
+                </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          {{/each}}
+          {{else}}
+            <p>No rounds available.</p>
+          {{/if}}
+          {{/if}}
+
+          {{#if (eq event.eventtype 'Kyorugi')}}
+            <table class="matches-table">
+              <thead>
+                <tr>
+                  <th>Round</th>
+                  <th>Match Time</th>
+                  <th>Player 1</th>
+                  <th>Player 2</th>
+                  <th>Scoresheet</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each matches}}
+                <tr>
+                  <td>{{round}}</td>
+                  <td>
+                      {{#if matchtime}}
+                      <p class="match-time" id="match-time-{{id}}">{{matchtime}}</p><button id="edittime-{{id}}" class="edittime" onclick="showmatchtimeform('{{id}}')"></button>
+                      {{else}}
+                      <form class="matchtime" action="/update-matchtime" method="post">
+                      <input type="hidden" name="id" value="{{id}}">
+                      <input type="hidden" name="eventid" value="{{eventid}}">
+                      <input type="time" class="matchtime" name="matchtime">
+                      <button type="submit">OK</button>
+                      </form>
+                      {{/if}}
+                      <form class="matchtime" id="matchtimeform-{{id}}" action="/update-matchtime" method="post" style="display:none">
+                      <input type="hidden" name="id" value="{{id}}">
+                      <input type="hidden" name="eventid" value="{{eventid}}">
+                      <input type="time" class="matchtime" name="matchtime">
+                      <button type="submit">OK</button>
+                      </form>
+                  </td>
+                  <td>{{player1_name}}:<p class="playerscore">{{player1score}}</p>
+                  </td>
+                  <td>{{player2_name}}:<p class="playerscore">{{player2score}}</p>
+                  </td>
+                  <td>
+                    {{#if (eq ../event.status 'Ongoing')}}
+                    <button href="#"
+                      onclick="openKyorugiScoresheet('{{id}}', '{{matchtime}}', '{{eventid}}', '{{player1}}', '{{player2}}', '{{player1_name}}', '{{player2_name}}', '{{player1score}}', '{{player2score}}', '{{matchtime}}', '{{winner}}', '{{loser}}', '{{matchttype}}', '{{round}}', '{{status}}')"
+                      class="open-kyorugi-scoresheet">Scoresheet -></button>
+                    {{/if}}
+                  </td>
+                </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          {{/if}}
+
+          {{#if (eq event.eventtype 'Promotion')}}
+          <table class="promotiontable">
+            <tr>
+              <th>Name</th>
+              <th>Status</th>
+              <th>Grade Sheet</th>
+            </tr>
+            {{#each promotionPlayersWithAthleteData}}
+              <tr>
+                <td>{{this.athleteData.name}}</td>
+                <td class="checks">
+                    {{#if (and this.form this.selfdef this.kicking this.freesparring this.basicmove this.behavior this.breaking)}}
+                    Done Grading
+                    {{else}}
+                    Not Graded
+                    {{/if}}
+                </td>
+                <td ><button class="view-grade-sheet" onclick="openGradeSheetModal('{{this.id}}', '{{this.form}}', '{{this.selfdef}}', '{{this.kicking}}', '{{this.freesparring}}', '{{this.basicmove}}', '{{this.behavior}}', '{{this.breaking}}')">&#8614;</button></td>
+              </tr>
+            {{/each}}
+            </table>
+          {{/if}}
+
+          <div id="gradesheetmodal" class="modal" style="dispaly:none;">
+            <div class="modal-content">
+              <span class="close" onclick="closeGradeSheetModal()">&times;</span>
+              <h2>Grade Sheet</h2>
+              <form id="gradesheetform" action="/submit-grade-sheet" method="post">
+                <input type="hidden" name="id">
+                <input type="hidden" name="eventid" value="{{event.id}}">
+                <div class="form-group">
+                  <label for="form">Form:</label>
+                  <input type="number" id="form" name="form" step="0.1" min="0" max="10" required>
+                </div>
+                <div class="form-group">
+                  <label for="selfdef">Self Defense:</label>
+                  <input type="number" id="selfdef" name="selfdef" step="0.1" min="0" max="10" required>
+                </div>
+                <div class="form-group">
+                  <label for="kicking">Kicking:</label>
+                  <input type="number" id="kicking" name="kicking" step="0.1" min="0" max="10" required>
+                </div>
+                <div class="form-group">
+                  <label for="freesparring">Free Sparring:</label>
+                  <input type="number" id="freesparring" name="freesparring" step="0.1" min="0" max="10" required>
+                </div>
+                <div class="form-group">
+                  <label for="basicmove">Basic Movement:</label>
+                  <input type="number" id="basicmove" name="basicmove" step="0.1" min="0" max="10" required>
+                </div>
+                <div class="form-group">
+                  <label for="behavior">Behavior:</label>
+                  <input type="number" id="behavior" name="behavior" step="0.1" min="0" max="10" required>
+                </div>
+                <div class="form-group">
+                  <label for="breaking">Breaking:</label>
+                  <input type="number" id="breaking" name="breaking" step="0.1" min="0" max="10" required>
+                </div>
+                {{#if (eq event.status 'Ongoing')}}
+                <button type="submit" class="submit-grade-sheet">Submit</button>
+                {{/if}}
+              </form>
+            </div>
+          </div>
+
+          
+        </div>
+      </div>
+          <script>
+            function openGradeSheetModal(id, form, selfdefense, kicking, freesparring, basicmovement, behavior, breaking) {
+              const modal = document.getElementById('gradesheetmodal');
+              modal.style.display = 'block';
+              modal.querySelector('input[name="id"]').value = id;
+              modal.querySelector('input[name="form"]').value = form;
+              modal.querySelector('input[name="selfdef"]').value = selfdefense;
+              modal.querySelector('input[name="kicking"]').value = kicking;
+              modal.querySelector('input[name="freesparring"]').value = freesparring;
+              modal.querySelector('input[name="basicmove"]').value = basicmovement;
+              modal.querySelector('input[name="behavior"]').value = behavior;
+              modal.querySelector('input[name="breaking"]').value = breaking;
+            }
+
+            function closeGradeSheetModal() {
+              document.getElementById('gradesheetmodal').style.display = 'none';
+            }
+          </script>
+      <div class="eventrightside">
+        {{#unless (eq event.status 'Cancelled')}}
+        <div class="eventregistercodediv">
+          <div class="buttondiv">
+            {{#unless champion}}
+              {{#if (orray user.athleteverified clubMembers)}}
+                {{#if (orray (3ands (eq currentUserAthlete.agedivision event.agedivision) (eq currentUserAthlete.gender event.gender) (eq currentUserAthlete.beltlevel event.beltlevel)) clubMembers)}}
+                  {{#unless (or currentregistrant (me registrationcount event.registrationcap))}}
+                    {{#if (eq event.status 'Active')}}
+                      {{#isBefore (now) event.backoutdl}}
+                      <a href="/events-registration/{{event.id}}" class="register-button">Register</a>
+                      {{else}}
+                      <h3>Registration Closed</h3>
+                      {{/isBefore}}
+                        {{else if (eq event.status 'Cancelled')}}
+                          <h3>This event has been<br> CANCELLED</h3>
+                        {{else if (eq event.status 'Concluded')}}
+                          <h3>This event has been<br> COMPLETED</h3>
+                        {{else}}
+                          <h3>Registration Closed</h3>
+                        {{/if}}
+                        {{else if currentregistrant.registered}}
+                          <p>Your check-in code is:</p>
+                          <h1 class="code">{{currentregistrant.id}}</h1>
+                        {{else if currentregistrant}}
+                          <p>Your check-in code is:</p>
+                          <h1 class="pending">pending</h1>
+                          {{#isBefore (now) event.backoutdl}}
+                          <form action="/withdraw-from-event" method="post" onsubmit="return confirm('Are you sure you want to withdraw from this event?');">
+                            <input type="hidden" name="eventid" value="{{event.id}}">
+                            <input type="hidden" name="userid" value="{{user.id}}">
+                            <button class="withdraw" type="submit">Withdraw Registration</button>
+                          </form>
+                          {{/isBefore}}
+                        {{else}}
+                          <h1 class="pending">Registration Limit Reached</h1>
+                  {{/unless}}
+                {{else}}
+                  <p>You don't fit this category</p>
+                {{/if}}
+              {{else}}
+              <a class="grayed-register-button">Not Registered</a>
+              {{/if}}
+            {{/unless}}
+            {{#if (eq event.status 'Concluded')}}
+              <h1 class="pending">This Competition has</h1>
+              <h1 class="pending"> Concluded</h1>
+              {{else if (eq event.status 'Ongoing')}}
+              <h1 class="pending">This Competition is</h1>
+              <h1 class="pending"> Ongoing</h1>
+            {{/if}}
+          </div>
+        </div>
+        {{/unless}}
+      </div>
+
+      <div class="poomsae-score-sheet">
+        <span class="close" onclick="closePoomsaeScoresheet()">&times;</span>
+        <h2 class="title">Judge's Score Sheet</h2>
+        <h3 class="playername"></h3>
+        <div class="score-table">
+          <form action="/submit-poomsae-scores" method="post">
+            <input type="hidden" name="id" value="">
+            <input type="hidden" name="eventid" value="{{event.id}}">
+            <table>
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Sub-Category</th>
+                  <th>Score Allocation</th>
+                  <th>Deductions</th>
+                  <th>Final Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td rowspan="3"><strong>Technical (4.0)</strong></td>
+                  <td>Accuracy in basic Movement</td>
+                  <td rowspan="3">4.0 (deduct -0.1, -0.3)</td>
+                  <td><input type="number" class="deduction-input" name="basicmovement" step="0.1" min="0" max="4"
+                      data-max="4"></td>
+                  <td class="final-score" data-base="4">4.0</td>
+                </tr>
+                <tr>
+                  <td>Accuracy in individual Movement of the Poomsae</td>
+                  <td><input type="number" class="deduction-input" name="indivmovement" step="0.1" min="0" max="4"
+                      data-max="4" value="0"></td>
+                  <td class="final-score" data-base="4">4.0</td>
+                </tr>
+                <tr>
+                  <td>Balance</td>
+                  <td><input type="number" class="deduction-input" name="balance" step="0.1" min="0" max="4"
+                      data-max="4" value="0"></td>
+                  <td class="final-score" data-base="4">4.0</td>
+                </tr>
+                <tr>
+                  <td rowspan="3"><strong>Performance (6.0)</strong></td>
+                  <td>Power & Speed</td>
+                  <td>2.0</td>
+                  <td><input type="number" class="deduction-input" name="powerspeed" step="0.1" min="0" max="2"
+                      data-max="2" value="0"></td>
+                  <td class="final-score" data-base="2">2.0</td>
+                </tr>
+                <tr>
+                  <td>Coordination of rhythm & Tempo and Softness & Power</td>
+                  <td>2.0</td>
+                  <td><input type="number" class="deduction-input" name="coord" step="0.1" min="0" max="2" data-max="2"
+                      value="0"></td>
+                  <td class="final-score" data-base="2">2.0</td>
+                </tr>
+                <tr>
+                  <td>Expression of Energy</td>
+                  <td>2.0</td>
+                  <td><input type="number" class="deduction-input" name="energy" step="0.1" min="0" max="2" data-max="2"
+                      value="0"></td>
+                  <td class="final-score" data-base="2">2.0</td>
+                </tr>
+
+              </tbody>
+            </table>
+            <div class="total-score">
+              <strong>Total Score (10.0):</strong> <span id="total-score">10.0</span>
+              <button class="submitscores" type="submit">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="kyorugi-scoresheet">
+        <span class="close" onclick="closeKyorugiScoresheet()">&times;</span>
+        <h1>Kyorugi Scoresheet</h1>
+        <div class="match-info">
+          <p class="playermatchup"><strong>Match:</strong></p>
+          <p class="matchtime"><strong>Time:</strong></p>
+        </div>
+        <div class="scores">
+          <h2>Scores</h2>
+          <form action="/submit-kyorugi-scores" method="POST">
+            <input type="hidden" name="matchid">
+            <input type="hidden" name="eventid" value="{{match.eventid}}">
+            <input type="hidden" name="player1">
+            <input type="hidden" name="player2">
+            <table>
+              <thead>
+                <tr>
+                  <th>Round{{match.round}}</th>
+                  <th class="player1_name"></th>
+                  <th class="player2_name"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td><input type="number" name="player1_round1" required></td>
+                  <td><input type="number" name="player2_round1" required></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td><input type="number" name="player1_round2"></td>
+                  <td><input type="number" name="player2_round2"></td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td><input type="number" name="player1_round3"></td>
+                  <td><input type="number" name="player2_round3"></td>
+                </tr>
+                <tr>
+                  <td>Total</td>
+                  <td><input type="number" name="player1_total" readonly></td>
+                  <td><input type="number" name="player2_total" readonly></td>
+                </tr>
+              </tbody>
+            </table>
+            <button type="submit">Submit Scores</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="announcements" style="display:none;">
+        <h2>Announcements</h2>
+        {{#if user.ptaverified}}
+        <div class="makeannouncement">
+          <button class="newannounce" onclick="openannounceModal()">+ Announce</button>
+        </div>
+        {{/if}}
+        {{#reverseEach eventannouncements}}
+        <div class="oneannouncement">
+          <h2>{{title}}</h2>
+          <p>{{subject}}</p>
+          <p>{{body}}</p>
+        </div>
+        {{/reverseEach}}
+      </div>
+
+      <div id="announceModal" class="modal" style="display:none;">
+        <div class="modal-content">
+          <span class="close" onclick="closeannounceModal()">&times;</span>
+          <form action="/create-event-announcement" method="post" class="announceform">
+            <input type="hidden" name="originalposter" value="{{user.username}}">
+            <input type="hidden" name="profilepic" value="{{user.profilepic}}">
+            <input type="hidden" name="eventid" value="{{event.id}}">
+
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+
+            <label for="subject">Subject:</label>
+            <input type="text" id="subject" name="subject" required>
+
+            <label for="body">Body:</label>
+            <textarea id="body" name="body" rows="4" required></textarea>
+
+            <button type="submit" class="submit-announce">Post Announcement</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="participants-container">
+    <div class="participants-title">Participants</div>
+    <table class="participants-table">
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Club</th>
+          <th>Height</th>
+          <th>Weight</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each participants}}
+        <tr>
+          <td>{{this.playername}}</td>
+          <td>{{this.club}}f</td>
+          <td>{{this.height}}</td>
+          <td>{{this.weight}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="registrations-container">
+    <div class="registrations-title">Pending Registrations</div>
+    {{#if pendingregs}}
+    <table class="registrations-table">
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Club</th>
+          <th>Height</th>
+          <th>Weight</th>
+          <th>Registered?</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each pendingregs}}
+        <tr>
+          <td>{{this.playername}}</td>
+          <td>{{this.club}}</td>
+          <td>{{this.height}}</td>
+          <td>{{this.weight}}</td>
+          <td>{{this.registered}}</td>
+          <td><a href="/events-review-registration/{{this.id}}">review</a></td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{else}}
+    <h1>No pending registrations</h1>
+    {{/if}}
+
+    <div class="registrations-title">Accepted Registrations</div>
+    <table class="registrations-table">
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Club</th>
+          <th>Height</th>
+          <th>Weight</th>
+          <th>Registered?</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each participants}}
+        <tr>
+          <td>{{this.playername}}</td>
+          <td>{{this.club}}</td>
+          <td>{{this.height}}</td>
+          <td>{{this.weight}}</td>
+          <td>{{this.registered}}</td>
+          <td><a href="/events-review-registration/{{this.id}}">review</a></td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="results-container" style="display: none;">
+    <h2 class="resultstitle">Results</h2><br>
+    {{#if (eq event.eventtype 'Poomsae')}}
+      {{#if poomsaenontop4}}
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Player</th>
+              {{!-- <th>Techniscal</th>
+              <th>Performance</th> --}}
+            </tr>
+          </thead>
+          <tbody>
+            {{#each poomsaetop4}}
+            <tr>
+              <td>{{ranking}}</td>
+              <td><button class="resultsviewathlete" onclick="window.location.href='/athletes-profile/{{athleteid}}'">{{name}}</button></td>
+              {{!-- <td>{{technicalscore}}</td>
+              <td>{{performancescore}}</td> --}}
+              
+            </tr>
+            {{/each}}
+            {{#each poomsaenontop4}}
+            <tr>
+              <td>P</td>
+              <td><button class="resultsviewathlete" onclick="window.location.href='/athletes-profile/{{athleteid}}'">{{name}}</button></td>
+              {{!-- <td>{{technicalscore}}</td>
+              <td>{{performancescore}}</td> --}}
+            
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      {{else}}
+        <p class="noresultsavailable">No results available.</p>
+      {{/if}}
+    {{else if (eq event.eventtype 'Kyorugi')}}
+     <table class="results-table">
+         <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Player</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td><button class="resultsviewathlete" onclick="window.location.href='/athletes-profile/{{champion.id}}'">{{champion.name}}</button></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td><button class="resultsviewathlete" onclick="window.location.href='/athletes-profile/{{secondPlace.id}}'">{{secondPlace.name}}</button></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td><button class="resultsviewathlete" onclick="window.location.href='/athletes-profile/{{thirdPlace1.id}}'">{{thirdPlace1.name}}</button></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td><button class="resultsviewathlete" onclick="window.location.href='/athletes-profile/{{thirdPlace2.id}}'">{{thirdPlace2.name}}</button></td>
+          </tr>
+          {{#each otherPlayersWithDetails}}
+            <tr>
+            <td>P</td>
+            <td><button class="resultsviewathlete" onclick="window.location.href='/athletes-profile/{{loserDetails.id}}'">{{loserDetails.name}}</button></td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{else if (eq event.eventtype 'Promotion')}}
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Player</th>
+            <th>Form</th>
+            <th>Self Defense</th>
+            <th>Kicking</th>
+            <th>Free Sparring</th>
+            <th>Basic Movement</th>
+            <th>Behavior</th>
+            <th>Breaking</th>
+            <th>Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each promotionPlayersWithAthleteData}}
+          <tr>
+            <td><button class="resultsviewathlete" onclick="window.location.href='/athletes-profile/{{this.athleteData.id}}'">{{this.athleteData.name}}</button></td>
+            <td>{{this.form}}</td>
+            <td>{{this.selfdef}}</td>
+            <td>{{this.kicking}}</td>
+            <td>{{this.freesparring}}</td>
+            <td>{{this.basicmove}}</td>
+            <td>{{this.behavior}}</td>
+            <td>{{this.breaking}}</td>
+            <td>{{this.result}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{/if}}
+  </div>
+
+  <script>
+    function openPoomsaeScoresheet(id, name, totalscore, technicalscore, performancescore) {
+      const poomsaeSheet = document.querySelector('.poomsae-score-sheet');
+      poomsaeSheet.style.display = 'block';
+      poomsaeSheet.querySelector('input[name="id"]').value = id;
+      poomsaeSheet.querySelector('.playername').textContent = 'Player name: ' + name;
+      document.getElementById('total-score').innerText = totalscore;
+    }
+
+    function openKyorugiScoresheet(id, matchtime, eventid, player1, player2, player1_name, player2_name, player1score, player2score, matchtime, winner, loser, matchtype, round, status) {
+      const kyorugiSheet = document.querySelector('.kyorugi-scoresheet');
+      kyorugiSheet.style.display = 'block';
+      kyorugiSheet.querySelector('input[name="matchid"]').value = id;
+      kyorugiSheet.querySelector('input[name="eventid"]').value = eventid;
+      kyorugiSheet.querySelector('input[name="player1_round1"]').value = player1score || '';
+      kyorugiSheet.querySelector('input[name="player2_round1"]').value = player2score || '';
+      kyorugiSheet.querySelector('input[name="player1"]').value = player1;
+      kyorugiSheet.querySelector('input[name="player2"]').value = player2;
+      kyorugiSheet.querySelector('.player1_name').textContent = player1_name;
+      kyorugiSheet.querySelector('.player2_name').textContent = player2_name;
+      kyorugiSheet.querySelector('.playermatchup').textContent = `${player1_name} vs ${player2_name}`;
+      kyorugiSheet.querySelector('.matchtime').textContent = `Match Time: ${matchtime}`;
+
+    }
+
+    function closeScoresheet(selector) {
+      document.querySelector(selector).style.display = 'none';
+    }
+
+    function closeKyorugiScoresheet() {
+      closeScoresheet('.kyorugi-scoresheet');
+    }
+
+    function closePoomsaeScoresheet() {
+      closeScoresheet('.poomsae-score-sheet');
+    }
+
+    document.querySelectorAll('.deduction-input').forEach(input => {
+      input.addEventListener('input', calculateScores);
+    });
+
+    function calculateScores() {
+      let totalScore = 10.0; // Starting score for Poomsae
+
+      document.querySelectorAll('.deduction-input').forEach(input => {
+        const maxScore = parseFloat(input.dataset.max);
+        const deduction = parseFloat(input.value) || 0;
+        const finalScoreElement = input.parentElement.nextElementSibling;
+        const finalScore = Math.max(0, maxScore - deduction); // Avoid negative scores
+
+        // Update the final score display for each row
+        finalScoreElement.textContent = finalScore.toFixed(1);
+
+        // Deduct from the total score
+        totalScore -= deduction;
+      });
+
+      // Update the total score in the UI
+      document.getElementById('total-score').textContent = totalScore.toFixed(1);
+    }
+
+    function toggleDropdown() {
+      document.getElementById("dropdown").classList.toggle("show");
+    }
+
+    window.onclick = function (event) {
+      if (!event.target.matches('.profile-pic img')) {
+        document.querySelectorAll(".dropdown-content").forEach(dropdown => {
+          if (dropdown.classList.contains('show')) {
+            dropdown.classList.remove('show');
+          }
+        });
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const tabs = {
+        participantsTab: document.getElementById('participants-tab'),
+        detailsTab: document.getElementById('details-tab'),
+        registrationsTab: document.getElementById('registrations-tab'),
+        announcementsTab: document.getElementById('announcements-tab'),
+        resultsTab: document.getElementById('results-tab')
+      };
+
+      const sections = {
+        eventleftside: document.querySelector('.eventleftside'),
+        eventrightside: document.querySelector('.eventrightside'),
+        eventmiddleside: document.querySelector('.eventmiddleside'),
+        participantsContainer: document.querySelector('.participants-container'),
+        registrationsContainer: document.querySelector('.registrations-container'),
+        announcements: document.querySelector('.announcements'),
+        resultsContainer: document.querySelector('.results-container')
+      };
+
+      function hideAllSections() {
+        Object.values(sections).forEach(section => section.style.display = 'none');
+      }
+
+      function showSection(section) {
+        hideAllSections();
+        section.style.display = 'block';
+      }
+
+      tabs.registrationsTab.addEventListener('click', () => showSection(sections.registrationsContainer));
+      tabs.announcementsTab.addEventListener('click', () => showSection(sections.announcements));
+      tabs.participantsTab.addEventListener('click', () => showSection(sections.participantsContainer));
+      tabs.resultsTab.addEventListener('click', () => showSection(sections.resultsContainer));
+      tabs.detailsTab.addEventListener('click', () => {
+        sections.eventleftside.style.display = 'block';
+        sections.eventrightside.style.display = 'block';
+        sections.eventmiddleside.style.display = 'block';
+        sections.participantsContainer.style.display = 'none';
+        sections.registrationsContainer.style.display = 'none';
+        sections.announcements.style.display = 'none';
+        sections.resultsContainer.style.display = 'none';
+      });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+      function calculateScores() {
+        let totalScore = 10.0; // Starting score for Poomsae
+
+        document.querySelectorAll('.deduction-input').forEach(input => {
+          const maxScore = parseFloat(input.dataset.max);
+          const deduction = parseFloat(input.value) || 0;
+          const finalScoreElement = input.parentElement.nextElementSibling;
+          const finalScore = Math.max(0, maxScore - deduction); // Avoid negative scores
+
+          // Update the final score display for each row
+          finalScoreElement.textContent = finalScore.toFixed(1);
+
+          // Deduct from the total score
+          totalScore -= deduction;
+        });
+
+        // Update the total score in the UI
+        document.getElementById('total-score').textContent = totalScore.toFixed(1);
+      }
+
+      document.addEventListener('input', function () {
+        let player1_wins = 0;
+        let player2_wins = 0;
+        const player1_rounds = document.querySelectorAll('input[name^="player1_round"]');
+        const player2_rounds = document.querySelectorAll('input[name^="player2_round"]');
+        const player1_ot = document.querySelector('input[name="player1_ot"]');
+        const player2_ot = document.querySelector('input[name="player2_ot"]');
+
+        player1_rounds.forEach((input, index) => {
+          const player1_score = parseInt(input.value) || 0;
+          const player2_score = parseInt(player2_rounds[index].value) || 0;
+          if (player1_score > player2_score) {
+        player1_wins += 1;
+          } else if (player2_score > player1_score) {
+        player2_wins += 1;
+          }
+        });
+
+        document.querySelector('input[name="player1_total"]').value = player1_wins;
+        document.querySelector('input[name="player2_total"]').value = player2_wins;
+      });
+    });
+
+    function openModal() {
+      document.getElementById('editmodal').style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('editmodal').style.display = 'none';
+    }
+
+    function openannounceModal() {
+      document.getElementById('announceModal').style.display = 'block';
+    }
+
+    function closeannounceModal() {
+      document.getElementById('announceModal').style.display = 'none';
+    }
+    
+    function opencanceleventmodal() {
+      document.getElementById('canceleventmodal').style.display = 'block';
+    }
+
+    function closecanceleventmodal() {
+      document.getElementById('canceleventmodal').style.display = 'none';
+    }
+
+    function showmatchtimeform(id) {
+      document.getElementById(`matchtimeform-${id}`).style.display = 'block';
+      document.getElementById(`match-time-${id}`).style.display = 'none';
+      document.getElementById(`edittime-${id}`).style.display = 'none';
+    }
+
+    window.onclick = function (event) {
+      if (event.target == document.getElementById('announceModal')) {
+        closeannounceModal();
+      }
+    }
+
+  </script>
+</body>
+
+</html>

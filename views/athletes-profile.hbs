@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Athlete Details</title>
+  <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
+  <link rel="stylesheet" href="/stylesheets/navbar.css">
+  <link rel="stylesheet" href="/stylesheets/athletes-profile.css">
+</head>
+<body>
+  <div class="header">
+    <div class="navbar">
+      <a href="/home"><img src="/images/logo.png" class="logo" alt="Logo"></a>
+      <ul class="tabs">
+        <li class="home"><a href="/home">Home</a></li>
+        <li class="athletes"><a href="/athletes">Athletes</a></li>
+        <li class="clubs"><a href="/clubs">Clubs</a></li>
+        <li class="events"><a href="/events">Events</a></li>
+        <li class="membership"><a href="/membership">Membership</a></li>
+        <li class="forum"><a href="/forum">Forum</a></li>
+        <li class="notifications">
+        <a href="/notifications">Notifications
+          {{#if notifications}}
+          <span class="badge">{{notifications.length}}</span>
+          {{/if}}
+        </a>
+      </li>
+        <li class="analytics"><a href="analytics">Reports</a></li>
+        <li class="profile-pic">
+          {{#if user.profilepic}}
+            <a href="#" onclick="toggleDropdown()"><img src="{{user.profilepic}}" alt="Profile Picture" class="profile-picture"></a>
+          {{else}}
+            <a href="#" onclick="toggleDropdown()" class="profile-picture"><img src="/images/none.jpg" alt="Profile Picture" class="profile-picture"></a>
+          {{/if}}
+          <div id="dropdown" class="dropdown-content">
+            <a href="/profile">Profile</a>
+            <a href="/settings">Settings</a>
+            
+            <a href="/">Logout</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <main>
+    <div class="athlete-header">
+      <img src="{{athlete.portrait}}" alt="Athlete Picture" class="athlete-pic">
+      <div class="athlete-info">
+        <h1>{{athlete.name}}</h1>
+        <p class="team">{{athlete.beltlevel}}</p>
+        <p>{{athlete.agedivision}}</p>
+        <p>{{athlete.clubregion}}</p>
+        <div class="invite-button">
+          {{!-- <a action="invite-player">+ Invite this player to your club</a> --}}
+        </div>
+      </div>
+      <div class="athlete-stats">
+        <div class="stat">
+          <span class="label">Games Played</span>
+          <span>{{athlete.gp}}</span>
+        </div>
+        <div class="stat">
+          <span class="label">Kyorugi Golds</span>
+          <span class="kyorugigolds"></span>
+        </div>
+        <div class="stat">
+          <span class="label">Poomsae Golds</span>
+          <span class="poomgolds"></span>
+        </div>
+      </div>
+    </div>
+    <div class="athlete-details">
+      <div class="previous-game">
+        <h2>Competition History</h2>
+        <table class="career-stats">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Event</th>
+              <th>Type</th>
+              <th>Location</th>
+              <th>Division</th>
+              <th>Ranking</th>
+              <th>Final Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each matchDataWithEventDetails}}
+            <tr>
+              <td>{{formatCreatedAt created_at}}</td>
+              <td>{{eventName}}</td>
+              <td>{{eventType}}</td>
+              <td>{{eventLocation}}</td>
+              <td>{{ageDivision}}</td>
+              <td>{{#unless (eq ranking 0)}}{{ordinal ranking}}{{else}}P{{/unless}}</td>
+              <td>{{poomsaefinalscore}}</td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (document.querySelectorAll('.notification').length > 0) {
+        let nonotifs = document.querySelectorAll('.no-notifs');
+        nonotifs.forEach(function (element) {
+          element.style.display = 'none';
+        });
+      }
+    });
+
+    function toggleDropdown() {
+      document.getElementById("dropdown").classList.toggle("show");
+    }
+
+    window.onclick = function (event) {
+      if (!event.target.matches('.profile-pic img')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        for (var i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const rows = document.querySelectorAll('.career-stats tbody tr');
+      let count = 0;
+      rows.forEach(row => {
+      const rankingCell = row.querySelector('td:nth-child(6)');
+      const typeCell = row.querySelector('td:nth-child(3)');
+      if (rankingCell && rankingCell.textContent.trim() === '1st' && typeCell && typeCell.textContent.trim() === 'Kyorugi') {
+        count++;
+      }
+      });
+      document.querySelector('.kyorugigolds').textContent = count;
+      console.log(`Number of rows where ranking is '1' and type is 'Kyorugi': ${count}`);
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const rows = document.querySelectorAll('.career-stats tbody tr');
+      let count = 0;
+      rows.forEach(row => {
+      const rankingCell = row.querySelector('td:nth-child(6)');
+      const typeCell = row.querySelector('td:nth-child(3)');
+      if (rankingCell && rankingCell.textContent.trim() === '1st' && typeCell && typeCell.textContent.trim() === 'Poomsae') {
+        count++;
+      }
+      });
+      document.querySelector('.poomgolds').textContent = count;
+      console.log(`Number of rows where ranking is '1' and type is 'Poomsae': ${count}`);
+    });
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>PTA | Home</title>
+  <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
+  <link rel="stylesheet" type="text/css" href="../stylesheets/home.css" />
+  <link rel="stylesheet" type="text/css" href="../stylesheets/navbar.css" />
+</head>
+
+<body class="container">
+  <div class="header">
+    <div class="navbar">
+      <a href="home"><img src="/images/logo.png" class="logo" alt="Logo"></a>
+      <ul class="tabs">
+        <li class="home"><a href="home">Home</a></li>
+        <li class="athletes"><a href="athletes">Athletes</a></li>
+        <li class="clubs"><a href="clubs">Clubs</a></li>
+        <li class="events"><a href="events">Events</a></li>
+        <li class="membership"><a href="membership">Membership</a></li>
+        <li class="forum"><a href="forum">Forum</a></li>
+        <li class="notifications">
+          <a href="notifications">Notifications
+            {{#if notifications}}
+            <span class="badge">{{notifications.length}}</span>
+            {{/if}}
+          </a>
+        </li>
+        <li class="analytics"><a href="analytics">Reports</a></li>
+        <li class="profile-pic">
+          {{#if user.profilepic}}
+          <a href="#" onclick="toggleDropdown()"><img src="{{user.profilepic}}" alt="Profile Picture"
+              class="profile-picture"></a>
+          {{else}}
+          <a href="#" onclick="toggleDropdown()" class="profile-picture"><img src="/images/none.jpg"
+              alt="Profile Picture" class="profile-picture"></a>
+          {{/if}}
+          <div id="dropdown" class="dropdown-content">
+            <a href="profile">Profile</a>
+            <a href="settings">Settings</a>
+           
+            <a href="/">Logout</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="home-container">
+    <div class="main-panel">
+      <!-- Recognition Section -->
+      <div class="recognition-section">
+        <div class="recognition-banner">
+          <h1>Recognition: Top Performers of the Year</h1>
+          <p>Our athletes are recognized for their dedication, skill, and achievements.</p>
+        </div>
+
+        <div class="recognition-cards">
+          {{#each athletes}}
+          <div class="card">
+            <img src="{{portrait}}" alt="{{name}} Portrait" class="performer-portrait">
+            <h3>{{name}}</h3>
+            <p>Belt Level: {{this.beltlevel}}</p>
+            <p>Ranking Points: {{this.rankingpoints}}</p>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+      <!-- Poster and Onboarding Container Wrapper -->
+      <div class="poster-onboarding-wrapper">
+        <div class="poster">
+          <img src="/images/homepage/ptabg.png" alt="Poster" class="poster-image">
+        </div>
+
+        <div id="onboarding-container">
+          <!-- First Screen: Welcome Message -->
+          <div class="onboarding-screen" id="welcome-screen">
+            <h1>Welcome to Taekwondo World!</h1>
+            <p class="user-text">You’re now part of our incredible and dynamic community. Let's get started!</p>
+            <button class="next-btn" onclick="nextScreen('user-type-screen')">Next</button>
+          </div>
+
+          <!-- Second Screen: User Type Selection -->
+          <div class="onboarding-screen" id="user-type-screen" style="display: none;">
+            <h1>Choose Your Role</h1>
+            <p class="user-text">Select your user type: </p>
+            <button class="type-btn" onclick="selectUserType('athlete')">Athlete</button>
+            <button class="type-btn" onclick="selectUserType('instructor')">Instructor</button>
+            <button class="type-btn" onclick="selectUserType('admin')">Admin</button>
+          </div>
+
+          <!-- Third Screen: Options Based on User Type -->
+          <div class="onboarding-screen" id="athlete-options" style="display: none;">
+            <h1>Welcome, Athlete!</h1>
+            <p class="user-text">Here are some options to get started:</p>
+            <ul>
+              <li><a href="/clubs">Join a Club</a></li>
+              <li><a href="/membership-ncc">Register for NCC</a></li>
+              <li><a href="/events">View Events</a></li>
+            </ul>
+            <button class="finish-btn" onclick="resetOnboarding()">Finish</button>
+          </div>
+
+          <div class="onboarding-screen" id="instructor-options" style="display: none;">
+            <h1>Welcome, Instructor!</h1>
+            <p>Here are some options to get started:</p>
+            <ul>
+              <li><a href="/membership-instructor">Apply for Instructor License</a></li>
+              <li><a href="/membership-club">Register a Club</a></li>
+            </ul>
+            <button class="finish-btn" onclick="resetOnboarding()">Finish</button>
+          </div>
+
+          <div class="onboarding-screen" id="admin-options" style="display: none;">
+            <h1>Welcome, Admin!</h1>
+            <p class="user-text">Access the home page to manage everything.</p>
+            <button class="finish-btn" onclick="resetOnboarding()">Finish</button>
+          </div>
+        </div>
+      </div>
+
+
+      {{#if userEvents}}
+      <h3 class="usereventstitle">Events you're currently registered in</h3><br>
+      <div class="userevents">
+        {{#each userEvents}}
+        <div class="registered-event-card">
+          <img src="{{eventpicture}}" alt="Event {{id}}" class="event-image">
+          <h3>{{name}}</h3>
+          <p>{{description}}</p>
+          <p>{{datetime}}</p><br>
+          <a href="/events-details/{{id}}">Go to Event</a>
+        </div>
+        {{/each}}
+      </div>
+      {{/if}}
+      
+      {{#if userclub}}
+        <h3 class="usereventstitle">Your Club</h3>
+        <div class="registered-event-card">
+          <img src="{{clubpic}}" alt="{{userclub.clubname}} Logo" class="club-logo">
+          <h3>{{userclub.clubname}}</h3>
+          <p>{{userclub.clubdescription}}</p>
+          <a href="/clubs-details/{{userclub.id}}">View Club</a>
+        </div><br>
+      {{/if}}
+
+      {{#if registeredClubs}}
+      <h3 class="usereventstitle">Registered Clubs</h3>
+        {{#each registeredClubs}}
+        <div class="registered-event-card">
+          <img src="{{clubpic}}" alt="{{this.clubname}} Logo" class="club-logo">
+          <h3>{{this.clubname}}</h3>
+          <p>{{this.clubdescription}}</p>
+          <a href="/clubs-details/{{this.id}}">View Club</a>
+        </div>
+        {{/each}}
+      {{/if}}
+
+
+      <div class="upcoming-events">
+        <h2>Upcoming Events</h2>
+        <div id="events" class="horizontal-container">
+          {{#each events}}
+          <div class="event">
+            <img src="{{eventpicture}}" alt="Event {{id}}">
+            <h3>{{name}} - {{datetime}}</h3>
+            <p>{{description}}</p>
+            <a href="events-details/{{this.id}}">Read More</a>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+  
+
+  <footer>
+    <div class="footer-content">
+      <div class="pta-logo">
+        <img src="/images/logo.png" alt="PTA Logo">
+      </div>
+      <div class="contact-info">
+        <p>Philippine Taekwondo Central Headquarters</p>
+        <p>Rizal Memorial Coliseum, Manila, Philippines</p>
+        <p>0977 384 5879</p>
+        <p>pthtkd@gmail.com</p>
+      </div>
+      <div class="social-media">
+        <p>Follow us</p>
+        <div class="icons">
+          <a href="https://www.facebook.com"><img src="/images/homepage/fb.png" alt="Facebook"></a>
+          <a href="https://www.instagram.com"><img src="/images/homepage/ig.png" alt="Instagram"></a>
+          <a href="https://www.twitch.com"><img src="/images/homepage/twitch.webp" alt="Twitch"></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+  <script>
+    function toggleDropdown() {
+      document.getElementById("dropdown").classList.toggle("show");
+    }
+
+    window.onclick = function (event) {
+      if (!event.target.matches('.profile-pic img')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        for (var i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+    // Function to navigate between screens
+    function nextScreen(screenId) {
+      document.querySelectorAll('.onboarding-screen').forEach(screen => {
+        screen.style.display = 'none';
+      });
+      document.getElementById(screenId).style.display = 'block';
+    }
+
+    // Function to select user type and show relevant options
+    function selectUserType(userType) {
+      nextScreen(userType + '-options');
+    }
+
+    // Function to reset onboarding to the first screen
+    function resetOnboarding() {
+      nextScreen('welcome-screen'); // Show the welcome message screen
+    }
+
+  </script>
+</body>
+
+</html>
