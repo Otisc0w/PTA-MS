@@ -6139,13 +6139,33 @@ app.get("/membership-ncc", async function (req, res) {
       headInstructor = fetchedHeadInstructor;
     }
 
+    const { data: usersncc, error: usersnccError } = await supabase
+      .from("ncc_registrations")
+      .select("*")
+      .eq("submittedby", req.session.user.id)
+      .single();
+
+    if (usersnccError && usersnccError.code !== 'PGRST116') {
+      return res.status(400).json({ error: usersnccError.message });
+    }
+
+    const { data: usersathlete, error: usersathleteError } = await supabase
+      .from("athletes")
+      .select("*")
+      .eq("userid", req.session.user.id)
+      .single();
+
+    if (usersathleteError && usersathleteError.code !== 'PGRST116') {
+      return res.status(400).json({ error: usersathleteError.message });
+    }
+
     console.log("Fetched user's club:", userClub); // Log the user's club data to the console
     console.log("Fetched head instructor:", headInstructor); // Log the head instructor data to the console
 
     console.log("Fetched data:", data); // Log the data to the console
 
     // Render the athletes.hbs template with the fetched data
-    res.render("membership-ncc", { clubs: data, user: req.session.user, headInstructor });
+    res.render("membership-ncc", { clubs: data, user: req.session.user, headInstructor, usersncc, usersathlete });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

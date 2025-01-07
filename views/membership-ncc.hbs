@@ -76,24 +76,24 @@
 							<div class="form-group">
 								<label for="gender">Gender</label>
 								<select id="gender" name="gender" required>
-									<option value="female">Female</option>
-									<option value="male">Male</option>
+									<option value="female" {{#if (eq usersncc.gender "female")}}selected{{/if}}>Female</option>
+									<option value="male" {{#if (eq usersncc.gender "male")}}selected{{/if}}>Male</option>
 								</select>
 							</div>
 							<div class="form-group">
 								<label for="bday">Birthday</label>
-								<input type="date" id="bday" name="bday" required>
+								<input type="date" id="bday" name="bday" value="{{usersncc.bday}}" required>
 							</div>
 							<div class="form-group">
 								<label for="age">Age:</label>
-								<input type="number" id="age" name="age" readonly>
+								<input type="number" id="age" name="age"  readonly>
 							</div>
 						</div>
 
 						<div class="form-row">
 							<div class="form-group">
 								<label for="phonenum">Mobile Number</label>
-								<input type="tel" id="phonenum" name="phonenum" pattern="\d{4}\d{3}\d{4}"
+								<input type="tel" id="phonenum" name="phonenum" value="{{usersncc.phonenum}}" pattern="\d{4}\d{3}\d{4}"
 									placeholder="0912-345-6789" required>
 							</div>
 							<div class="form-group">
@@ -157,17 +157,17 @@
 							<div class="form-group">
 								<label for="beltlevel">Current Belt Level</label>
 								<select name="beltlevel" id="beltlevel" required>
-									<option value="White Belt">White Belt</option>
-									<option value="Low Yellow Belt">Low Yellow Belt</option>
-									<option value="High Yellow Belt">High Yellow Belt</option>
-									<option value="Low Blue Belt">Low Blue Belt</option>
-									<option value="High Blue Belt">High Blue Belt</option>
-									<option value="Low Red Belt">Low Red Belt</option>
-									<option value="High Red Belt">High Red Belt</option>
-									<option value="Low Brown Belt">Low Brown Belt</option>
-									<option value="High Brown Belt">High Brown Belt</option>
-									<option value="Junior/Poom Black Belt">Junior/Poom Black Belt</option>
-									<option value="Black/Dan Belt">Black/Dan Belt</option>
+									<option value="White Belt" {{#if (eq usersathlete.beltlevel "White Belt")}}selected{{/if}}>White Belt</option>
+									<option value="Low Yellow Belt" {{#if (eq usersathlete.beltlevel "Low Yellow Belt")}}selected{{/if}}>Low Yellow Belt</option>
+									<option value="High Yellow Belt" {{#if (eq usersathlete.beltlevel "High Yellow Belt")}}selected{{/if}}>High Yellow Belt</option>
+									<option value="Low Blue Belt" {{#if (eq usersathlete.beltlevel "Low Blue Belt")}}selected{{/if}}>Low Blue Belt</option>
+									<option value="High Blue Belt" {{#if (eq usersathlete.beltlevel "High Blue Belt")}}selected{{/if}}>High Blue Belt</option>
+									<option value="Low Red Belt" {{#if (eq usersathlete.beltlevel "Low Red Belt")}}selected{{/if}}>Low Red Belt</option>
+									<option value="High Red Belt" {{#if (eq usersathlete.beltlevel "High Red Belt")}}selected{{/if}}>High Red Belt</option>
+									<option value="Low Brown Belt" {{#if (eq usersathlete.beltlevel "Low Brown Belt")}}selected{{/if}}>Low Brown Belt</option>
+									<option value="High Brown Belt" {{#if (eq usersathlete.beltlevel "High Brown Belt")}}selected{{/if}}>High Brown Belt</option>
+									<option value="Junior/Poom Black Belt" {{#if (eq usersathlete.beltlevel "Junior/Poom Black Belt")}}selected{{/if}}>Junior/Poom Black Belt</option>
+									<option value="Black/Dan Belt" {{#if (eq usersathlete.beltlevel "Black/Dan Belt")}}selected{{/if}}>Black/Dan Belt</option>
 								</select>
 							</div>
 						</div>
