@@ -52,6 +52,7 @@
               <span class="status-shipped">Accepted and Registered. Certificate shipped to regional office.</span>
               {{else if (eq clubregistration.status 4)}}
               <span class="status-rejected">Rejected</span>
+              <p class="description">{{registration.susdescription}}</p>
               {{else if (eq clubregistration.status 5)}}
               <span class="status-unknown">Expired</span>
               {{/if}}
@@ -60,24 +61,37 @@
               <div class="status-buttons" id="status-buttons">            {{!-- VALUES NAMES AND TYPES NEED TO STAY THE SAME --}}
                 <button type="submit" name="status" value="1">Processing Application</button>
                 <button type="button" id="accepted" class="accepted">Accepted and Registered</button>
-                <button type="submit" name="status" value="4">Reject Application</button>
+                <button type="button" id="rejectbtn" class="rejectbtn">Reject Application</button>
               </div>
               <div class="confirmscreen" id="confirmscreen" style="display: none;">
                 <h3>Are you sure? This will be added to the clubs page for the public to see.</h3>
                 <button class="cancel" id="cancel">Cancel</button>
                 <button  type="submit" value="3" name="status">Confirm</button>
               </div>
+              <div class="confirmrejectscreen" id="confirmrejectscreen" style="display: none;">
+                <h3>Please state reason for rejection.</h3>
+                <select name="rejectmsg" id="rejectmsg">
+                  <option value="Incomplete Documentation">Incomplete Documentation</option>
+                  <option value="Invalid Information">Invalid Information</option>
+                  <option value="Failed Background Check">Failed Background Check</option>
+                  <option value="Other">Other</option>
+                </select>
+                <textarea name="rejectdescription" id="rejectdescription" cols="30" rows="10"></textarea>
+                <button type="button" class="cancelreject" id="cancelreject">Cancel</button>
+                <button type="submit" value="4" name="status" id="confirm">Confirm</button>
+              </div>
               <div class="backtolist">
                 <a href="/membership-status">Back to list</a>
               </div>
+              
             {{/if}}
           </div>
         </form>
-      <div class="printwindow" id="printableArea" >
-        <p><strong>ID:</strong> {{clubregistration.id}}</p>
-        <p><strong>First Name:</strong> {{clubregistration.firstname}}</p>
-        <p><strong>Last Name:</strong> {{clubregistration.lastname}}</p>
-      </div>
+        <div class="printwindow" id="printableArea" >
+          <p><strong>ID:</strong> {{clubregistration.id}}</p>
+          <p><strong>First Name:</strong> {{clubregistration.firstname}}</p>
+          <p><strong>Last Name:</strong> {{clubregistration.lastname}}</p>
+        </div>
 
         <script>
           const confirmscreen = document.getElementById("confirmscreen");
@@ -86,6 +100,13 @@
           const accepted = document.getElementById("accepted");
           const statusForm = document.getElementById("statusForm");
           const confirmButton = document.getElementById("confirm");
+          const rejectbtn = document.getElementById("rejectbtn");
+
+          rejectbtn.addEventListener("click", function (event) {
+            event.preventDefault();
+            confirmrejectscreen.style.display = "block";
+            statuses.style.display = "none";
+          });
 
           cancel.addEventListener("click", function (event) {
             event.preventDefault();

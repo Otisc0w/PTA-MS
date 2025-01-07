@@ -1561,12 +1561,12 @@ app.post("/update-instructorstatus", async (req, res) => {
     }
 
     if (status == 6) {
-      const { suspendmsg } = req.body; // Capture the suspend message from the form
+      const { suspendmsg, susdescription } = req.body; // Capture the suspend message from the form
 
       // Update the suspendmsg column
       const { error: updatesuspendmsgError } = await supabase
       .from("instructor_registrations")
-      .update({ suspendmsg: suspendmsg })
+      .update({ suspendmsg: suspendmsg, susdescription: susdescription })
       .eq("id", applicationId);
 
       if (updatesuspendmsgError) {
@@ -1587,12 +1587,12 @@ app.post("/update-instructorstatus", async (req, res) => {
 
     // Check if status is 4, indicating the need to update the rejectmsg
     if (status == 4) {
-      const { rejectmsg } = req.body; // Capture the reject message from the form
+      const { rejectmsg, rejectdescription } = req.body; // Capture the reject message from the form
 
       // Update the rejectmsg column
       const { error: updateRejectMsgError } = await supabase
       .from("instructor_registrations")
-      .update({ rejectmsg: rejectmsg })
+      .update({ rejectmsg: rejectmsg, rejectdescription: rejectdescription })
       .eq("id", applicationId);
 
       if (updateRejectMsgError) {
