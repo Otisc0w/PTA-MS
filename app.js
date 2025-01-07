@@ -1716,6 +1716,19 @@ app.post("/update-clubstatus", async (req, res) => {
       statusDesc = "Congratulations! Your club registration has been accepted and shipped to the regional office. Please check with your regional office for further details.";
       break;
       case 4:
+
+      const { rejectmsg, rejectdescription } = req.body; // Capture the reject message from the form
+
+      // Update the rejectmsg column
+      const { error: updateRejectMsgError } = await supabase
+        .from("club_registrations")
+        .update({ rejectmsg: rejectmsg, rejectdescription: rejectdescription })
+        .eq("id", applicationId);
+
+      if (updateRejectMsgError) {
+        console.error("Error updating rejectmsg:", updateRejectMsgError.message);
+        return res.status(500).send("Error updating rejectmsg");
+      }
         statusMessage = "Your club registration has been rejected.";
         statusDesc = "Sorry, your club registration has been rejected. PLease see reason(s) for rejection in your membership status.";
       default:

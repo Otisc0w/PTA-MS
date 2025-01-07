@@ -52,7 +52,8 @@
               <span class="status-shipped">Accepted and Registered. Certificate shipped to regional office.</span>
               {{else if (eq clubregistration.status 4)}}
               <span class="status-rejected">Rejected</span>
-              <p class="description">{{registration.susdescription}}</p>
+              <p>{{clubregistration.rejectmsg}}</p>
+              <p class="description">{{clubregistration.rejectdescription}}</p>
               {{else if (eq clubregistration.status 5)}}
               <span class="status-unknown">Expired</span>
               {{/if}}
@@ -83,7 +84,6 @@
               <div class="backtolist">
                 <a href="/membership-status">Back to list</a>
               </div>
-              
             {{/if}}
           </div>
         </form>
@@ -101,6 +101,14 @@
           const statusForm = document.getElementById("statusForm");
           const confirmButton = document.getElementById("confirm");
           const rejectbtn = document.getElementById("rejectbtn");
+          const cancelreject = document.getElementById("cancelreject");
+          const actionButtons = document.getElementById("status-buttons");
+
+          cancelreject.addEventListener("click", function (event) {
+            event.preventDefault();
+            confirmrejectscreen.style.display = "none";
+            actionButtons.style.display = "block";
+          });
 
           rejectbtn.addEventListener("click", function (event) {
             event.preventDefault();
@@ -122,8 +130,7 @@
             confirmButton.value = accepted.getAttribute("data-status");
           });
 
-          confirmButton.addEventListener("click", function (event) {
-            event.preventDefault();
+          confirmButton.addEventListener("click", function () {
             const status = confirmButton.value;
             const applicationId = document.querySelector('input[name="applicationId"]').value;
           });
