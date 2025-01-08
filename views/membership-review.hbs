@@ -40,108 +40,128 @@
     <section class="review-header">
       <h1>Review NCC Application</h1>
     </section>
+    <form action="">
+      <div class="review-details">
+        <table class="profile-section">
+          <tr>
+            <td><img class="athlete-picture" src="{{registration.portrait}}" alt="Profile Picture"></td>
+            <td>
+              <table class="details-section">
+                {{!-- <tr>
+                  <td><strong>ID:</strong></td>
+                  <td class="information">{{registration.id}}</td>
+                </tr> --}}
+                
+                    <tr>
+                    <td><strong>First Name:</strong></td>
+                    <td class="information">
+                      <input type="text" value="{{registration.firstname}}" readonly>
+                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td><strong>Middle Initial:</strong></td>
+                    <td class="information">
+                      <input type="text" value="{{registration.middlename}}" readonly>
+                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td><strong>Last Name:</strong></td>
+                    <td class="information">
+                      <input type="text" value="{{registration.lastname}}" readonly>
+                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td><strong>Gender:</strong></td>
+                    <td class="information">
+                      <input type="text" value="{{registration.gender}}" readonly>
+                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td><strong>Birthday:</strong></td>
+                    <td class="information">
+                      <input type="text" value="{{formatDate registration.birthday "MMMM D, YYYY"}}" readonly>
+                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td><strong>Phone Number:</strong></td>
+                    <td class="information">
+                      <input type="text" value="{{registration.phonenum}}" readonly>
+                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td><strong>Email:</strong></td>
+                    <td class="information">
+                      <input type="text" value="{{registration.email}}" readonly>
+                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    </td>
+                    </tr>
+                  <tr>
+                    <td><strong>Birth Certificate:</strong></td>
+                    <td class="information">
+                    <input type="text" value="{{registration.birthcert}}" readonly>
+                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    <a href="{{registration.birthcert}}" target="_blank">View Birth Certificate</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Payment Proof:</strong></td>
+                    <td class="information">
+                      <input type="text" value="{{registration.paymentproof}}" readonly>
+                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    <a href="{{registration.paymentproof}}" target="_blank">View Payment Proof</a>
+                    </td>
+                  </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
 
-    <div class="review-details">
-      <table class="profile-section">
-        <tr>
-          <td><img class="athlete-picture" src="{{registration.portrait}}" alt="Profile Picture"></td>
-          <td>
-            <table class="details-section">
-              {{!-- <tr>
-                <td><strong>ID:</strong></td>
-                <td class="information">{{registration.id}}</td>
-              </tr> --}}
-              <tr>
-                <td><strong>First Name:</strong></td>
-                <td class="information">{{registration.firstname}}</td>
-              </tr>
-              <tr>
-                <td><strong>Middle Initial:</strong></td>
-                <td class="information">{{registration.middlename}}</td>
-              </tr>
-              <tr>
-                <td><strong>Last Name:</strong></td>
-                <td class="information">{{registration.lastname}}</td>
-              </tr>
-              <tr>
-                <td><strong>Gender:</strong></td>
-                <td class="information">{{registration.gender}}</td>
-              </tr>
-              <tr>
-                <td><strong>Birthday:</strong></td>
-                <td class="information">{{formatDate registration.birthday "MMMM D, YYYY"}}</td>
-              </tr>
-              <tr>
-                <td><strong>Phone Number:</strong></td>
-                <td class="information">{{registration.phonenum}}</td>
-              </tr>
-              <tr>
-                <td><strong>Email:</strong></td>
-                <td class="information">{{registration.email}}</td>
-              </tr>
-              <tr>
-                <tr>
-                  <td><strong>Birth Certificate:</strong></td>
-                  <td class="information">
-                  <a href="{{registration.birthcert}}" target="_blank">View Birth Certificate</a>
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>Payment Proof:</strong></td>
-                  <td class="information">
-                  <a href="{{registration.paymentproof}}" target="_blank">View Payment Proof</a>
-                  </td>
-                </tr>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-
-      <table class="additional-details">
-        <tr>
-          <td><strong>Last Promotion:</strong></td>
-          <td class="information">{{formatDate registration.lastpromo "MMMM D, YYYY"}}</td>
-        </tr>
-        <tr>
-          <td><strong>Promotion Location:</strong></td>
-          <td class="information">{{registration.promolocation}}</td>
-        </tr>
-        {{!-- <tr>
-          <td><strong>Club:</strong></td>
-          <td class="information">{{registration.club}}</td>
-        </tr> --}}
-        <tr>
-          <td><strong>Region:</strong></td>
-          <td class="information">{{registration.clubregion}}</td>
-        </tr>
-        <tr>
-          <td><strong>Belt Level:</strong></td>
-          <td class="information">{{registration.beltlevel}}</td>
-        </tr>
-        <tr>
-          <td><strong>Instructor First Name:</strong></td>
-          <td class="information">{{registration.instructorfirstname}}</td>
-        </tr>
-        <tr>
-          <td><strong>Instructor Middle Initial:</strong></td>
-          <td class="information">{{registration.instructormi}}</td>
-        </tr>
-        <tr>
-          <td><strong>Instructor Last Name:</strong></td>
-          <td class="information">{{registration.instructorlastname}}</td>
-        </tr>
-        <tr>
-          <td><strong>Instructor Mobile:</strong></td>
-          <td class="information">{{registration.instructormobile}}</td>
-        </tr>
-        <tr>
-          <td><strong>Instructor Email:</strong></td>
-          <td class="information">{{registration.instructoremail}}</td>
-        </tr>
-      </table>
-    </div>
-
+        <table class="additional-details">
+          <tr>
+            <td><strong>Last Promotion:</strong></td>
+            <td class="information">{{formatDate registration.lastpromo "MMMM D, YYYY"}}</td>
+          </tr>
+          <tr>
+            <td><strong>Promotion Location:</strong></td>
+            <td class="information">{{registration.promolocation}}</td>
+          </tr>
+          <tr>
+            <td><strong>Region:</strong></td>
+            <td class="information">{{registration.clubregion}}</td>
+          </tr>
+          <tr>
+            <td><strong>Belt Level:</strong></td>
+            <td class="information">{{registration.beltlevel}}</td>
+          </tr>
+          <tr>
+            <td><strong>Instructor First Name:</strong></td>
+            <td class="information">{{registration.instructorfirstname}}</td>
+          </tr>
+          <tr>
+            <td><strong>Instructor Middle Initial:</strong></td>
+            <td class="information">{{registration.instructormi}}</td>
+          </tr>
+          <tr>
+            <td><strong>Instructor Last Name:</strong></td>
+            <td class="information">{{registration.instructorlastname}}</td>
+          </tr>
+          <tr>
+            <td><strong>Instructor Mobile:</strong></td>
+            <td class="information">{{registration.instructormobile}}</td>
+          </tr>
+          <tr>
+            <td><strong>Instructor Email:</strong></td>
+            <td class="information">{{registration.instructoremail}}</td>
+          </tr>
+        </table>
+      </div>
+    </form>
 
     <form action="/update-nccstatus" method="post" class="review-form">
       <input type="hidden" name="applicationId" value="{{registration.id}}">
@@ -285,7 +305,17 @@
       actionButtons.style.display = "none";
     });
 
-
+    function clearInput(button) {
+      const input = button.previousElementSibling;
+      if (input.value === '') {
+      input.value = input.getAttribute('data-original-value');
+      button.textContent = 'x';
+      } else {
+      input.setAttribute('data-original-value', input.value);
+      input.value = '';
+      button.textContent = 'undo';
+      }
+    }
 
     function printIdCard(divName) {
       var printContents = document.getElementById(divName).innerHTML;
