@@ -217,19 +217,28 @@
 						</div>
 					</div>
 					<!-- Page 3 -->
+
 					<div class="ncc-page ncc-page3 hidden">
 						<div class="form-row">
 							<div class="form-group">
 								<label for="birthcert">Birth Certificate NSO/PSA</label>
-								<input type="file" id="birthcert" name="birthcert" required>
+								{{#if usersncc.birthcert}}
+									<p>&#10003; Uploaded</p>
+								{{else}}
+									<input type="file" id="birthcert" name="birthcert" {{#if usersncc.birthcert}}disabled{{/if}} required>
+								{{/if}}
 							</div>
 							<div class="form-group">
 								<label for="portrait">1:1 Player Picture</label>
-								<input type="file" id="portrait" name="portrait" required>
+								{{#if usersncc.birthcert}}
+									<p>&#10003; Uploaded</p>
+								{{else}}
+									<input type="file" id="portrait" name="portrait" {{#if usersncc.portrait}}<span>&#10003;</span>disabled{{/if}} required>
+								{{/if}}
 							</div>
 							<div class="form-group">
 								<label for="signature">Sign Here</label>
-								<input type="text" id="signature" name="signature" required>
+								<input type="text" id="signature" name="signature" {{#if usersncc.signature}}disabled{{/if}} required>
 							</div>
 						</div>
 
