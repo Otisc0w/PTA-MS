@@ -6183,11 +6183,22 @@ app.get("/membership-instructor", async function (req, res) {
       return res.status(400).json({ error: error.message });
     }
 
+    const { data: usersinstructor, error: usersinstructorError } = await supabase
+      .from("instructor_registrations")
+      .select("*")
+      .eq("submittedby", req.session.user.id)
+      .single();
+
+    if (usersinstructorError && usersinstructorError.code !== 'PGRST116') {
+      return res.status(400).json({ error: usersinstructorError.message });
+    }
+
     console.log("Fetched data:", data); // Log the data to the console
 
     // Render the athletes.hbs template with the fetched data
     res.render("membership-instructor", {
       clubs: data,
+      usersinstructor,
       user: req.session.user,
     });
   } catch (error) {

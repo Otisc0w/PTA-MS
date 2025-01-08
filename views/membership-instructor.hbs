@@ -135,31 +135,55 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="birthcert">Birth Certificate NSO/PSA</label>
-                <input type="file" id="birthcert" name="birthcert" required>
+                {{#if usersinstructor.birthcert}}
+									<p>&#10003; Uploaded</p>
+								{{else}}
+									<input type="file" id="birthcert" name="birthcert" >
+								{{/if}}
               </div>
               <div class="form-group">
                 <label for="educproof">Proof of College/Highschool Education (2 years)</label>
-                <input type="file" id="educproof" name="educproof" required>
+                {{#if usersinstructor.educproof}}
+									<p>&#10003; Uploaded</p>
+								{{else}}
+                  <input type="file" id="educproof" name="educproof" >
+								{{/if}}
               </div>
               <div class="form-group">
                 <label for="poomsaecert">Poomsae Course Certificate</label>
-                <input type="file" id="poomsaecert" name="poomsaecert" required>
+                {{#if usersinstructor.poomsaecert}}
+									<p>&#10003; Uploaded</p>
+								{{else}}
+                  <input type="file" id="poomsaecert" name="poomsaecert" >
+								{{/if}}
               </div>
               <div class="form-group">
                 <label for="kukkiwoncert">1st Dan Kukkiwon Certificate</label>
-                <input type="file" id="kukkiwoncert" name="kukkiwoncert" required>
+                {{#if usersinstructor.kukkiwoncert}}
+									<p>&#10003; Uploaded</p>
+								{{else}}
+                  <input type="file" id="kukkiwoncert" name="kukkiwoncert" >
+								{{/if}}
               </div>
               <div class="form-group">
                 <label for="ptablackbeltcert">2nd Dan PTA Blackbelt Certificate</label>
-                <input type="file" id="ptablackbeltcert" name="ptablackbeltcert" required>
+                {{#if usersinstructor.ptablackbeltcert}}
+									<p>&#10003; Uploaded</p>
+								{{else}}
+                  <input type="file" id="ptablackbeltcert" name="ptablackbeltcert" >
+								{{/if}}
               </div>
               <div class="form-group">
                 <label for="portrait">1:1 Instructor Picture</label>
-                <input type="file" id="portrait" name="portrait" required>
+                {{#if usersinstructor.portrait}}
+									<p>&#10003; Uploaded</p>
+								{{else}}
+                  <input type="file" id="portrait" name="portrait" >
+								{{/if}}
               </div>
               <div class="form-group">
                 <label for="signature">Sign Here</label>
-                <input type="text" id="signature" name="signature" required>
+                <input type="text" id="signature" name="signature" >
               </div>
             </div>
 
@@ -197,7 +221,11 @@
 						<div class="form-row">
 							<div class="form-group">
 								<label for="paymentproof">Upload Payment Proof</label>
-								<input type="file" id="paymentproof" name="paymentproof" required>
+                {{#if usersinstructor.paymentproof}}
+									<p>&#10003; Already Paid</p>
+								{{else}}
+									<input type="file" id="paymentproof" name="paymentproof" required>
+								{{/if}}
 							</div>
 						</div>
 						<button class="cancel-button" type="button" onclick="showPreviousPage()">Previous</button>
