@@ -1521,6 +1521,8 @@ app.post("/reject-ncc-fields", async (req, res) => {
     paymentproof
   } = req.body;
 
+  const bdayValue = bday ? bday : null;
+
   try {
     // Update the registration with the reject message and description
     const { error: updateRegistrationError } = await supabase
@@ -1532,11 +1534,10 @@ app.post("/reject-ncc-fields", async (req, res) => {
       middlename,
       lastname,
       gender,
-      bday,
+      bday: bdayValue,
       age,
       phonenum,
       email,
-      lastpromo,
       promolocation,
       clubregion,
       beltlevel,

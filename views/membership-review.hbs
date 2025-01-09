@@ -83,9 +83,11 @@
                     <tr>
                       <td><strong>Birthday:</strong></td>
                       <td class="information">
-                        <input type="text" name="birthday" value="{{formatDate registration.birthday "MMMM D, YYYY"}}" readonly>
+                        <input type="text" name="bday" value="{{formatDate registration.bday "MMMM D, YYYY"}}" readonly>
                         <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
                       </td>
+
+                      
                     </tr>
                     <tr>
                       <td><strong>Phone Number:</strong></td>
@@ -127,7 +129,7 @@
             <tr>
             <td><strong>Last Promotion:</strong></td>
             <td class="information">
-              <input type="text" name="lastpromo" value="{{formatDate registration.lastpromo "MMMM D, YYYY"}}" readonly>
+              <input type="text" name="lastpromo" value="{{formatDate registration.bday "MMMM D, YYYY"}}" readonly>
               <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
             </td>
             </tr>
@@ -345,6 +347,12 @@
       input.value = '';
       button.textContent = 'undo';
       }
+    }
+
+    function clearDate(button) {
+      const input = button.previousElementSibling;
+      input.value = ''; // Clear the input field
+      input.setAttribute('data-null', 'true'); // Mark it as null
     }
 
     function printIdCard(divName) {
