@@ -40,126 +40,156 @@
     <section class="review-header">
       <h1>Review NCC Application</h1>
     </section>
-    <form action="">
+    
       <div class="review-details">
         <table class="profile-section">
           <tr>
             <td><img class="athlete-picture" src="{{registration.portrait}}" alt="Profile Picture"></td>
             <td>
-              <table class="details-section">
-                {{!-- <tr>
+              <form action="/reject-ncc-fields" method="post">
+                <table class="details-section">
+                <tr>
                   <td><strong>ID:</strong></td>
-                  <td class="information">{{registration.id}}</td>
-                </tr> --}}
+                  <td class="information"><input type="text" name="nccregid" value="{{registration.id}}"></td>
+                </tr>
+                    <tr>
+                      <td><strong>First Name:</strong></td>
+                      <td class="information">
+                        <input type="text" name="firstname" value="{{registration.firstname}}" readonly>
+                        <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Middle Initial:</strong></td>
+                      <td class="information">
+                        <input type="text" name="middlename" value="{{registration.middlename}}" readonly>
+                        <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Last Name:</strong></td>
+                      <td class="information">
+                        <input type="text" name="lastname" value="{{registration.lastname}}" readonly>
+                        <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Gender:</strong></td>
+                      <td class="information">
+                        <input type="text" name="gender" value="{{registration.gender}}" readonly>
+                        <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Birthday:</strong></td>
+                      <td class="information">
+                        <input type="text" name="birthday" value="{{formatDate registration.birthday "MMMM D, YYYY"}}" readonly>
+                        <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Phone Number:</strong></td>
+                      <td class="information">
+                        <input type="text" name="phonenum" value="{{registration.phonenum}}" readonly>
+                        <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Email:</strong></td>
+                      <td class="information">
+                        <input type="text" name="email" value="{{registration.email}}" readonly>
+                        <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Birth Certificate:</strong></td>
+                      <td class="information">
+                        <input type="text" name="birthcert" value="{{registration.birthcert}}" readonly>
+                        <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                        <a href="{{registration.birthcert}}" target="_blank">View Birth Certificate</a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Payment Proof:</strong></td>
+                      <td class="information">
+                        <input type="text" name="paymentproof" value="{{registration.paymentproof}}" readonly>
+                        <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                        <a href="{{registration.paymentproof}}" target="_blank">View Payment Proof</a>
+                      </td>
+                    </tr>
+                </table>
                 
-                    <tr>
-                    <td><strong>First Name:</strong></td>
-                    <td class="information">
-                      <input type="text" value="{{registration.firstname}}" readonly>
-                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
-                    </td>
-                    </tr>
-                    <tr>
-                    <td><strong>Middle Initial:</strong></td>
-                    <td class="information">
-                      <input type="text" value="{{registration.middlename}}" readonly>
-                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
-                    </td>
-                    </tr>
-                    <tr>
-                    <td><strong>Last Name:</strong></td>
-                    <td class="information">
-                      <input type="text" value="{{registration.lastname}}" readonly>
-                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
-                    </td>
-                    </tr>
-                    <tr>
-                    <td><strong>Gender:</strong></td>
-                    <td class="information">
-                      <input type="text" value="{{registration.gender}}" readonly>
-                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
-                    </td>
-                    </tr>
-                    <tr>
-                    <td><strong>Birthday:</strong></td>
-                    <td class="information">
-                      <input type="text" value="{{formatDate registration.birthday "MMMM D, YYYY"}}" readonly>
-                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
-                    </td>
-                    </tr>
-                    <tr>
-                    <td><strong>Phone Number:</strong></td>
-                    <td class="information">
-                      <input type="text" value="{{registration.phonenum}}" readonly>
-                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
-                    </td>
-                    </tr>
-                    <tr>
-                    <td><strong>Email:</strong></td>
-                    <td class="information">
-                      <input type="text" value="{{registration.email}}" readonly>
-                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
-                    </td>
-                    </tr>
-                  <tr>
-                    <td><strong>Birth Certificate:</strong></td>
-                    <td class="information">
-                    <input type="text" value="{{registration.birthcert}}" readonly>
-                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
-                    <a href="{{registration.birthcert}}" target="_blank">View Birth Certificate</a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><strong>Payment Proof:</strong></td>
-                    <td class="information">
-                      <input type="text" value="{{registration.paymentproof}}" readonly>
-                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
-                    <a href="{{registration.paymentproof}}" target="_blank">View Payment Proof</a>
-                    </td>
-                  </tr>
-              </table>
             </td>
           </tr>
         </table>
 
         <table class="additional-details">
-          <tr>
+            <tr>
             <td><strong>Last Promotion:</strong></td>
-            <td class="information">{{formatDate registration.lastpromo "MMMM D, YYYY"}}</td>
-          </tr>
-          <tr>
+            <td class="information">
+              <input type="text" name="lastpromo" value="{{formatDate registration.lastpromo "MMMM D, YYYY"}}" readonly>
+              <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+            </td>
+            </tr>
+            <tr>
             <td><strong>Promotion Location:</strong></td>
-            <td class="information">{{registration.promolocation}}</td>
-          </tr>
-          <tr>
+            <td class="information">
+              <input type="text" name="promolocation" value="{{registration.promolocation}}" readonly>
+              <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+            </td>
+            </tr>
+            <tr>
             <td><strong>Region:</strong></td>
-            <td class="information">{{registration.clubregion}}</td>
-          </tr>
-          <tr>
+            <td class="information">
+              <input type="text" name="clubregion" value="{{registration.clubregion}}" readonly>
+              <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+            </td>
+            </tr>
+            <tr>
             <td><strong>Belt Level:</strong></td>
-            <td class="information">{{registration.beltlevel}}</td>
-          </tr>
-          <tr>
+            <td class="information">
+              <input type="text" name="beltlevel" value="{{registration.beltlevel}}" readonly>
+              <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+            </td>
+            </tr>
+            <tr>
             <td><strong>Instructor First Name:</strong></td>
-            <td class="information">{{registration.instructorfirstname}}</td>
-          </tr>
-          <tr>
+            <td class="information">
+              <input type="text" name="instructorfirstname" value="{{registration.instructorfirstname}}" readonly>
+              <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+            </td>
+            </tr>
+            <tr>
             <td><strong>Instructor Middle Initial:</strong></td>
-            <td class="information">{{registration.instructormi}}</td>
-          </tr>
-          <tr>
+            <td class="information">
+              <input type="text" name="instructormi" value="{{registration.instructormi}}" readonly>
+              <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+            </td>
+            </tr>
+            <tr>
             <td><strong>Instructor Last Name:</strong></td>
-            <td class="information">{{registration.instructorlastname}}</td>
-          </tr>
-          <tr>
+            <td class="information">
+              <input type="text" name="instructorlastname" value="{{registration.instructorlastname}}" readonly>
+              <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+            </td>
+            </tr>
+            <tr>
             <td><strong>Instructor Mobile:</strong></td>
-            <td class="information">{{registration.instructormobile}}</td>
-          </tr>
-          <tr>
+            <td class="information">
+              <input type="text" name="instructormobile" value="{{registration.instructormobile}}" readonly>
+              <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+            </td>
+            </tr>
+            <tr>
             <td><strong>Instructor Email:</strong></td>
-            <td class="information">{{registration.instructoremail}}</td>
-          </tr>
-        </table>
+            <td class="information">
+              <input type="text" name="instructoremail" value="{{registration.instructoremail}}" readonly>
+              <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+            </td>
+            </tr>
+          </table>
+        <button type="submit" class="rejectbtn">Confirm Rejections</button>
+        </form>
       </div>
     </form>
 
