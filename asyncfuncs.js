@@ -92,7 +92,10 @@ async function checkAndExpireNCCRegistrations(req, res, next) {
       const ids = expiredRegistrations.map(registration => registration.id);
       const { error: updateError } = await supabase
         .from("ncc_registrations")
-        .update({ status: 5 })
+        .update({ 
+          status: 5,
+          paymentproof: null, // Remove payment proof CHECK THIS AGAIN IF NOT WERK
+         })
         .in("id", ids);
 
       if (updateError) {

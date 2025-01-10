@@ -55,61 +55,61 @@
               <td>
                 <table>
                   <tr>
-                  <td><strong>First Name:</strong></td>
-                  <td><input type="text" name="firstname" value="{{registration.firstname}}" readonly>
-                  <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
-                  </td>
+                    <td><strong>First Name:</strong></td>
+                    <td><input type="text" name="firstname" value="{{registration.firstname}}" readonly>
+                    <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    </td>
                   </tr>
                   <tr>
-                  <td><strong>Middle Initial:</strong></td>
-                  <td><input type="text" name="middlename" value="{{registration.middlename}}" readonly>
-                  <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
-                  </td>
+                    <td><strong>Middle Initial:</strong></td>
+                    <td><input type="text" name="middlename" value="{{registration.middlename}}" readonly>
+                    <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    </td>
                   </tr>
                   <tr>
-                  <td><strong>Last Name:</strong></td>
-                  <td><input type="text" name="lastname" value="{{registration.lastname}}" readonly>
-                  <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
-                  </td>
+                    <td><strong>Last Name:</strong></td>
+                    <td><input type="text" name="lastname" value="{{registration.lastname}}" readonly>
+                    <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    </td>
                   </tr>
                   <tr>
-                  <td><strong>Gender:</strong></td>
-                  <td><input type="text" name="gender" value="{{registration.gender}}" readonly>
-                  <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
-                  </td>
+                    <td><strong>Gender:</strong></td>
+                    <td><input type="text" name="gender" value="{{registration.gender}}" readonly>
+                    <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    </td>
                   </tr>
                   <tr>
-                  <td><strong>Birthday:</strong></td>
-                  <td><input type="date" name="bday" value="{{registration.bday}}" readonly>
-                  <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
-                  </td>
+                    <td><strong>Birthday:</strong></td>
+                    <td><input type="date" name="bday" value="{{registration.bday}}" readonly>
+                    <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    </td>
                   </tr>
                   <tr>
-                  <td><strong>Phone Number:</strong></td>
-                  <td><input type="tel" name="phonenum" value="{{registration.phonenum}}" readonly>
-                  <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
-                  </td>
+                    <td><strong>Phone Number:</strong></td>
+                    <td><input type="tel" name="phonenum" value="{{registration.phonenum}}" readonly>
+                    <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    </td>
                   </tr>
                   <tr>
-                  <td><strong>Email:</strong></td>
-                  <td><input type="email" name="email" value="{{registration.email}}" readonly>
-                  <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
-                  </td>
+                    <td><strong>Email:</strong></td>
+                    <td><input type="email" name="email" value="{{registration.email}}" readonly>
+                    <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    </td>
                   </tr>
                   <tr>
-                  <td><strong>Region:</strong></td>
-                  <td><input type="text" name="region" value="{{registration.region}}" readonly>
-                  <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
-                  </td>
+                    <td><strong>Region:</strong></td>
+                    <td><input type="text" name="region" value="{{registration.region}}" readonly>
+                    <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    </td>
                   </tr>
                   <tr>
-                  <td><strong>Club:</strong></td>
-                  <td><input type="text" name="clubname" value="{{registration.clubname}}" readonly>
-                  <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
-                  </td>
+                    <td><strong>Club:</strong></td>
+                    <td><input type="text" name="clubname" value="{{registration.clubname}}" readonly>
+                    <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    </td>
                   </tr>
                   <tr>
-                  <td colspan="2">
+                    <td colspan="2">
                       <a href="{{registration.birthcert}}" target="_blank" download>Birth Certificate</a>
                       <input type="text" name="birthcert" value="{{registration.birthcert}}" readonly>
                       <button type="button" class="clear-input" onclick="clearInput(this)">x</button><br>
@@ -128,7 +128,7 @@
                       <a href="{{registration.paymentproof}}" target="_blank" download>Payment Proof</a>
                       <input type="text" name="paymentproof" value="{{registration.paymentproof}}" readonly>
                       <button type="button" class="clear-input" onclick="clearInput(this)">x</button><br>
-                  </td>
+                    </td>
                   </tr>
                 </table>
               </td>
@@ -261,8 +261,16 @@
       });
     });
 
-    function clearInput(element) {
-      element.previousElementSibling.value = "";
+    function clearInput(button) {
+      const input = button.previousElementSibling;
+      if (input.value === '') {
+      input.value = input.getAttribute('data-original-value');
+      button.textContent = 'x';
+      } else {
+      input.setAttribute('data-original-value', input.value);
+      input.value = '';
+      button.textContent = 'undo';
+      }
     }
 
     cancel.addEventListener("click", function (event) {
@@ -303,10 +311,10 @@
     function toggleDropdown() {
       document.getElementById("dropdown").classList.toggle("show");
     }
-
+  
     document.addEventListener("DOMContentLoaded", function() {
       const clearInputButtons = document.querySelectorAll(".clear-input");
-      const isAdminVerified = {{user.adminverified}};
+      const isAdminVerified = {{user.ptaverified}};
 
       if (!isAdminVerified) {
       clearInputButtons.forEach(button => {
@@ -315,8 +323,6 @@
       }
     });
     // THIS THANG NOT SURE IF WORKS
-
-    
   </script>
 </body>
 

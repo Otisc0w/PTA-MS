@@ -1518,7 +1518,8 @@ app.post("/reject-ncc-fields", async (req, res) => {
     instructoremail,
     birthcert,
     portrait,
-    paymentproof
+    paymentproof,
+    validpayment
   } = req.body;
 
   const bdayValue = bday ? bday : null;
@@ -1548,7 +1549,8 @@ app.post("/reject-ncc-fields", async (req, res) => {
       instructoremail,
       birthcert,
       portrait,
-      paymentproof
+      paymentproof,
+      validpayment
       })
       .eq("id", nccregid);
 
@@ -1585,6 +1587,7 @@ app.post("/reject-instructor-fields", async (req, res) => {
     kukkiwoncert,
     ptablackbeltcert,
     paymentproof,
+    validpayment,
   } = req.body;
 
   const bdayValue = bday ? bday : null;
@@ -1611,6 +1614,7 @@ app.post("/reject-instructor-fields", async (req, res) => {
         kukkiwoncert,
         ptablackbeltcert,
         paymentproof,
+        validpayment
       })
       .eq("id", instructorregid);
 

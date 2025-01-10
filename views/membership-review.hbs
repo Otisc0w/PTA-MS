@@ -117,6 +117,11 @@
                         <input type="text" name="paymentproof" value="{{registration.paymentproof}}" readonly>
                         <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
                         <a href="{{registration.paymentproof}}" target="_blank">View Payment Proof</a>
+                        <div class="radio-buttons">
+                          <label>Payment valid?</label>
+                            <input type="radio" name="validpayment" value="true"> Yes
+                            <input type="radio" name="validpayment" value="false"> No
+                        </div>
                       </td>
                     </tr>
                 </table>

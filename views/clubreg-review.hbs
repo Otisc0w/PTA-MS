@@ -28,20 +28,26 @@
 			<div class="review-header">
         <h1>Review Club Application</h1>
       </div>
-        <form action="/update-clubstatus" method="post">
-          <div class="review-details" >
-            <h2>Club Application Information</h2>
-            <input type="hidden" name="applicationId" value="{{clubregistration.id}}"> 
-                                                  {{!-- use '{{clubregistration.something}}' to get the data --}}
-            <h2>{{clubregistration.clubname}}</h2>
-						<img class='clubpic' src="{{clubregistration.clubpic}}">
-            submittedby: {{clubregistration.firstname}} {{clubregistration.lastname}}
-            <a href="{{clubregistration.idfile}}" target="_blank" download> ID</a>
-            <a href="{{clubregistration.proofdoc}}" target="_blank" download> Proof Document </a>
-            <a href="{{clubregistration.paymentproof}}" target="_blank" download> Payment Proof </a>
+        <div class="review-details">
+          <h2>Club Application Information</h2>
+          <input type="hidden" name="applicationId" value="{{clubregistration.id}}"> 
 
-            <!-- Add any other relevant details here -->
-          </div>
+          <h2>{{clubregistration.clubname}}</h2>
+          <img class='clubpic' src="{{clubregistration.clubpic}}"><br>
+          Submitted by: {{clubregistration.firstname}} {{clubregistration.lastname}}
+          <a href="{{clubregistration.idfile}}" target="_blank" download> ID</a>
+          <input type="text" value="{{clubregistration.idfile}}">
+          <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+          <a href="{{clubregistration.proofdoc}}" target="_blank" download> Proof Document </a>
+          <input type="text" value="{{clubregistration.idfile}}">
+          <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+          <a href="{{clubregistration.paymentproof}}" target="_blank" download> Payment Proof </a>
+          <input type="text" value="{{clubregistration.idfile}}">
+          <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+        </div>
+
+        <form action="/update-clubstatus" method="post">
+          <input type="hidden" name="applicationId" value="{{clubregistration.id}}"> 
           <div class="application-actions">
             <h1 class="status">
               {{#if (eq clubregistration.status 1)}}
@@ -145,6 +151,29 @@
 
             document.body.innerHTML = originalContents;
           }
+
+          function clearInput(button) {
+            const input = button.previousElementSibling;
+            if (input.value === '') {
+            input.value = input.getAttribute('data-original-value');
+            button.textContent = 'x';
+            } else {
+            input.setAttribute('data-original-value', input.value);
+            input.value = '';
+            button.textContent = 'undo';
+            }
+          }
+
+          document.addEventListener("DOMContentLoaded", function() {
+            const clearInputButtons = document.querySelectorAll(".clear-input");
+            const isAdminVerified = {{user.ptaverified}};
+
+            if (!isAdminVerified) {
+            clearInputButtons.forEach(button => {
+              button.style.display = "none";
+            });
+            }
+          });
   		    </script>
 			</div>
     </div>
