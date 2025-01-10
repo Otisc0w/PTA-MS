@@ -367,6 +367,17 @@
     function toggleDropdown() {
       document.getElementById("dropdown").classList.toggle("show");
     }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      const clearInputButtons = document.querySelectorAll(".clear-input");
+      const isAdminVerified = {{user.adminverified}};
+
+      if (!isAdminVerified) {
+      clearInputButtons.forEach(button => {
+        button.style.display = "none";
+      });
+      }
+    });
   </script>
 </body>
 

@@ -110,25 +110,34 @@
                   </tr>
                   <tr>
                   <td colspan="2">
-                      <a href="{{registration.birthcert}}" target="_blank" download>Birth Certificate</a><br>
-                      <input type="text" name="birthcert" value="{{registration.birthcert}}" readonly><br>
-                      <a href="{{registration.educproof}}" target="_blank" download>Proof of Education</a><br>
-                      <input type="text" name="educproof" value="{{registration.educproof}}" readonly><br>
-                      <a href="{{registration.poomsaecert}}" target="_blank" download>Poomsae Certificate</a><br>
-                      <input type="text" name="poomsaecert" value="{{registration.poomsaecert}}" readonly><br>
-                      <a href="{{registration.kukkiwoncert}}" target="_blank" download>Kukkiwon Certificate</a><br>
-                      <input type="text" name="kukkiwoncert" value="{{registration.kukkiwoncert}}" readonly><br>
-                      <a href="{{registration.ptablackbeltcert}}" target="_blank" download>PTA Black-Belt Certificate</a><br>
-                      <input type="text" name="ptablackbeltcert" value="{{registration.ptablackbeltcert}}" readonly><br>
-                      <a href="{{registration.paymentproof}}" target="_blank" download>Payment Proof</a><br>
-                      <input type="text" name="paymentproof" value="{{registration.paymentproof}}" readonly><br>
+                      <a href="{{registration.birthcert}}" target="_blank" download>Birth Certificate</a>
+                      <input type="text" name="birthcert" value="{{registration.birthcert}}" readonly>
+                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button><br>
+                      <a href="{{registration.educproof}}" target="_blank" download>Proof of Education</a>
+                      <input type="text" name="educproof" value="{{registration.educproof}}" readonly>
+                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button><br>
+                      <a href="{{registration.poomsaecert}}" target="_blank" download>Poomsae Certificate</a>
+                      <input type="text" name="poomsaecert" value="{{registration.poomsaecert}}" readonly>
+                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button><br>
+                      <a href="{{registration.kukkiwoncert}}" target="_blank" download>Kukkiwon Certificate</a>
+                      <input type="text" name="kukkiwoncert" value="{{registration.kukkiwoncert}}" readonly>
+                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button><br>
+                      <a href="{{registration.ptablackbeltcert}}" target="_blank" download>PTA Black-Belt Certificate</a>
+                      <input type="text" name="ptablackbeltcert" value="{{registration.ptablackbeltcert}}" readonly>
+                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button><br>
+                      <a href="{{registration.paymentproof}}" target="_blank" download>Payment Proof</a>
+                      <input type="text" name="paymentproof" value="{{registration.paymentproof}}" readonly>
+                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button><br>
                   </td>
                   </tr>
                 </table>
               </td>
             </tr>
-            <button type="submit">Confirm rejections</button>
+            
           </table>
+          {{#if user.ptaverified}}
+          <button type="submit">Confirm rejections</button>
+          {{/if}}
         </form>
 
       </section>
@@ -294,6 +303,20 @@
     function toggleDropdown() {
       document.getElementById("dropdown").classList.toggle("show");
     }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      const clearInputButtons = document.querySelectorAll(".clear-input");
+      const isAdminVerified = {{user.adminverified}};
+
+      if (!isAdminVerified) {
+      clearInputButtons.forEach(button => {
+        button.style.display = "none";
+      });
+      }
+    });
+    // THIS THANG NOT SURE IF WORKS
+
+    
   </script>
 </body>
 
