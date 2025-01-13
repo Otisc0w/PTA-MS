@@ -1523,6 +1523,7 @@ app.post("/reject-ncc-fields", async (req, res) => {
   } = req.body;
 
   const bdayValue = bday ? bday : null;
+  const lastpromoValue = lastpromo ? lastpromo : null;
 
   try {
     // Update the registration with the reject message and description
@@ -1539,6 +1540,7 @@ app.post("/reject-ncc-fields", async (req, res) => {
       age,
       phonenum,
       email,
+      lastpromo: lastpromoValue,
       promolocation,
       clubregion,
       beltlevel,

@@ -46,7 +46,7 @@
           <tr>
             <td><img class="athlete-picture" src="{{registration.portrait}}" alt="Profile Picture"></td>
             <td>
-              <form action="/reject-ncc-fields" method="post">
+              <form action={{#if user.ptaverified}}"/reject-ncc-fields"{{else}}"/submit-ncc"{{/if}} method="post" enctype="multipart/form-data">
                 <table class="details-section">
                 <tr>
                   <td><strong>ID:</strong></td>
@@ -106,16 +106,24 @@
                     <tr>
                       <td><strong>Birth Certificate:</strong></td>
                       <td class="information">
-                        <input type="text" name="birthcert" value="{{registration.birthcert}}" {{#if (or user.ptaverified registration.birthcert)}}readonly{{else}}required{{/if}}>
+                        {{#if registration.birthcert}}
+                        <a href="{{registration.birthcert}}" target="_blank">View Payment Proof</a>
+                        {{else}}
+                          no payment
+                        {{/if}}
+                        {{#if (or user.ptaverified registration.birthcert)}}
+                          <input type="text" name="birthcert" value="{{registration.birthcert}}" hidden readonly>
+                        {{else}}
+                          <input type="file" name="birthcert" required>
+                        {{/if}}
                         {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
-                        <a href="{{registration.birthcert}}" target="_blank">View Birth Certificate</a>
                       </td>
                     </tr>
                     <tr>
                       <td><strong>Payment Proof:</strong></td>
                       <td class="information">
                         {{#if registration.paymentproof}}
-                        <a href="{{registration.paymentproof}}" target="_blank">View Payment Proof</a>
+                          <a href="{{registration.paymentproof}}" target="_blank">View Payment Proof</a>
                         {{else}}
                           no payment
                         {{/if}}
@@ -204,7 +212,7 @@
             </td>
             </tr>
           </table>
-        <button type="submit" class="rejectbtn">Confirm Rejections</button>
+        <button type="submit" class="rejectbtn">{{#if user.ptaverified}}Confirm Rejections{{else}}Submit Changes{{/if}}</button>
         </form>
       </div>
     </form>
