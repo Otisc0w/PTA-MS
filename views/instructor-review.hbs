@@ -43,7 +43,6 @@
     
       <section class="review-details">
         <h2>Applicant Information</h2>
-
         
         <form action={{#if user.ptaverified}}"/reject-instructor-fields"{{else}}"/submit-instructor"{{/if}} method="post" enctype="multipart/form-data">
         <input type="hidden" name="instructorregid" value="{{registration.id}}">
@@ -97,14 +96,8 @@
                     </td>
                   </tr>
                   <tr>
-                    <td><strong>Region:</strong></td>
-                    <td><input type="text" name="region" value="{{registration.region}}" {{#if (or user.ptaverified registration.region)}}readonly{{else}}required{{/if}}>
-                        {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><strong>Club:</strong></td>
-                    <td><input type="text" name="clubname" value="{{registration.clubname}}" {{#if (or user.ptaverified registration.clubname)}}readonly{{else}}required{{/if}}>
+                    <td><strong>Club Region:</strong></td>
+                    <td><input type="text" name="clubregion" value="{{registration.clubregion}}" {{#if (or user.ptaverified registration.clubregion)}}readonly{{else}}required{{/if}}>
                         {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
                     </td>
                   </tr>
@@ -213,8 +206,7 @@
           {{else}}
             <button type="submit">Submit Changes</button>
           {{/if}}
-        </form>
-
+      </form>
       </section>
 
     <form action="/update-instructorstatus" method="post" class="review-form">

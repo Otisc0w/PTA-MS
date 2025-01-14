@@ -28,23 +28,98 @@
 			<div class="review-header">
         <h1>Review Club Application</h1>
       </div>
+      <form action="{{#if user.ptaverified}}/reject-club-fields{{else}}/submit-club{{/if}}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="clubregid" value="{{clubregistration.id}}"> 
         <div class="review-details">
           <h2>Club Application Information</h2>
-          <input type="hidden" name="applicationId" value="{{clubregistration.id}}"> 
 
-          <h2>{{clubregistration.clubname}}</h2>
-          <img class='clubpic' src="{{clubregistration.clubpic}}"><br>
-          Submitted by: {{clubregistration.firstname}} {{clubregistration.lastname}}
-          <a href="{{clubregistration.idfile}}" target="_blank" download> ID</a>
-          <input type="text" value="{{clubregistration.idfile}}">
-          <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
-          <a href="{{clubregistration.proofdoc}}" target="_blank" download> Proof Document </a>
-          <input type="text" value="{{clubregistration.idfile}}">
-          <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
-          <a href="{{clubregistration.paymentproof}}" target="_blank" download> Payment Proof </a>
-          <input type="text" value="{{clubregistration.idfile}}">
-          <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
-        </div>
+          <table class="details-section">
+            <tr>
+              <td colspan="2">
+                <img class="clubpic" src="{{clubregistration.clubpic}}">
+                <input type="hidden" name="clubname" value="{{clubregistration.clubpic}}" {{#if (or user.ptaverified clubregistration.clubname)}}readonly{{else}}required{{/if}} default="">
+                        {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
+              </td>
+              <td>
+                <table>
+                  <tr>
+                    <td><strong>Club Name:</strong></td>
+                    <td><input type="text" name="clubname" value="{{clubregistration.clubname}}" {{#if (or user.ptaverified clubregistration.clubname)}}readonly{{else}}required{{/if}}>
+                        {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>First Name:</strong></td>
+                    <td><input type="text" name="firstname" value="{{clubregistration.firstname}}" {{#if (or user.ptaverified clubregistration.firstname)}}readonly{{else}}required{{/if}}>
+                        {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Last Name:</strong></td>
+                    <td><input type="text" name="lastname" value="{{clubregistration.lastname}}" {{#if (or user.ptaverified clubregistration.lastname)}}readonly{{else}}required{{/if}}>
+                        {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2"><strong>Valid ID:</strong></td>
+                    <td class="information">
+                      {{#if clubregistration.idfile}}
+                      <a href="{{clubregistration.idfile}}" target="_blank">View Payment Proof</a>
+                      {{else}}
+                        no payment
+                      {{/if}}
+                      {{#if (or user.ptaverified clubregistration.idfile)}}
+                        <input type="text" name="idfile" value="{{clubregistration.idfile}}" hidden readonly default="">
+                      {{else}}
+                        <input type="file" name="idfile" required>
+                      {{/if}}
+                      {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2"><strong>Proof of Club Operations:</strong></td>
+                    <td class="information">
+                      {{#if clubregistration.proofdoc}}
+                      <a href="{{clubregistration.proofdoc}}" target="_blank">View Payment Proof</a>
+                      {{else}}
+                        no payment
+                      {{/if}}
+                      {{#if (or user.ptaverified clubregistration.proofdoc)}}
+                        <input type="text" name="proofdoc" value="{{clubregistration.proofdoc}}" hidden readonly default="">
+                      {{else}}
+                        <input type="file" name="proofdoc" required>
+                      {{/if}}
+                      {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2"><strong>Proof of Payment:</strong></td>
+                    <td class="information">
+                      {{#if clubregistration.paymentproof}}
+                      <a href="{{clubregistration.paymentproof}}" target="_blank">View Payment Proof</a>
+                      {{else}}
+                        no payment
+                      {{/if}}
+                      {{#if (or user.ptaverified clubregistration.paymentproof)}}
+                        <input type="text" name="paymentproof" value="{{clubregistration.paymentproof}}" hidden readonly default="">
+                      {{else}}
+                        <input type="file" name="paymentproof" required>
+                      {{/if}}
+                      {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
+                    </td>
+                  </tr>
+
+                </table>
+              </td>
+            </tr>
+          </table>
+          {{#if user.ptaverified}}
+            <button type="submit">Confirm rejections</button>
+          {{else}}
+            <button type="submit">Submit Changes</button>
+          {{/if}}
+      </form>
+      </div>
 
         <form action="/update-clubstatus" method="post">
           <input type="hidden" name="applicationId" value="{{clubregistration.id}}"> 

@@ -1633,6 +1633,59 @@ app.post("/reject-instructor-fields", async (req, res) => {
   }
 });
 
+app.post("/reject-club-fields", async (req, res) => {
+  const {
+    clubregid,
+    rejectmsg,
+    rejectdescription,
+    firstname,
+    lastname,
+    phonenum,
+    email,
+    clubname,
+    clubaddress,
+    province,
+    idfile,
+    proofdoc,
+    clubpic,
+    paymentproof,
+  } = req.body;
+
+  try {
+    // Update the registration with the reject message and description
+    const { error: updateRegistrationError } = await supabase
+      .from("club_registrations")
+      .update({
+        rejectmsg,
+        rejectdescription,
+        firstname,
+        lastname,
+        phonenum,
+        email,
+        clubname,
+        clubaddress,
+        province,
+        idfile,
+        proofdoc,
+        clubpic,
+        paymentproof,
+        status: 1
+      })
+      .eq("id", clubregid);
+
+    if (updateRegistrationError) {
+      console.error("Error updating registration:", updateRegistrationError.message);
+      return res.status(500).send("Error updating registration");
+    }
+
+    // Redirect back to the review page
+    res.redirect(`/clubreg-review/${clubregid}`);
+  } catch (error) {
+    console.error("Server error:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 app.post("/update-instructorstatus", async (req, res) => {
   if (!req.session.user) {
     return res.status(401).send("Unauthorized: No user logged in");
