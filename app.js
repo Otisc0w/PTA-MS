@@ -1656,20 +1656,20 @@ app.post("/reject-club-fields", async (req, res) => {
     const { error: updateRegistrationError } = await supabase
       .from("club_registrations")
       .update({
-        rejectmsg,
-        rejectdescription,
+        // rejectmsg,
+        // rejectdescription,
         firstname,
         lastname,
         phonenum,
-        email,
-        clubname,
-        clubaddress,
-        province,
-        idfile,
-        proofdoc,
-        clubpic,
-        paymentproof,
-        status: 1
+        // email,
+        // clubname,
+        // clubaddress,
+        // province,
+        // idfile,
+        // proofdoc,
+        // clubpic,
+        // paymentproof,
+        // status: 1,
       })
       .eq("id", clubregid);
 
