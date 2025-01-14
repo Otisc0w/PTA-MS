@@ -19,7 +19,6 @@
           <div id="dropdown" class="dropdown-content">
             <a href="profile">Profile</a>
             <a href="settings">Settings</a>
-           
             <a href="/">Logout</a>
           </div>
       </div>
@@ -29,6 +28,29 @@
         <h1>Review Club Application</h1>
       </div>
       <form action="/reject-club-fields" method="post" enctype="multipart/form-data">
+        <input type="text" name="clubregid" value="{{clubregistration.id}}">
+        <div class="review-details">
+          <h2>Club Application Information</h2>
+          <table class="details-section">
+            <tr>
+              <td colspan="2">
+                <img class="clubpic" src="{{clubregistration.clubpic}}">
+                <input type="hidden" name="clubpic" value="{{clubregistration.clubpic}}" {{#if (or user.ptaverified clubregistration.clubpic)}}readonly{{else}}required{{/if}}>
+                  {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Club Name:</strong></td>
+              <td><input type="text" name="clubname" value="{{clubregistration.clubname}}" {{#if (or user.ptaverified clubregistration.clubname)}}readonly{{else}}required{{/if}}>
+                  {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
+              </td>
+            </tr>
+          </table>
+        </div>
+        <button type="submit">Confirm rejections</button>
+      </form>
+
+      {{!-- <form action="/reject-club-fields" method="post" enctype="multipart/form-data">
         <input type="hidden" name="clubregid" value="{{clubregistration.id}}"> 
         <div class="review-details">
           <h2>Club Application Information</h2>
@@ -116,61 +138,61 @@
           {{else}}
             <button type="submit">Submit Changes</button>
           {{/if}}
-      </form>
+      </form> --}}
       </div>
 
-        <form action="/update-clubstatus" method="post">
-          <input type="hidden" name="applicationId" value="{{clubregistration.id}}"> 
-          <div class="application-actions">
-            <h1 class="status">
-              {{#if (eq clubregistration.status 1)}}
-              <span class="status-under-review">Processing Application</span>
-              {{else if (eq clubregistration.status 2)}}
-              <span class="status-en-route">En-route to Regional Office</span>
-              {{else if (eq clubregistration.status 3)}}
-              <span class="status-shipped">Accepted and Registered. Certificate shipped to regional office.</span>
-              {{else if (eq clubregistration.status 4)}}
-              <span class="status-rejected">Rejected</span>
-              <p>{{clubregistration.rejectmsg}}</p>
-              <p class="description">{{clubregistration.rejectdescription}}</p>
-              {{else if (eq clubregistration.status 5)}}
-              <span class="status-unknown">Expired</span>
-              {{/if}}
-            </h1>
-            {{#if user.ptaverified}}
-              <div class="status-buttons" id="status-buttons">            {{!-- VALUES NAMES AND TYPES NEED TO STAY THE SAME --}}
-                <button type="submit" name="status" value="1">Processing Application</button>
-                <button type="button" id="accepted" class="accepted">Accepted and Registered</button>
-                <button type="button" id="rejectbtn" class="rejectbtn">Reject Application</button>
-              </div>
-              <div class="confirmscreen" id="confirmscreen" style="display: none;">
-                <h3>Are you sure? This will be added to the clubs page for the public to see.</h3>
-                <button class="cancel" id="cancel">Cancel</button>
-                <button  type="submit" value="3" name="status">Confirm</button>
-              </div>
-              <div class="confirmrejectscreen" id="confirmrejectscreen" style="display: none;">
-                <h3>Please state reason for rejection.</h3>
-                <select name="rejectmsg" id="rejectmsg">
-                  <option value="Incomplete Documentation">Incomplete Documentation</option>
-                  <option value="Invalid Information">Invalid Information</option>
-                  <option value="Failed Background Check">Failed Background Check</option>
-                  <option value="Other">Other</option>
-                </select>
-                <textarea name="rejectdescription" id="rejectdescription" cols="30" rows="10"></textarea>
-                <button type="button" class="cancelreject" id="cancelreject">Cancel</button>
-                <button type="submit" value="4" name="status" id="confirm">Confirm</button>
-              </div>
-              <div class="backtolist">
-                <a href="/membership-status">Back to list</a>
-              </div>
+      <form action="/update-clubstatus" method="post">
+        <input type="hidden" name="applicationId" value="59"> 
+        <div class="application-actions">
+          <h1 class="status">
+            {{#if (eq clubregistration.status 1)}}
+            <span class="status-under-review">Processing Application</span>
+            {{else if (eq clubregistration.status 2)}}
+            <span class="status-en-route">En-route to Regional Office</span>
+            {{else if (eq clubregistration.status 3)}}
+            <span class="status-shipped">Accepted and Registered. Certificate shipped to regional office.</span>
+            {{else if (eq clubregistration.status 4)}}
+            <span class="status-rejected">Rejected</span>
+            <p>{{clubregistration.rejectmsg}}</p>
+            <p class="description">{{clubregistration.rejectdescription}}</p>
+            {{else if (eq clubregistration.status 5)}}
+            <span class="status-unknown">Expired</span>
             {{/if}}
-          </div>
-        </form>
-        <div class="printwindow" id="printableArea" >
-          <p><strong>ID:</strong> {{clubregistration.id}}</p>
-          <p><strong>First Name:</strong> {{clubregistration.firstname}}</p>
-          <p><strong>Last Name:</strong> {{clubregistration.lastname}}</p>
+          </h1>
+          {{#if user.ptaverified}}
+            <div class="status-buttons" id="status-buttons">            {{!-- VALUES NAMES AND TYPES NEED TO STAY THE SAME --}}
+              <button type="submit" name="status" value="1">Processing Application</button>
+              <button type="button" id="accepted" class="accepted">Accepted and Registered</button>
+              <button type="button" id="rejectbtn" class="rejectbtn">Reject Application</button>
+            </div>
+            <div class="confirmscreen" id="confirmscreen" style="display: none;">
+              <h3>Are you sure? This will be added to the clubs page for the public to see.</h3>
+              <button class="cancel" id="cancel">Cancel</button>
+              <button  type="submit" value="3" name="status">Confirm</button>
+            </div>
+            <div class="confirmrejectscreen" id="confirmrejectscreen" style="display: none;">
+              <h3>Please state reason for rejection.</h3>
+              <select name="rejectmsg" id="rejectmsg">
+                <option value="Incomplete Documentation">Incomplete Documentation</option>
+                <option value="Invalid Information">Invalid Information</option>
+                <option value="Failed Background Check">Failed Background Check</option>
+                <option value="Other">Other</option>
+              </select>
+              <textarea name="rejectdescription" id="rejectdescription" cols="30" rows="10"></textarea>
+              <button type="button" class="cancelreject" id="cancelreject">Cancel</button>
+              <button type="submit" value="4" name="status" id="confirm">Confirm</button>
+            </div>
+            <div class="backtolist">
+              <a href="/membership-status">Back to list</a>
+            </div>
+          {{/if}}
         </div>
+      </form>
+      <div class="printwindow" id="printableArea" >
+        <p><strong>ID:</strong> {{clubregistration.id}}</p>
+        <p><strong>First Name:</strong> {{clubregistration.firstname}}</p>
+        <p><strong>Last Name:</strong> {{clubregistration.lastname}}</p>
+      </div>
 
         <script>
           const confirmscreen = document.getElementById("confirmscreen");
@@ -236,17 +258,6 @@
             button.textContent = 'undo';
             }
           }
-
-          document.addEventListener("DOMContentLoaded", function() {
-            const clearInputButtons = document.querySelectorAll(".clear-input");
-            const isAdminVerified = {{user.ptaverified}};
-
-            if (!isAdminVerified) {
-            clearInputButtons.forEach(button => {
-              button.style.display = "none";
-            });
-            }
-          });
   		    </script>
 			</div>
     </div>
