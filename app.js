@@ -1554,69 +1554,115 @@ app.post("/reject-ncc-fields", async (req, res) => {
   }
 });
 
-// app.post("/reject-instructor-fields", async (req, res) => {
-//   const {
-//     instructorregid,
-//     rejectmsg,
-//     rejectdescription,
-//     firstname,
-//     middlename,
-//     lastname,
-//     gender,
-//     bday,
-//     phonenum,
-//     email,
-//     clubregion,
-//     birthcert,
-//     portrait,
-//     educproof,
-//     poomsaecert,
-//     kukkiwoncert,
-//     ptablackbeltcert,
-//     paymentproof,
-//     validpayment,
-//   } = req.body;
+app.post("/reject-instructor-fields", async (req, res) => {
+  const {
+    instructorregid,
+    rejectmsg,
+    rejectdescription,
+    firstname,
+    middlename,
+    lastname,
+    gender,
+    bday,
+    phonenum,
+    email,
+    clubregion,
+    birthcert,
+    portrait,
+    educproof,
+    poomsaecert,
+    kukkiwoncert,
+    ptablackbeltcert,
+    paymentproof,
+    validpayment,
+  } = req.body;
 
-//   const bdayValue = bday ? bday : null;
+  const bdayValue = bday ? bday : null;
 
-//   try {
-//     // Update the registration with the reject message and description
-//     const { error: updateRegistrationError } = await supabase
-//       .from("instructor_registrations")
-//       .update({
-//         rejectmsg,
-//         rejectdescription,
-//         firstname,
-//         middlename,
-//         lastname,
-//         gender,
-//         bday: bdayValue,
-//         phonenum,
-//         email,
-//         clubregion,
-//         birthcert,
-//         portrait,
-//         educproof,
-//         poomsaecert,
-//         kukkiwoncert,
-//         ptablackbeltcert,
-//         paymentproof,
-//         validpayment
-//       })
-//       .eq("id", instructorregid);
+  try {
+    // Update the registration with the reject message and description
+    const { error: updateRegistrationError } = await supabase
+      .from("instructor_registrations")
+      .update({
+        rejectmsg,
+        rejectdescription,
+        firstname,
+        middlename,
+        lastname,
+        gender,
+        bday: bdayValue,
+        phonenum,
+        email,
+        clubregion,
+        birthcert,
+        portrait,
+        educproof,
+        poomsaecert,
+        kukkiwoncert,
+        ptablackbeltcert,
+        paymentproof,
+        validpayment
+      })
+      .eq("id", instructorregid);
 
-//     if (updateRegistrationError) {
-//       console.error("Error updating registration:", updateRegistrationError.message);
-//       return res.status(500).send("Error updating registration");
-//     }
+    if (updateRegistrationError) {
+      console.error("Error updating registration:", updateRegistrationError.message);
+      return res.status(500).send("Error updating registration");
+    }
 
-//     // Redirect back to the review page
-//     res.redirect(`/instructor-review/${instructorregid}`);
-//   } catch (error) {
-//     console.error("Server error:", error.message);
-//     res.status(500).json({ error: error.message });
-//   }
-// });
+    // Redirect back to the review page
+    res.redirect(`/instructor-review/${instructorregid}`);
+  } catch (error) {
+    console.error("Server error:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post("/reject-club-fields", async (req, res) => {
+  const {
+    id,
+    firstname,
+    lastname,
+    phonenum,
+    email,
+    clubname,
+    clubaddress,
+    province,
+    idfile,
+    proofdoc,
+    clubpic,
+    paymentproof,
+  } = req.body;
+
+  try {
+    const { data, error } = await supabase
+      .from("club_registrations")
+      .update(
+        {
+          firstname,
+          lastname,
+          phonenum,
+          email,
+          clubname,
+          clubaddress,
+          province,
+          idfile,
+          proofdoc,
+          clubpic,
+          paymentproof,
+        }
+      )
+      .eq("id", id);
+
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    res.redirect(`/clubreg-review/${id}`);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 app.post("/update-instructorstatus", async (req, res) => {
   if (!req.session.user) {
