@@ -86,8 +86,6 @@
                         <input type="text" name="bday" value="{{formatDate registration.bday "MMMM D, YYYY"}}" {{#if (or user.ptaverified registration.bday)}}readonly{{else}}required{{/if}}>
                         {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
                       </td>
-
-                      
                     </tr>
                     <tr>
                       <td><strong>Phone Number:</strong></td>
@@ -133,16 +131,9 @@
                           <input type="file" name="paymentproof" required>
                         {{/if}}
                         {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
-                       
-                        {{!-- <div class="radio-buttons">
-                          <label>Payment valid?</label>
-                            <input type="radio" name="validpayment" value="true"> Yes
-                            <input type="radio" name="validpayment" value="false"> No
-                        </div> --}}
                       </td>
                     </tr>
                 </table>
-                
             </td>
           </tr>
         </table>

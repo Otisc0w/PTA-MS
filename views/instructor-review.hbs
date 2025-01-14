@@ -45,7 +45,7 @@
         <h2>Applicant Information</h2>
 
         
-        <form action="/reject-instructor-fields" method="post">
+        <form action={{#if user.ptaverified}}"/reject-instructor-fields"{{else}}"/submit-instructor"{{/if}} method="post" enctype="multipart/form-data">
         <input type="hidden" name="instructorregid" value="{{registration.id}}">
           <table class="details-section">
             <tr>
@@ -56,87 +56,162 @@
                 <table>
                   <tr>
                     <td><strong>First Name:</strong></td>
-                    <td><input type="text" name="firstname" value="{{registration.firstname}}" readonly>
-                    <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    <td><input type="text" name="firstname" value="{{registration.firstname}}" {{#if (or user.ptaverified registration.firstname)}}readonly{{else}}required{{/if}}>
+                        {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
                     </td>
                   </tr>
                   <tr>
                     <td><strong>Middle Initial:</strong></td>
-                    <td><input type="text" name="middlename" value="{{registration.middlename}}" readonly>
-                    <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    <td><input type="text" name="middlename" value="{{registration.middlename}}" {{#if (or user.ptaverified registration.middlename)}}readonly{{else}}required{{/if}}>
+                        {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
                     </td>
                   </tr>
                   <tr>
                     <td><strong>Last Name:</strong></td>
-                    <td><input type="text" name="lastname" value="{{registration.lastname}}" readonly>
-                    <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    <td><input type="text" name="lastname" value="{{registration.lastname}}" {{#if (or user.ptaverified registration.lastname)}}readonly{{else}}required{{/if}}>
+                        {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
                     </td>
                   </tr>
                   <tr>
                     <td><strong>Gender:</strong></td>
-                    <td><input type="text" name="gender" value="{{registration.gender}}" readonly>
-                    <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    <td><input type="text" name="gender" value="{{registration.gender}}" {{#if (or user.ptaverified registration.gender)}}readonly{{else}}required{{/if}}>
+                        {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
                     </td>
                   </tr>
                   <tr>
                     <td><strong>Birthday:</strong></td>
-                    <td><input type="date" name="bday" value="{{registration.bday}}" readonly>
-                    <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    <td><input type="date" name="bday" value="{{registration.bday}}" {{#if (or user.ptaverified registration.bday)}}readonly{{else}}required{{/if}}>
+                        {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
                     </td>
                   </tr>
                   <tr>
                     <td><strong>Phone Number:</strong></td>
-                    <td><input type="tel" name="phonenum" value="{{registration.phonenum}}" readonly>
-                    <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    <td><input type="tel" name="phonenum" value="{{registration.phonenum}}" {{#if (or user.ptaverified registration.phonenum)}}readonly{{else}}required{{/if}}>
+                        {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
                     </td>
                   </tr>
                   <tr>
                     <td><strong>Email:</strong></td>
-                    <td><input type="email" name="email" value="{{registration.email}}" readonly>
-                    <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    <td><input type="email" name="email" value="{{registration.email}}" {{#if (or user.ptaverified registration.email)}}readonly{{else}}required{{/if}}>
+                        {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
                     </td>
                   </tr>
                   <tr>
                     <td><strong>Region:</strong></td>
-                    <td><input type="text" name="region" value="{{registration.region}}" readonly>
-                    <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    <td><input type="text" name="region" value="{{registration.region}}" {{#if (or user.ptaverified registration.region)}}readonly{{else}}required{{/if}}>
+                        {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
                     </td>
                   </tr>
                   <tr>
                     <td><strong>Club:</strong></td>
-                    <td><input type="text" name="clubname" value="{{registration.clubname}}" readonly>
-                    <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                    <td><input type="text" name="clubname" value="{{registration.clubname}}" {{#if (or user.ptaverified registration.clubname)}}readonly{{else}}required{{/if}}>
+                        {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
                     </td>
                   </tr>
                   <tr>
-                    <td colspan="2">
-                      <a href="{{registration.birthcert}}" target="_blank" download>Birth Certificate</a>
-                      <input type="text" name="birthcert" value="{{registration.birthcert}}" readonly>
-                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button><br>
-                      <a href="{{registration.educproof}}" target="_blank" download>Proof of Education</a>
-                      <input type="text" name="educproof" value="{{registration.educproof}}" readonly>
-                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button><br>
-                      <a href="{{registration.poomsaecert}}" target="_blank" download>Poomsae Certificate</a>
-                      <input type="text" name="poomsaecert" value="{{registration.poomsaecert}}" readonly>
-                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button><br>
-                      <a href="{{registration.kukkiwoncert}}" target="_blank" download>Kukkiwon Certificate</a>
-                      <input type="text" name="kukkiwoncert" value="{{registration.kukkiwoncert}}" readonly>
-                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button><br>
-                      <a href="{{registration.ptablackbeltcert}}" target="_blank" download>PTA Black-Belt Certificate</a>
-                      <input type="text" name="ptablackbeltcert" value="{{registration.ptablackbeltcert}}" readonly>
-                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button><br>
-                      <a href="{{registration.paymentproof}}" target="_blank" download>Payment Proof</a>
-                      <input type="text" name="paymentproof" value="{{registration.paymentproof}}" readonly>
-                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button><br>
+                    <td colspan="2"><strong>Birth Certificate:</strong></td>
+                    <td class="information">
+                      {{#if registration.birthcert}}
+                      <a href="{{registration.birthcert}}" target="_blank">View Payment Proof</a>
+                      {{else}}
+                        no payment
+                      {{/if}}
+                      {{#if (or user.ptaverified registration.birthcert)}}
+                        <input type="text" name="birthcert" value="{{registration.birthcert}}" hidden readonly>
+                      {{else}}
+                        <input type="file" name="birthcert" required>
+                      {{/if}}
+                      {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2"><strong>Proof of Education:</strong></td>
+                    <td class="information">
+                      {{#if registration.educproof}}
+                      <a href="{{registration.educproof}}" target="_blank">View Payment Proof</a>
+                      {{else}}
+                        no payment
+                      {{/if}}
+                      {{#if (or user.ptaverified registration.educproof)}}
+                        <input type="text" name="educproof" value="{{registration.educproof}}" hidden readonly>
+                      {{else}}
+                        <input type="file" name="educproof" required>
+                      {{/if}}
+                      {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2"><strong>Poomsae Certificate:</strong></td>
+                    <td class="information">
+                      {{#if registration.poomsaecert}}
+                      <a href="{{registration.poomsaecert}}" target="_blank">View Payment Proof</a>
+                      {{else}}
+                        no payment
+                      {{/if}}
+                      {{#if (or user.ptaverified registration.poomsaecert)}}
+                        <input type="text" name="poomsaecert" value="{{registration.poomsaecert}}" hidden readonly>
+                      {{else}}
+                        <input type="file" name="poomsaecert" required>
+                      {{/if}}
+                      {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2"><strong>Kukkiwon Certificate:</strong></td>
+                    <td class="information">
+                      {{#if registration.kukkiwoncert}}
+                      <a href="{{registration.kukkiwoncert}}" target="_blank">View Payment Proof</a>
+                      {{else}}
+                        no payment
+                      {{/if}}
+                      {{#if (or user.ptaverified registration.kukkiwoncert)}}
+                        <input type="text" name="kukkiwoncert" value="{{registration.kukkiwoncert}}" hidden readonly>
+                      {{else}}
+                        <input type="file" name="kukkiwoncert" required>
+                      {{/if}}
+                      {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2"><strong>PTA Black-Belt Certificate:</strong></td>
+                    <td class="information">
+                      {{#if registration.ptablackbeltcert}}
+                      <a href="{{registration.ptablackbeltcert}}" target="_blank">View Payment Proof</a>
+                      {{else}}
+                        no payment
+                      {{/if}}
+                      {{#if (or user.ptaverified registration.ptablackbeltcert)}}
+                        <input type="text" name="ptablackbeltcert" value="{{registration.ptablackbeltcert}}" hidden readonly>
+                      {{else}}
+                        <input type="file" name="ptablackbeltcert" required>
+                      {{/if}}
+                      {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2"><strong>Proof of Payment:</strong></td>
+                    <td class="information">
+                      {{#if registration.paymentproof}}
+                      <a href="{{registration.paymentproof}}" target="_blank">View Payment Proof</a>
+                      {{else}}
+                        no payment
+                      {{/if}}
+                      {{#if (or user.ptaverified registration.paymentproof)}}
+                        <input type="text" name="paymentproof" value="{{registration.paymentproof}}" hidden readonly>
+                      {{else}}
+                        <input type="file" name="paymentproof" required>
+                      {{/if}}
+                      {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
                     </td>
                   </tr>
                 </table>
               </td>
             </tr>
-            
           </table>
           {{#if user.ptaverified}}
-          <button type="submit">Confirm rejections</button>
+            <button type="submit">Confirm rejections</button>
+          {{else}}
+            <button type="submit">Submit Changes</button>
           {{/if}}
         </form>
 
@@ -311,18 +386,7 @@
     function toggleDropdown() {
       document.getElementById("dropdown").classList.toggle("show");
     }
-  
-    document.addEventListener("DOMContentLoaded", function() {
-      const clearInputButtons = document.querySelectorAll(".clear-input");
-      const isAdminVerified = {{user.ptaverified}};
 
-      if (!isAdminVerified) {
-      clearInputButtons.forEach(button => {
-        button.style.display = "none";
-      });
-      }
-    });
-    // THIS THANG NOT SURE IF WORKS
   </script>
 </body>
 
