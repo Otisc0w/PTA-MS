@@ -1495,16 +1495,14 @@ app.post("/update-nccstatus", async (req, res) => {
 });
 
 app.post("/reject-ncc-fields", async (req, res) => {
-  const { 
-    nccregid, 
-    rejectmsg, 
-    description, 
+
+  const {
+    id,
     firstname,
     middlename,
     lastname,
     gender,
     bday,
-    age,
     phonenum,
     email,
     lastpromo,
@@ -1517,121 +1515,108 @@ app.post("/reject-ncc-fields", async (req, res) => {
     instructormobile,
     instructoremail,
     birthcert,
-    portrait,
     paymentproof,
-    validpayment
   } = req.body;
 
-  const bdayValue = bday ? bday : null;
-  const lastpromoValue = lastpromo ? lastpromo : null;
-
   try {
-    // Update the registration with the reject message and description
-    const { error: updateRegistrationError } = await supabase
+    const { data, error } = await supabase
       .from("ncc_registrations")
-      .update({
-      rejectmsg,
-      description,
-      firstname,
-      middlename,
-      lastname,
-      gender,
-      bday: bdayValue,
-      age,
-      phonenum,
-      email,
-      lastpromo: lastpromoValue,
-      promolocation,
-      clubregion,
-      beltlevel,
-      instructorfirstname,
-      instructormi,
-      instructorlastname,
-      instructormobile,
-      instructoremail,
-      birthcert,
-      portrait,
-      paymentproof,
-      validpayment
-      })
-      .eq("id", nccregid);
+      .update(
+        { firstname,
+          middlename,
+          lastname,
+          gender,
+          bday,
+          phonenum,
+          email,
+          lastpromo,
+          promolocation,
+          clubregion,
+          beltlevel,
+          instructorfirstname,
+          instructormi,
+          instructorlastname,
+          instructormobile,
+          instructoremail,
+          birthcert,
+          paymentproof,
+         }
+      )
+      .eq("id", id);
 
-    if (updateRegistrationError) {
-      console.error("Error updating registration:", updateRegistrationError.message);
-      return res.status(500).send("Error updating registration");
+    if (error) {
+      return res.status(400).json({ error: error.message });
     }
 
-    // Redirect back to the review page
-    res.redirect(`/membership-review/${nccregid}`);
+    res.redirect(`/membership-review/${id}`);
   } catch (error) {
-    console.error("Server error:", error.message);
     res.status(500).json({ error: error.message });
   }
 });
 
-app.post("/reject-instructor-fields", async (req, res) => {
-  const {
-    instructorregid,
-    rejectmsg,
-    rejectdescription,
-    firstname,
-    middlename,
-    lastname,
-    gender,
-    bday,
-    phonenum,
-    email,
-    clubregion,
-    birthcert,
-    portrait,
-    educproof,
-    poomsaecert,
-    kukkiwoncert,
-    ptablackbeltcert,
-    paymentproof,
-    validpayment,
-  } = req.body;
+// app.post("/reject-instructor-fields", async (req, res) => {
+//   const {
+//     instructorregid,
+//     rejectmsg,
+//     rejectdescription,
+//     firstname,
+//     middlename,
+//     lastname,
+//     gender,
+//     bday,
+//     phonenum,
+//     email,
+//     clubregion,
+//     birthcert,
+//     portrait,
+//     educproof,
+//     poomsaecert,
+//     kukkiwoncert,
+//     ptablackbeltcert,
+//     paymentproof,
+//     validpayment,
+//   } = req.body;
 
-  const bdayValue = bday ? bday : null;
+//   const bdayValue = bday ? bday : null;
 
-  try {
-    // Update the registration with the reject message and description
-    const { error: updateRegistrationError } = await supabase
-      .from("instructor_registrations")
-      .update({
-        rejectmsg,
-        rejectdescription,
-        firstname,
-        middlename,
-        lastname,
-        gender,
-        bday: bdayValue,
-        phonenum,
-        email,
-        clubregion,
-        birthcert,
-        portrait,
-        educproof,
-        poomsaecert,
-        kukkiwoncert,
-        ptablackbeltcert,
-        paymentproof,
-        validpayment
-      })
-      .eq("id", instructorregid);
+//   try {
+//     // Update the registration with the reject message and description
+//     const { error: updateRegistrationError } = await supabase
+//       .from("instructor_registrations")
+//       .update({
+//         rejectmsg,
+//         rejectdescription,
+//         firstname,
+//         middlename,
+//         lastname,
+//         gender,
+//         bday: bdayValue,
+//         phonenum,
+//         email,
+//         clubregion,
+//         birthcert,
+//         portrait,
+//         educproof,
+//         poomsaecert,
+//         kukkiwoncert,
+//         ptablackbeltcert,
+//         paymentproof,
+//         validpayment
+//       })
+//       .eq("id", instructorregid);
 
-    if (updateRegistrationError) {
-      console.error("Error updating registration:", updateRegistrationError.message);
-      return res.status(500).send("Error updating registration");
-    }
+//     if (updateRegistrationError) {
+//       console.error("Error updating registration:", updateRegistrationError.message);
+//       return res.status(500).send("Error updating registration");
+//     }
 
-    // Redirect back to the review page
-    res.redirect(`/instructor-review/${instructorregid}`);
-  } catch (error) {
-    console.error("Server error:", error.message);
-    res.status(500).json({ error: error.message });
-  }
-});
+//     // Redirect back to the review page
+//     res.redirect(`/instructor-review/${instructorregid}`);
+//   } catch (error) {
+//     console.error("Server error:", error.message);
+//     res.status(500).json({ error: error.message });
+//   }
+// });
 
 app.post("/update-instructorstatus", async (req, res) => {
   if (!req.session.user) {
