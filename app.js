@@ -1518,6 +1518,9 @@ app.post("/reject-ncc-fields", async (req, res) => {
     paymentproof,
   } = req.body;
 
+  const bdayValue = bday ? bday : null;
+  const lastpromoValue = lastpromo ? lastpromo : null;
+
   try {
     const { data, error } = await supabase
       .from("ncc_registrations")
@@ -1526,10 +1529,10 @@ app.post("/reject-ncc-fields", async (req, res) => {
           middlename,
           lastname,
           gender,
-          bday,
+          bday: bdayValue,
           phonenum,
           email,
-          lastpromo,
+          lastpromo: lastpromoValue,
           promolocation,
           clubregion,
           beltlevel,
@@ -1620,7 +1623,7 @@ app.post("/reject-instructor-fields", async (req, res) => {
 
 app.post("/reject-club-fields", async (req, res) => {
   const {
-    id,
+    clubregid,
     firstname,
     lastname,
     phonenum,
@@ -1652,13 +1655,13 @@ app.post("/reject-club-fields", async (req, res) => {
           paymentproof,
         }
       )
-      .eq("id", id);
+      .eq("id", clubregid);
 
     if (error) {
       return res.status(400).json({ error: error.message });
     }
 
-    res.redirect(`/clubreg-review/${id}`);
+    res.redirect(`/clubreg-review/${clubregid}`);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -6441,6 +6444,11 @@ app.get("/membership-status", async function (req, res) {
 });
 
 app.get("/membership-review/:id", async (req, res) => {
+
+  if (!req.session.user) {
+    return res.redirect("/");
+  }
+
   const { id } = req.params;
 
   try {
@@ -6468,6 +6476,10 @@ app.get("/membership-review/:id", async (req, res) => {
 });
 
 app.get("/instructor-review/:id", async (req, res) => {
+  if (!req.session.user) {
+    return res.redirect("/");
+  }
+
   const { id } = req.params;
 
   try {
@@ -6495,6 +6507,10 @@ app.get("/instructor-review/:id", async (req, res) => {
 });
 
 app.get("/clubreg-review/:id", async (req, res) => {
+  if (!req.session.user) {
+    return res.redirect("/");
+  }
+
   const { id } = req.params;
 
   try {

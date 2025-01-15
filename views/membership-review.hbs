@@ -83,7 +83,7 @@
                     <tr>
                       <td><strong>Birthday:</strong></td>
                       <td class="information">
-                        <input type="text" name="bday" value="{{formatDate registration.bday "MMMM D, YYYY"}}" {{#if (or user.ptaverified registration.bday)}}readonly{{else}}required{{/if}}>
+                        <input type="date" name="bday" value="{{formatDate registration.bday "YYYY-MM-DD"}}" {{#if (or user.ptaverified registration.bday)}}readonly{{else}}required{{/if}}>
                         {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
                       </td>
                     </tr>
@@ -107,12 +107,12 @@
                         {{#if registration.birthcert}}
                         <a href="{{registration.birthcert}}" target="_blank">View Payment Proof</a>
                         {{else}}
-                          no payment
+                          No File
                         {{/if}}
                         {{#if (or user.ptaverified registration.birthcert)}}
                           <input type="text" name="birthcert" value="{{registration.birthcert}}" hidden readonly>
                         {{else}}
-                          <input type="file" name="birthcert" required>
+                          <input type="file" name="birthcert" value="{{registration.birthcert}}" required>
                         {{/if}}
                         {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
                       </td>
@@ -123,28 +123,28 @@
                         {{#if registration.paymentproof}}
                           <a href="{{registration.paymentproof}}" target="_blank">View Payment Proof</a>
                         {{else}}
-                          no payment
+                          No Payment
                         {{/if}}
                         {{#if (or user.ptaverified registration.paymentproof)}}
                           <input type="text" name="paymentproof" value="{{registration.paymentproof}}" hidden readonly>
                         {{else}}
-                          <input type="file" name="paymentproof" required>
+                          <input type="file" name="paymentproof" value="{{registration.paymentproof}}" required>
                         {{/if}}
                         {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
                       </td>
                     </tr>
                 </table>
-              <button type="submit" class="rejectbtn">{{#if user.ptaverified}}Confirm Rejections{{else}}Submit Changes{{/if}}</button>
-             </form>
+             
+             
             </td>
           </tr>
         </table>
 
-        <table class="additional-details">
+          <table class="additional-details">
             <tr>
             <td><strong>Last Promotion:</strong></td>
             <td class="information">
-              <input type="text" name="lastpromo" value="{{formatDate registration.bday "MMMM D, YYYY"}}" {{#if (or user.ptaverified registration.middlename)}}readonly{{else}}required{{/if}}>
+              <input type="date" name="lastpromo" value="{{formatDate registration.lastpromo "YYYY-MM-DD"}}" {{#if (or user.ptaverified registration.lastpromo)}}readonly{{else}}required{{/if}}>
               {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
             </td>
             </tr>
@@ -205,7 +205,8 @@
             </td>
             </tr>
           </table>
-        
+        <button type="submit" class="rejectbtn">{{#if user.ptaverified}}Confirm Rejections{{else}}Submit Changes{{/if}}</button>
+        </form>
       </div>
 
     <form action="/update-nccstatus" method="post" class="review-form">

@@ -28,7 +28,7 @@
         <h1>Review Club Application</h1>
       </div>
 
-      <form action="/reject-club-fields" method="post">
+      <form action="/reject-club-fields" method="post" {{#unless user.ptaverified}}enctype="multipart/form-data"{{/unless}}>
         <input type="hidden" name="clubregid" value="{{clubregistration.id}}"> 
         <div class="review-details">
           <h2>Club Application Information</h2>
@@ -36,7 +36,7 @@
             <tr>
               <td colspan="2">
                 <img class="clubpic" src="{{clubregistration.clubpic}}">
-                <input type="hidden" name="clubname" value="{{clubregistration.clubpic}}" {{#if (or user.ptaverified clubregistration.clubname)}}readonly{{else}}required{{/if}}>
+                <input type="hidden" name="clubpic" value="{{clubregistration.clubpic}}" {{#if (or user.ptaverified clubregistration.clubpic)}}readonly{{else}}required{{/if}}>
                   {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
               </td>
               <td>
@@ -116,8 +116,8 @@
           {{else}}
             <button type="submit">Submit Changes</button>
           {{/if}}
+        </div>
       </form>
-      </div>
 
       <form action="/update-clubstatus" method="post">
         <input type="hidden" name="applicationId" value="59"> 

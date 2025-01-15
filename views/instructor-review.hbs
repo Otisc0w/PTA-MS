@@ -44,7 +44,7 @@
       <section class="review-details">
         <h2>Applicant Information</h2>
         
-        <form action={{#if user.ptaverified}}"/reject-instructor-fields"{{else}}"/submit-instructor"{{/if}} method="post" enctype="multipart/form-data">
+        <form action={{#if user.ptaverified}}"/reject-instructor-fields"{{else}}"/submit-instructor" enctype="multipart/form-data"{{/if}} method="post" >
         <input type="hidden" name="instructorregid" value="{{registration.id}}">
           <table class="details-section">
             <tr>
