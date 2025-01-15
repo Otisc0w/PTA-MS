@@ -27,30 +27,8 @@
 			<div class="review-header">
         <h1>Review Club Application</h1>
       </div>
-      <form action="/reject-club-fields" method="post" enctype="multipart/form-data">
-        <input type="text" name="clubregid" value="{{clubregistration.id}}">
-        <div class="review-details">
-          <h2>Club Application Information</h2>
-          <table class="details-section">
-            <tr>
-              <td colspan="2">
-                <img class="clubpic" src="{{clubregistration.clubpic}}">
-                <input type="hidden" name="clubpic" value="{{clubregistration.clubpic}}" {{#if (or user.ptaverified clubregistration.clubpic)}}readonly{{else}}required{{/if}}>
-                  {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
-              </td>
-            </tr>
-            <tr>
-              <td><strong>Club Name:</strong></td>
-              <td><input type="text" name="clubname" value="{{clubregistration.clubname}}" {{#if (or user.ptaverified clubregistration.clubname)}}readonly{{else}}required{{/if}}>
-                  {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
-              </td>
-            </tr>
-          </table>
-        </div>
-        <button type="submit">Confirm rejections</button>
-      </form>
 
-      {{!-- <form action="/reject-club-fields" method="post" enctype="multipart/form-data">
+      <form action="/reject-club-fields" method="post">
         <input type="hidden" name="clubregid" value="{{clubregistration.id}}"> 
         <div class="review-details">
           <h2>Club Application Information</h2>
@@ -138,7 +116,7 @@
           {{else}}
             <button type="submit">Submit Changes</button>
           {{/if}}
-      </form> --}}
+      </form>
       </div>
 
       <form action="/update-clubstatus" method="post">
