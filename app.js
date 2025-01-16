@@ -1498,6 +1498,7 @@ app.post("/reject-ncc-fields", async (req, res) => {
 
   const {
     id,
+    portrait,
     firstname,
     middlename,
     lastname,
@@ -1525,7 +1526,8 @@ app.post("/reject-ncc-fields", async (req, res) => {
     const { data, error } = await supabase
       .from("ncc_registrations")
       .update(
-        { firstname,
+        { portrait,
+          firstname,
           middlename,
           lastname,
           gender,

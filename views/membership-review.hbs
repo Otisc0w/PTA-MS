@@ -44,9 +44,13 @@
       <div class="review-details">
         <table class="profile-section">
           <tr>
-            <td><img class="athlete-picture" src="{{registration.portrait}}" alt="Profile Picture"></td>
+            <form action={{#if user.ptaverified}}"/reject-ncc-fields"{{else}}"/submit-ncc" enctype="multipart/form-data"{{/if}} method="post">
+            
+            <td><img class="athlete-picture" src="{{registration.portrait}}" alt="Profile Picture">
+            <input type="text" name="portrait" value="{{registration.portrait}}" hidden readonly>
+            {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
+            </td>
             <td>
-              <form action={{#if user.ptaverified}}"/reject-ncc-fields"{{else}}"/submit-ncc" enctype="multipart/form-data"{{/if}} method="post" >
                 <table class="details-section">
                 <tr>
                   <td><strong>ID:</strong></td>
