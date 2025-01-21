@@ -12,6 +12,7 @@
     --hover-color: #0056b3;
     --border-radius: 8px;
     --box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
 }
 
 body {
@@ -83,6 +84,7 @@ body {
     width: 300px;
     border-radius: 3%;
     object-fit: cover;
+    margin-right: 0;
 }
 
 .dropdown-content {
@@ -130,8 +132,8 @@ body {
     margin-bottom: 20px;
     color: var(--text-color);
     display: flex;
-    flex-direction: column;
-    margin: 20px;
+    align-items: flex-start;
+    gap: 20px; /* Ensures spacing between sections */
 }
 
 .review-details div {
@@ -180,8 +182,10 @@ body {
 }
 
 .confirmscreen button {
-    margin-right: 10px;
+    margin: 10px auto;
+    display: block;
 }
+
 
 .backtolist a {
     color: var(--primary-color);
@@ -229,7 +233,8 @@ body {
 /* Profile section */
 .profile-section {
     display: flex;
-    margin-bottom: 20px;
+    margin-bottom: 1px;
+    margin-right: 0;
 }
 
 .details-section {
@@ -237,8 +242,8 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    font-size: 20px;
-    margin-left: 30px;
+    font-size: 18px;
+    margin-left: 0;
 }
 
 .details-section table {
@@ -248,12 +253,12 @@ body {
 
 .details-section th,
 .details-section td {
-    padding: 10px;
+    padding: 5px 8px;
     text-align: left;
 }
 
 .details-section tr {
-    margin-bottom: 30px;
+    margin-bottom: 1px;
 }
 
 .information {
@@ -261,10 +266,20 @@ body {
     font-size: 22px;
 }
 
+.information input {
+    margin: 5px 0; /* Add minimal vertical spacing for inputs */
+}
+
+
 .additional-details {
     margin-top: 20px;
     padding-top: 10px;
-    border-top: 1px solid #ccc;
+
+    font-size: 20px;
+}
+.additional-details tr {
+    margin-bottom: 0; /* Reduce the spacing in additional details */
+    margin-left: 0;
 }
 
 p {
@@ -408,3 +423,172 @@ strong {
     font-size: 16px;
     color: var(--text-color);
   }
+
+
+  .review-details input[type="text"],
+  .review-details input[type="date"],
+  .review-details input[type="file"] {
+      flex-grow: 1;
+      width: 100%;
+      padding: 6px 10px;
+      border: 1px solid var(--accent-bg);
+      border-radius: var(--border-radius);
+      background-color: var(--accent-bg);
+      color: var(--text-color);
+      font-size: 14px;
+      box-shadow: inset var(--box-shadow);
+      margin:0;
+  }
+  
+  .review-details input[readonly] {
+      background-color: #444;
+      color: var(--secondary-text);
+      border: 1px solid #555;
+      cursor: not-allowed;
+  }
+  
+  .review-details table {
+      width: 100%;
+      border-spacing: 10px 5px; /* Reduced vertical spacing */
+      table-layout: fixed; /* Ensures uniform column widths */
+  }
+  
+  .review-details th {
+      text-align: left;
+      padding: 5px 10px;
+      vertical-align: top; /* Aligns text to the top */
+  }
+  
+  .review-details td {
+      padding: 5px 10px;
+      vertical-align: top; /* Aligns fields with labels */
+      display: flex; /* Ensure uniform layout */
+      align-items: center;
+      gap: 10px; /* Adds spacing between elements */
+  }
+  
+  .rejectbtn1 {
+    display: block;
+    margin: 10px auto 0; /* Centers the button and adds top margin */
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--border-radius);
+    background-color: red;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center; /* Aligns text in the button */
+    font-weight: bold;
+}
+.rejectbtn1:hover {
+    background-color: var(--hover-color);
+}
+
+
+  /* Clear Input Button */
+button.clear-input {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 80%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: var(--box-shadow);
+    transition: background-color 0.3s, transform 0.2s;
+    margin-left: 10px;
+}
+
+button.clear-input:hover {
+    background-color: #e53935;
+    transform: scale(1.1);
+}
+
+/* Confirm Reject Screen Container */
+#confirmrejectscreen {
+    background-color: var(--dark-bg);
+    border: 1px solid var(--accent-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 20px;
+    max-width: 600px; /* Ensures a consistent width */
+    margin: 30px auto; /* Centers the container */
+    color: var(--primary-color);
+    text-align: center; /* Aligns content to the center */
+}
+
+/* Title Styling */
+#confirmrejectscreen h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+    text-align: center;
+}
+
+/* Select and Textarea Styling */
+#confirmrejectscreen select,
+#confirmrejectscreen textarea {
+    width: 100%;
+    padding: 0;
+    border: 1px solid var(--accent-bg);
+    border-radius: var(--border-radius);
+    background-color: var(--light-bg);
+    color: var(--text-color);
+    margin-bottom: 20px;
+    font-size: 16px;
+    box-shadow: inset var(--box-shadow);
+}
+
+/* Button Styling */
+#confirmrejectscreen button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--border-radius);
+    background-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
+    transition: background-color 0.3s;
+}
+
+#confirmrejectscreen button:hover {
+    background-color: var(--hover-color);
+}
+
+#confirmrejectscreen .cancelreject {
+    background-color: red;
+}
+
+#confirmrejectscreen .cancelreject:hover {
+    background-color: darkred;
+}
+
+#cancel{
+    padding: 5px 10px;
+    border: none;
+    border-radius: var(--border-radius);
+    background-color: red;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
+    transition: background-color 0.3s;
+}
+
+#confirm{
+    padding: 5px 10px;
+    border: none;
+    border-radius: var(--border-radius);
+    background-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
+    transition: background-color 0.3s;
+}
