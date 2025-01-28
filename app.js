@@ -1487,6 +1487,23 @@ app.post("/update-nccstatus", async (req, res) => {
       };
     }
 
+    if (status ==2){
+      const { data: transactions, error: transactionError } = await supabase
+        .from("transactions")
+        .insert([
+          {
+            userid: registration.submittedby,
+            type: "ncc",
+            amount: 500, // Adjust the amount as needed
+          },
+        ]);
+
+      if (transactionError) {
+        console.error("Error creating transaction:", transactionError.message);
+        return res.status(500).send("Error creating transaction");
+      }
+    }
+
     res.redirect(`/membership-review/${applicationId}`); // Redirect back to the review page
   } catch (error) {
     console.error("Server error:", error.message);
