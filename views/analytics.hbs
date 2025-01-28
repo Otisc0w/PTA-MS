@@ -60,6 +60,19 @@
   <!-- Analytics Content -->
   <div class="analytics-container">
 
+    <div class="card top-performers-card">
+      <h2>Transactions</h2>
+      <div class="performers">
+        {{#each transactions}}
+        <div class="performer-card">
+          <!--<img src="{{this.image}}" alt="Performer Photo" class="performer-photo"> -->
+          <h3>{{this.type}}</h3>
+          <p>Date: {{this.date}}</p>
+          <p>Amount: {{this.amount}}</p>
+        </div>
+        {{/each}}
+      </div>
+    </div>
     <!-- Top 5 Performers of the Year -->
     <!-- Top 10 Performers of the Year -->
     <div class="card top-performers-card">

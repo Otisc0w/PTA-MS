@@ -1487,6 +1487,7 @@ app.post("/update-nccstatus", async (req, res) => {
       };
     }
 
+    // Check if status is 2, indicating the need to create a transaction for the NCC fee CHECKE NOT SURE OF OTHR CONSEQEUENCES
     if (status ==2){
       const { data: transactions, error: transactionError } = await supabase
         .from("transactions")
@@ -1826,6 +1827,24 @@ app.post("/update-instructorstatus", async (req, res) => {
       console.log("Instructor verified successfully");
     }
 
+    // Check if status is 2, indicating the need to create a transaction for the Instructor fee CEHCK FIRST 
+    if (status == 2) {
+      const { data: transactions, error: transactionError } = await supabase
+        .from("transactions")
+        .insert([
+          {
+            userid: registration.submittedby,
+            type: "instructor",
+            amount: 500, // Adjust the amount as needed
+          },
+        ]);
+
+      if (transactionError) {
+        console.error("Error creating transaction:", transactionError.message);
+        return res.status(500).send("Error creating transaction");
+      }
+    }
+
     res.redirect(`/instructor-review/${applicationId}`); // Redirect back to the review page
   } catch (error) {
     console.error("Server error:", error.message);
@@ -1856,7 +1875,7 @@ app.post("/update-clubstatus", async (req, res) => {
 
     console.log("Registration updated:", clubregistration);
     
-    // Check if status is 4, indicating the need to update the user's athleteverified column and insert into athletes table
+    // Check if status is 3 indicating the need to update the user's athleteverified column and insert into athletes table
     if (status == 3) {
       const {
         phonenum,
@@ -1892,6 +1911,24 @@ app.post("/update-clubstatus", async (req, res) => {
       }
 
       console.log("Club inserted successfully");
+    }
+    
+    // Check if status is 2, indicating the need to update the rejectmsg
+    if (status == 2) {
+      const { data: transactions, error: transactionError } = await supabase
+        .from("transactions")
+        .insert([
+          {
+            userid: clubregistration.submittedby,
+            type: "club",
+            amount: 500, // Adjust the amount as needed
+          },
+        ]);
+
+      if (transactionError) {
+        console.error("Error creating transaction:", transactionError.message);
+        return res.status(500).send("Error creating transaction");
+      }
     }
 
     // Add a notification for the user about their club registration status
@@ -6679,6 +6716,15 @@ app.get("/analytics", async (req, res) => {
     if (totalClubsError) throw totalClubsError;
     const totalClubs = totalClubsData.length;
 
+    // Fetch transactions data
+    const { data: transactions, error: transactionsError } = await supabase
+      .from("transactions")
+      .select("*");
+
+    if (transactionsError) {
+      throw transactionsError;
+    }
+
     // Render the analytics page with all fetched data
     res.render("analytics", {
       topPerformers: topPerformersWithClubs,
@@ -6688,6 +6734,7 @@ app.get("/analytics", async (req, res) => {
       totalClubs,
       clubsByMonth,  // Pass grouped clubs
       eventsByMonth, // Pass grouped events
+      transactions,
     });
   } catch (error) {
     console.error("Error fetching analytics data:", error.message);
