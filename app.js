@@ -5834,6 +5834,28 @@ app.get("/events-details/:id", async function (req, res) {
 
     // Calculate the number of registrations
     const registrationcount = participants.length;
+    // Fetch judge scores for poomsae players
+    const { data: judgeScores, error: judgeScoresError } = await supabase
+      .from("poomsae_judge_scores")
+      .select("*")
+      .in("poomsaeplayerid", poomsaePlayers.map(player => player.id));
+
+    if (judgeScoresError) {
+      return res.status(400).json({ error: judgeScoresError.message });
+    }
+
+    // Map judge scores to poomsae players in sortedGroupedByRound
+    Object.keys(sortedGroupedByRound).forEach(round => {
+      sortedGroupedByRound[round] = sortedGroupedByRound[round].map(player => {
+      const playerJudgeScores = judgeScores.filter(score => score.poomsaeplayerid === player.id);
+      return {
+        ...player,
+        judgeScores: playerJudgeScores,
+      };
+      });
+    });
+
+    console.log("Grouped Poomsae Players with Judge Scores:", sortedGroupedByRound);
 
     // Fetch the top 4 players with the highest totalscore
     const { data: poomsaetop4, error: poomsaetop4Error } = await supabase

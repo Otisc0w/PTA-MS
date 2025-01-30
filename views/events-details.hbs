@@ -373,7 +373,13 @@
                       </form>
                     {{/if}}
                   </td>
-                  <td class="totalscore">{{totalscore}}</td>
+                  <td class="totalscore">
+                    {{#each judgeScores}}
+                      <div class="judge-score">
+                        {{techscore}}
+                      </div>
+                    {{/each}}
+                  </td>
                   <td>
                     {{#unless (eq ranking 0)}}
                     {{#if (eq ../../event.status 'Ongoing')}}
@@ -594,7 +600,7 @@
         <h3 class="playername"></h3>
         <div class="score-table">
           <form action="/submit-poomsae-scores" method="post">
-            <input type="hidden" name="id" value="">
+            <input type="" name="id" value=""> <-- ID
             <input type="hidden" name="eventid" value="{{event.id}}">
             <table>
               <thead>
@@ -872,7 +878,7 @@
       {{/if}}
     {{else if (eq event.eventtype 'Kyorugi')}}
      <table class="results-table">
-         <thead>
+        <thead>
           <tr>
             <th>Rank</th>
             <th>Player</th>
