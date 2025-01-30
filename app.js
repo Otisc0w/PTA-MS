@@ -4503,10 +4503,26 @@ app.post("/submit-poomsae-scores", async (req, res) => {
       return res.status(400).json({ error: error.message });
     }
 
+    // Insert scores into judge_scores table
+    const { error: judgeScoresError } = await supabase
+      .from("poomsae_judge_scores")
+      .insert([
+        {
+          judgeid: req.session.user.id, // Assuming the judge ID is the current user's ID
+          poomsaeplayerid: id,
+          techscore: technicalscore,
+          performancescore: performancescore,
+        },
+      ]);
+
+    if (judgeScoresError) {
+      return res.status(400).json({ error: judgeScoresError.message });
+    }
     res.redirect(`/events-details/${eventid}`);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+
 });
 
 app.post("/submit-grade-sheet", async (req, res) => {
