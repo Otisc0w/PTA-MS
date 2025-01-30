@@ -1471,24 +1471,6 @@ app.post("/update-nccstatus", async (req, res) => {
       console.log("Athlete inserted successfully");
       }
 
-      // Store athlete data in session
-      req.session.athlete = {
-      firstname,
-      middlename,
-      lastname,
-      gender,
-      bday,
-      clubregion,
-      beltlevel,
-      portrait,
-      division,
-      height,
-      weight,
-      };
-    }
-
-    // Check if status is 2, indicating the need to create a transaction for the NCC fee CHECKE NOT SURE OF OTHR CONSEQEUENCES
-    if (status ==2){
       const { data: transactions, error: transactionError } = await supabase
         .from("transactions")
         .insert([
@@ -1503,6 +1485,21 @@ app.post("/update-nccstatus", async (req, res) => {
         console.error("Error creating transaction:", transactionError.message);
         return res.status(500).send("Error creating transaction");
       }
+
+      // Store athlete data in session
+      req.session.athlete = {
+      firstname,
+      middlename,
+      lastname,
+      gender,
+      bday,
+      clubregion,
+      beltlevel,
+      portrait,
+      division,
+      height,
+      weight,
+      };
     }
 
     res.redirect(`/membership-review/${applicationId}`); // Redirect back to the review page
@@ -1824,11 +1821,6 @@ app.post("/update-instructorstatus", async (req, res) => {
         return res.status(500).send("Error updating expireson");
       }
 
-      console.log("Instructor verified successfully");
-    }
-
-    // Check if status is 2, indicating the need to create a transaction for the Instructor fee CEHCK FIRST 
-    if (status == 2) {
       const { data: transactions, error: transactionError } = await supabase
         .from("transactions")
         .insert([
@@ -1843,6 +1835,8 @@ app.post("/update-instructorstatus", async (req, res) => {
         console.error("Error creating transaction:", transactionError.message);
         return res.status(500).send("Error creating transaction");
       }
+
+      console.log("Instructor verified successfully");
     }
 
     res.redirect(`/instructor-review/${applicationId}`); // Redirect back to the review page
@@ -1910,11 +1904,6 @@ app.post("/update-clubstatus", async (req, res) => {
         return res.status(500).send("Error inserting club");
       }
 
-      console.log("Club inserted successfully");
-    }
-    
-    // Check if status is 2, indicating the need to update the rejectmsg
-    if (status == 2) {
       const { data: transactions, error: transactionError } = await supabase
         .from("transactions")
         .insert([
@@ -1929,7 +1918,10 @@ app.post("/update-clubstatus", async (req, res) => {
         console.error("Error creating transaction:", transactionError.message);
         return res.status(500).send("Error creating transaction");
       }
+
+      console.log("Club inserted successfully");
     }
+    
 
     // Add a notification for the user about their club registration status
     let statusMessage;
