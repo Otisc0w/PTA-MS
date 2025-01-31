@@ -295,7 +295,7 @@ strong {
     padding: 10px 20px;
     border: none;
     border-radius: var(--border-radius);
-    background-color: darkred;
+    background-color: red;
     color: white;
     cursor: pointer;
     transition: background-color 0.2s;
@@ -303,7 +303,7 @@ strong {
 }
 
 .backtolist:hover {
-    background-color: red;
+    background-color: darkred;
 }
 
 .printbtn {
@@ -481,7 +481,7 @@ strong {
     font-weight: bold;
 }
 .rejectbtn1:hover {
-    background-color: var(--hover-color);
+    background-color: darkred;
 }
 
 
