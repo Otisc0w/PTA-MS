@@ -374,11 +374,9 @@
                     {{/if}}
                   </td>
                   <td class="totalscore">
-                    {{#each judgeScores}}
                       <div class="judge-score">
-                        {{totalscore}}
+                        {{averageScore}}
                       </div>
-                    {{/each}}
                   </td>
                   <td>
                     {{#unless (eq ranking 0)}}
@@ -600,7 +598,7 @@
         <h3 class="playername"></h3>
         <div class="score-table">
           <form action="/submit-poomsae-scores" method="post">
-            <input type="" name="id" value=""> <-- ID
+            <input type="" name="id" value="">
             <input type="hidden" name="eventid" value="{{event.id}}">
             <table>
               <thead>
@@ -659,7 +657,7 @@
               </tbody>
             </table>
             <div class="total-score">
-              <strong>Total Score (10.0):</strong> <span id="total-score">10.0</span>
+              <strong>Total Score (10.0):</strong> <input type="number" id="total-score" name="totalscore" value="10.0" readonly>
               <button class="submitscores" type="submit">Submit</button>
             </div>
           </form>
@@ -1001,7 +999,7 @@
       });
 
       // Update the total score in the UI
-      document.getElementById('total-score').textContent = totalScore.toFixed(1);
+      document.getElementById('total-score').value = totalScore.toFixed(1);
     }
 
     function toggleDropdown() {

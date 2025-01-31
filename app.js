@@ -150,8 +150,6 @@ app.use( session({
   })
 );
 
-
-
 // Set up Handlebars view engine
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "views"));
@@ -4483,17 +4481,18 @@ app.post("/submit-poomsae-scores", async (req, res) => {
     energy,
     id,
     eventid,
+    totalscore,
   } = req.body;
 
   
   const technicalscore = 4-parseFloat(basicmovement) -parseFloat(indivmovement) - parseFloat(balance);
   const performancescore = 6 - parseFloat(powerspeed) - parseFloat(coord) - parseFloat(energy);
-  const totalscore = parseFloat(technicalscore) + parseFloat(performancescore);
+  // const totalscore = parseFloat(technicalscore) + parseFloat(performancescore);
 
   try {
     const { error } = await supabase.from("poomsae_players")
     .update({ 
-      totalscore: totalscore,
+      totalscore: parseFloat(totalscore),
       performancescore: performancescore,
       technicalscore: technicalscore, 
      })
@@ -4512,7 +4511,7 @@ app.post("/submit-poomsae-scores", async (req, res) => {
           poomsaeplayerid: id,
           techscore: technicalscore,
           performancescore: performancescore,
-          totalscore: performancescore + technicalscore,
+          totalscore: parseFloat(totalscore),
         },
       ]);
 
@@ -5845,13 +5844,28 @@ app.get("/events-details/:id", async function (req, res) {
       return res.status(400).json({ error: judgeScoresError.message });
     }
 
-    // Map judge scores to poomsae players in sortedGroupedByRound
+    // Calculate average total score for each poomsae player
+    const playerScoresMap = judgeScores.reduce((acc, score) => {
+      if (!acc[score.poomsaeplayerid]) {
+      acc[score.poomsaeplayerid] = [];
+      }
+      acc[score.poomsaeplayerid].push(score.totalscore);
+      return acc;
+    }, {});
+
+    Object.keys(playerScoresMap).forEach(playerId => {
+      const scores = playerScoresMap[playerId];
+      const averageScore = scores.reduce((sum, score) => sum + score, 0) / scores.length;
+      playerScoresMap[playerId] = averageScore;
+    });
+
+    // Map average scores to poomsae players in sortedGroupedByRound
     Object.keys(sortedGroupedByRound).forEach(round => {
       sortedGroupedByRound[round] = sortedGroupedByRound[round].map(player => {
-      const playerJudgeScores = judgeScores.filter(score => score.poomsaeplayerid === player.id);
+      const averageScore = playerScoresMap[player.id] || 0;
       return {
         ...player,
-        judgeScores: playerJudgeScores,
+        averageScore,
       };
       });
     });
