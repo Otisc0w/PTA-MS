@@ -4512,6 +4512,7 @@ app.post("/submit-poomsae-scores", async (req, res) => {
           poomsaeplayerid: id,
           techscore: technicalscore,
           performancescore: performancescore,
+          totalscore: performancescore + technicalscore,
         },
       ]);
 
