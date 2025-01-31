@@ -4487,20 +4487,19 @@ app.post("/submit-poomsae-scores", async (req, res) => {
   
   const technicalscore = 4-parseFloat(basicmovement) -parseFloat(indivmovement) - parseFloat(balance);
   const performancescore = 6 - parseFloat(powerspeed) - parseFloat(coord) - parseFloat(energy);
-  // const totalscore = parseFloat(technicalscore) + parseFloat(performancescore);
 
   try {
-    const { error } = await supabase.from("poomsae_players")
-    .update({ 
-      totalscore: parseFloat(totalscore),
-      performancescore: performancescore,
-      technicalscore: technicalscore, 
-     })
-    .eq("id", id); // Ensure you pass the player ID in the request body
+    // const { error } = await supabase.from("poomsae_players")
+    // .update({ 
+    //   totalscore: parseFloat(totalscore),
+    //   performancescore: performancescore,
+    //   technicalscore: technicalscore, 
+    //  })
+    // .eq("id", id); // Ensure you pass the player ID in the request body
 
-    if (error) {
-      return res.status(400).json({ error: error.message });
-    }
+    // if (error) {
+    //   return res.status(400).json({ error: error.message });
+    // }
 
     // Insert scores into judge_scores table
     const { error: judgeScoresError } = await supabase
@@ -4517,6 +4516,29 @@ app.post("/submit-poomsae-scores", async (req, res) => {
 
     if (judgeScoresError) {
       return res.status(400).json({ error: judgeScoresError.message });
+    }
+
+    // Calculate the average total score for the poomsae player
+    const { data: judgescores, error: judgescoresError } = await supabase
+      .from("poomsae_judge_scores")
+      .select("totalscore")
+      .eq("poomsaeplayerid", id);
+
+    if (judgescoresError) {
+      return res.status(400).json({ error: judgescoresError.message });
+    }
+
+    const totalScores = judgescores.map(score => score.totalscore);
+    const averageTotalScore = totalScores.reduce((acc, score) => acc + score, 0) / totalScores.length;
+
+    // Update the poomsae_players table with the average total score
+    const { error: updatePoomsaePlayerError } = await supabase
+      .from("poomsae_players")
+      .update({ totalscore: averageTotalScore })
+      .eq("id", id);
+
+    if (updatePoomsaePlayerError) {
+      return res.status(400).json({ error: updatePoomsaePlayerError.message });
     }
     res.redirect(`/events-details/${eventid}`);
   } catch (error) {
