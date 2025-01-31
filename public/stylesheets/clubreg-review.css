@@ -246,7 +246,7 @@ body {
     cursor: pointer;
     transition: background-color 0.3s;
     text-align: center;
-    font-weight: bold;
+
     max-width: 250px;
     /* Restricts button width */
 }
@@ -255,6 +255,26 @@ body {
     background-color: darkred;
 }
 
+.submit-changes-btn {
+    display: block;
+    margin: 10px auto;
+    /* Centers the button */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: blue;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center;
+
+    max-width: 250px;
+    /* Restricts button width */
+}
+
+.submit-changes-btn:hover {
+    background-color: darkblue;
+}
 .backtolist {
     padding: 8px 10px;
     font-size: 13px;
