@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PTA | Membership Review</title>
   <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
-  <link rel="stylesheet" type="text/css" href="../stylesheets/membership-review.css">
+  <link rel="stylesheet" type="text/css" href="../stylesheets/instructor-review.css">
   <link rel="stylesheet" type="text/css" href="../stylesheets/navbar.css">
 </head>
 
@@ -29,7 +29,7 @@
         <div id="dropdown" class="dropdown-content">
           <a href="profile">Profile</a>
           <a href="settings">Settings</a>
-         
+
           <a href="/">Logout</a>
         </div>
       </div>
@@ -40,174 +40,198 @@
     <section class="review-header">
       <h1>Review Instructor Application</h1>
     </section>
-    
-      <section class="review-details">
-        <h2>Applicant Information</h2>
-        
-        <form action={{#if user.ptaverified}}"/reject-instructor-fields"{{else}}"/submit-instructor" enctype="multipart/form-data"{{/if}} method="post" >
+
+    <section class="review-details">
+      <h2>Applicant Information</h2>
+
+      <form action={{#if user.ptaverified}}"/reject-instructor-fields"{{else}}"/submit-instructor"
+        enctype="multipart/form-data" {{/if}} method="post">
         <input type="hidden" name="instructorregid" value="{{registration.id}}">
-          <table class="details-section">
-            <tr>
-              <td colspan="2">
-                <img class="athlete-picture" src="{{registration.portrait}}">
-              </td>
-              <td>
-                <table>
-                  <tr>
-                    <td><strong>First Name:</strong></td>
-                    <td><input type="text" name="firstname" value="{{registration.firstname}}" {{#if (or user.ptaverified registration.firstname)}}readonly{{else}}required{{/if}}>
-                        {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><strong>Middle Initial:</strong></td>
-                    <td><input type="text" name="middlename" value="{{registration.middlename}}" {{#if (or user.ptaverified registration.middlename)}}readonly{{else}}required{{/if}}>
-                        {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><strong>Last Name:</strong></td>
-                    <td><input type="text" name="lastname" value="{{registration.lastname}}" {{#if (or user.ptaverified registration.lastname)}}readonly{{else}}required{{/if}}>
-                        {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><strong>Gender:</strong></td>
-                    <td><input type="text" name="gender" value="{{registration.gender}}" {{#if (or user.ptaverified registration.gender)}}readonly{{else}}required{{/if}}>
-                        {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><strong>Birthday:</strong></td>
-                    <td><input type="date" name="bday" value="{{registration.bday}}" {{#if (or user.ptaverified registration.bday)}}readonly{{else}}required{{/if}}>
-                        {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><strong>Phone Number:</strong></td>
-                    <td><input type="tel" name="phonenum" value="{{registration.phonenum}}" {{#if (or user.ptaverified registration.phonenum)}}readonly{{else}}required{{/if}}>
-                        {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><strong>Email:</strong></td>
-                    <td><input type="email" name="email" value="{{registration.email}}" {{#if (or user.ptaverified registration.email)}}readonly{{else}}required{{/if}}>
-                        {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><strong>Club Region:</strong></td>
-                    <td><input type="text" name="clubregion" value="{{registration.clubregion}}" {{#if (or user.ptaverified registration.clubregion)}}readonly{{else}}required{{/if}}>
-                        {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="2"><strong>Birth Certificate:</strong></td>
-                    <td class="information">
-                      {{#if registration.birthcert}}
-                      <a href="{{registration.birthcert}}" target="_blank">View Payment Proof</a>
-                      {{else}}
-                        no payment
-                      {{/if}}
-                      {{#if (or user.ptaverified registration.birthcert)}}
-                        <input type="text" name="birthcert" value="{{registration.birthcert}}" hidden readonly>
-                      {{else}}
-                        <input type="file" name="birthcert" required>
-                      {{/if}}
-                      {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="2"><strong>Proof of Education:</strong></td>
-                    <td class="information">
-                      {{#if registration.educproof}}
-                      <a href="{{registration.educproof}}" target="_blank">View Payment Proof</a>
-                      {{else}}
-                        no payment
-                      {{/if}}
-                      {{#if (or user.ptaverified registration.educproof)}}
-                        <input type="text" name="educproof" value="{{registration.educproof}}" hidden readonly>
-                      {{else}}
-                        <input type="file" name="educproof" required>
-                      {{/if}}
-                      {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="2"><strong>Poomsae Certificate:</strong></td>
-                    <td class="information">
-                      {{#if registration.poomsaecert}}
-                      <a href="{{registration.poomsaecert}}" target="_blank">View Payment Proof</a>
-                      {{else}}
-                        no payment
-                      {{/if}}
-                      {{#if (or user.ptaverified registration.poomsaecert)}}
-                        <input type="text" name="poomsaecert" value="{{registration.poomsaecert}}" hidden readonly>
-                      {{else}}
-                        <input type="file" name="poomsaecert" required>
-                      {{/if}}
-                      {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="2"><strong>Kukkiwon Certificate:</strong></td>
-                    <td class="information">
-                      {{#if registration.kukkiwoncert}}
-                      <a href="{{registration.kukkiwoncert}}" target="_blank">View Payment Proof</a>
-                      {{else}}
-                        no payment
-                      {{/if}}
-                      {{#if (or user.ptaverified registration.kukkiwoncert)}}
-                        <input type="text" name="kukkiwoncert" value="{{registration.kukkiwoncert}}" hidden readonly>
-                      {{else}}
-                        <input type="file" name="kukkiwoncert" required>
-                      {{/if}}
-                      {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="2"><strong>PTA Black-Belt Certificate:</strong></td>
-                    <td class="information">
-                      {{#if registration.ptablackbeltcert}}
-                      <a href="{{registration.ptablackbeltcert}}" target="_blank">View Payment Proof</a>
-                      {{else}}
-                        no payment
-                      {{/if}}
-                      {{#if (or user.ptaverified registration.ptablackbeltcert)}}
-                        <input type="text" name="ptablackbeltcert" value="{{registration.ptablackbeltcert}}" hidden readonly>
-                      {{else}}
-                        <input type="file" name="ptablackbeltcert" required>
-                      {{/if}}
-                      {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="2"><strong>Proof of Payment:</strong></td>
-                    <td class="information">
-                      {{#if registration.paymentproof}}
-                      <a href="{{registration.paymentproof}}" target="_blank">View Payment Proof</a>
-                      {{else}}
-                        no payment
-                      {{/if}}
-                      {{#if (or user.ptaverified registration.paymentproof)}}
-                        <input type="text" name="paymentproof" value="{{registration.paymentproof}}" hidden readonly>
-                      {{else}}
-                        <input type="file" name="paymentproof" required>
-                      {{/if}}
-                      {{#if user.ptaverified}}<button type="button" class="clear-input" onclick="clearInput(this)">x</button>{{/if}}
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-          </table>
-          {{#if user.ptaverified}}
-            <button type="submit">Confirm rejections</button>
-          {{else}}
-            <button type="submit">Submit Changes</button>
-          {{/if}}
+        <table class="details-section">
+          <tr>
+            <td colspan="2">
+              <img class="athlete-picture" src="{{registration.portrait}}">
+            </td>
+            <td>
+              <table>
+                <tr>
+                  <td><strong>First Name:</strong></td>
+                  <td><input type="text" name="firstname" value="{{registration.firstname}}" {{#if (or user.ptaverified
+                      registration.firstname)}}readonly{{else}}required{{/if}}>
+                    {{#if user.ptaverified}}<button type="button" class="clear-input"
+                      onclick="clearInput(this)">x</button>{{/if}}
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Middle Initial:</strong></td>
+                  <td><input type="text" name="middlename" value="{{registration.middlename}}" {{#if (or
+                      user.ptaverified registration.middlename)}}readonly{{else}}required{{/if}}>
+                    {{#if user.ptaverified}}<button type="button" class="clear-input"
+                      onclick="clearInput(this)">x</button>{{/if}}
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Last Name:</strong></td>
+                  <td><input type="text" name="lastname" value="{{registration.lastname}}" {{#if (or user.ptaverified
+                      registration.lastname)}}readonly{{else}}required{{/if}}>
+                    {{#if user.ptaverified}}<button type="button" class="clear-input"
+                      onclick="clearInput(this)">x</button>{{/if}}
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Gender:</strong></td>
+                  <td><input type="text" name="gender" value="{{registration.gender}}" {{#if (or user.ptaverified
+                      registration.gender)}}readonly{{else}}required{{/if}}>
+                    {{#if user.ptaverified}}<button type="button" class="clear-input"
+                      onclick="clearInput(this)">x</button>{{/if}}
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Birthday:</strong></td>
+                  <td><input type="date" name="bday" value="{{registration.bday}}" {{#if (or user.ptaverified
+                      registration.bday)}}readonly{{else}}required{{/if}}>
+                    {{#if user.ptaverified}}<button type="button" class="clear-input"
+                      onclick="clearInput(this)">x</button>{{/if}}
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Phone Number:</strong></td>
+                  <td><input type="tel" name="phonenum" value="{{registration.phonenum}}" {{#if (or user.ptaverified
+                      registration.phonenum)}}readonly{{else}}required{{/if}}>
+                    {{#if user.ptaverified}}<button type="button" class="clear-input"
+                      onclick="clearInput(this)">x</button>{{/if}}
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Email:</strong></td>
+                  <td><input type="email" name="email" value="{{registration.email}}" {{#if (or user.ptaverified
+                      registration.email)}}readonly{{else}}required{{/if}}>
+                    {{#if user.ptaverified}}<button type="button" class="clear-input"
+                      onclick="clearInput(this)">x</button>{{/if}}
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Club Region:</strong></td>
+                  <td><input type="text" name="clubregion" value="{{registration.clubregion}}" {{#if (or
+                      user.ptaverified registration.clubregion)}}readonly{{else}}required{{/if}}>
+                    {{#if user.ptaverified}}<button type="button" class="clear-input"
+                      onclick="clearInput(this)">x</button>{{/if}}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2"><strong>Birth Certificate:</strong></td>
+                  <td class="information">
+                    {{#if registration.birthcert}}
+                    <a href="{{registration.birthcert}}" target="_blank">View Payment Proof</a>
+                    {{else}}
+                    no document
+                    {{/if}}
+                    {{#if (or user.ptaverified registration.birthcert)}}
+                    <input type="text" name="birthcert" value="{{registration.birthcert}}" hidden readonly>
+                    {{else}}
+                    <input type="file" name="birthcert" required>
+                    {{/if}}
+                    {{#if user.ptaverified}}<button type="button" class="clear-input"
+                      onclick="clearInput(this)">x</button>{{/if}}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2"><strong>Proof of Education:</strong></td>
+                  <td class="information">
+                    {{#if registration.educproof}}
+                    <a href="{{registration.educproof}}" target="_blank">View Payment Proof</a>
+                    {{else}}
+                    no document
+                    {{/if}}
+                    {{#if (or user.ptaverified registration.educproof)}}
+                    <input type="text" name="educproof" value="{{registration.educproof}}" hidden readonly>
+                    {{else}}
+                    <input type="file" name="educproof" required>
+                    {{/if}}
+                    {{#if user.ptaverified}}<button type="button" class="clear-input"
+                      onclick="clearInput(this)">x</button>{{/if}}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2"><strong>Poomsae Certificate:</strong></td>
+                  <td class="information">
+                    {{#if registration.poomsaecert}}
+                    <a href="{{registration.poomsaecert}}" target="_blank">View Payment Proof</a>
+                    {{else}}
+                    no document
+                    {{/if}}
+                    {{#if (or user.ptaverified registration.poomsaecert)}}
+                    <input type="text" name="poomsaecert" value="{{registration.poomsaecert}}" hidden readonly>
+                    {{else}}
+                    <input type="file" name="poomsaecert" required>
+                    {{/if}}
+                    {{#if user.ptaverified}}<button type="button" class="clear-input"
+                      onclick="clearInput(this)">x</button>{{/if}}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2"><strong>Kukkiwon Certificate:</strong></td>
+                  <td class="information">
+                    {{#if registration.kukkiwoncert}}
+                    <a href="{{registration.kukkiwoncert}}" target="_blank">View Payment Proof</a>
+                    {{else}}
+                    no document
+                    {{/if}}
+                    {{#if (or user.ptaverified registration.kukkiwoncert)}}
+                    <input type="text" name="kukkiwoncert" value="{{registration.kukkiwoncert}}" hidden readonly>
+                    {{else}}
+                    <input type="file" name="kukkiwoncert" required>
+                    {{/if}}
+                    {{#if user.ptaverified}}<button type="button" class="clear-input"
+                      onclick="clearInput(this)">x</button>{{/if}}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2"><strong>PTA Black-Belt Certificate:</strong></td>
+                  <td class="information">
+                    {{#if registration.ptablackbeltcert}}
+                    <a href="{{registration.ptablackbeltcert}}" target="_blank">View Payment Proof</a>
+                    {{else}}
+                    no document
+                    {{/if}}
+                    {{#if (or user.ptaverified registration.ptablackbeltcert)}}
+                    <input type="text" name="ptablackbeltcert" value="{{registration.ptablackbeltcert}}" hidden
+                      readonly>
+                    {{else}}
+                    <input type="file" name="ptablackbeltcert" required>
+                    {{/if}}
+                    {{#if user.ptaverified}}<button type="button" class="clear-input"
+                      onclick="clearInput(this)">x</button>{{/if}}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2"><strong>Proof of Payment:</strong></td>
+                  <td class="information">
+                    {{#if registration.paymentproof}}
+                    <a href="{{registration.paymentproof}}" target="_blank">View Payment Proof</a>
+                    {{else}}
+                    no document
+                    {{/if}}
+                    {{#if (or user.ptaverified registration.paymentproof)}}
+                    <input type="text" name="paymentproof" value="{{registration.paymentproof}}" hidden readonly>
+                    {{else}}
+                    <input type="file" name="paymentproof" required>
+                    {{/if}}
+                    {{#if user.ptaverified}}<button type="button" class="clear-input"
+                      onclick="clearInput(this)">x</button>{{/if}}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        {{#if user.ptaverified}}
+         <button type="submit" class="confirm-reject-btn">Confirm rejections</button>
+        {{else}}
+        <button type="submit" class="submit-changes-btn">Submit Changes</button>
+        {{/if}}
       </form>
-      </section>
+    </section>
 
     <form action="/update-instructorstatus" method="post" class="review-form">
 
@@ -233,50 +257,51 @@
           {{/if}}
         </h1>
         {{#if user.ptaverified}}
-          <div class="action-buttons">
-            <button type="button" onclick="printDiv('printableArea')">Print</button>
-            <button type="submit" name="status" value="1">Under Review</button>
-            <button type="submit" name="status" value="2">En-route to Regional Office</button>
-            <button type="button" id="idshipped" class="idshipped">ID Shipped</button>
-            {{#if (eq registration.status 3)}}
-              <button type="button" id="suspendbtn" class="suspendbtn">Suspend this Instructor</button>
-            {{else}}
-              <button type="button" id="rejectbtn" class="rejectbtn">Reject Application</button>
-            {{/if}}
-          </div>
+        <div class="action-buttons">
+          <button type="button" onclick="printDiv('printableArea')">Print</button>
+          <button type="submit" name="status" value="1">Under Review</button>
+          <button type="submit" name="status" value="2">En-route to Regional Office</button>
+          <button type="button" id="idshipped" class="idshipped">ID Shipped</button>
+          {{#if (eq registration.status 3)}}
+          <button type="button" id="suspendbtn" class="suspendbtn">Suspend this Instructor</button>
+          {{else}}
+          <button type="button" id="rejectbtn" class="rejectbtn">Reject Application</button>
+          {{/if}}
+        </div>
 
-          <div class="confirmrejectscreen" id="confirmrejectscreen" style="display: none;">
-            <h3>Please state reason for rejection.</h3>
-            <select name="rejectmsg" id="rejectmsg">
-              <option value="Incomplete Documentation">Incomplete Documentation</option>
-              <option value="Invalid Information">Invalid Information</option>
-              <option value="Failed Background Check">Failed Background Check</option>
-              <option value="Other">Other</option>
-            </select>
-            <textarea name="rejectdescription" id="rejectdescription" cols="30" rows="10"></textarea>
-            <button type="button" class="cancelreject" id="cancelreject">Cancel</button>
-            <button type="submit" value="4" name="status" id="confirm">Confirm</button>
-          </div>
+        <div class="confirmrejectscreen" id="confirmrejectscreen" style="display: none;">
+          <h3>Please state reason for rejection.</h3>
+          <select name="rejectmsg" id="rejectmsg">
+            <option value="Incomplete Documentation">Incomplete Documentation</option>
+            <option value="Invalid Information">Invalid Information</option>
+            <option value="Failed Background Check">Failed Background Check</option>
+            <option value="Other">Other</option>
+          </select>
+          <textarea name="rejectdescription" id="rejectdescription" cols="30" rows="10"></textarea>
+          <button type="button" class="cancelreject" id="cancelreject">Cancel</button>
+          <button type="submit" value="4" name="status" id="confirm">Confirm</button>
+        </div>
 
-          <div class="confirmsuspendscreen" id="confirmsuspendscreen" style="display: none;">
-            <h3>This action will suspend the instructor's license, not allowing him to register any more clubs. Please state reason for suspension.</h3>
-            <select name="suspendmsg" id="suspendmsg">
-              <option value="Expired">Expired</option>
-              <option value="Invalid Information">Invalid Information</option>
-              <option value="Failed Background Check">Failed Background Check</option>
-              <option value="Other">Other</option>
-            </select>
-            <textarea name="susdescription" id="susdescription" cols="30" rows="10"></textarea>
-            <button type="button" class="cancelsuspend" id="cancelsuspend">Cancel</button>
-            <button type="submit" value="6" name="status" id="confirm">Confirm</button>
-          </div>
+        <div class="confirmsuspendscreen" id="confirmsuspendscreen" style="display: none;">
+          <h3>This action will suspend the instructor's license, not allowing him to register any more clubs. Please
+            state reason for suspension.</h3>
+          <select name="suspendmsg" id="suspendmsg">
+            <option value="Expired">Expired</option>
+            <option value="Invalid Information">Invalid Information</option>
+            <option value="Failed Background Check">Failed Background Check</option>
+            <option value="Other">Other</option>
+          </select>
+          <textarea name="susdescription" id="susdescription" cols="30" rows="10"></textarea>
+          <button type="button" class="cancelsuspend" id="cancelsuspend">Cancel</button>
+          <button type="submit" value="6" name="status" id="confirm">Confirm</button>
+        </div>
 
-          <div class="confirmscreen" id="confirmscreen" style="display: none;">
-            <h3>Are you sure? The applicant will be notified that his ID is ready. This registration will also disappear
-              after a few days.</h3>
-            <button type="button" class="cancel" id="cancel">Cancel</button>
-            <button type="submit" value="3" name="status" id="confirm">Confirm</button>
-          </div>
+        <div class="confirmscreen" id="confirmscreen" style="display: none;">
+          <h3>Are you sure? The applicant will be notified that his ID is ready. This registration will also disappear
+            after a few days.</h3>
+          <button type="button" class="cancel" id="cancel">Cancel</button>
+          <button type="submit" value="3" name="status" id="confirm">Confirm</button>
+        </div>
         {{/if}}
         <div class="backtolist">
           <a href="/membership-status">Back to list</a>
@@ -310,7 +335,7 @@
     const idshipped = document.getElementById("idshipped");
     const rejectbtn = document.getElementById("rejectbtn");
 
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
       const suspendbtn = document.getElementById("suspendbtn");
       const confirmsuspendscreen = document.getElementById("confirmsuspendscreen");
       const cancelsuspend = document.getElementById("cancelsuspend");
@@ -331,12 +356,12 @@
     function clearInput(button) {
       const input = button.previousElementSibling;
       if (input.value === '') {
-      input.value = input.getAttribute('data-original-value');
-      button.textContent = 'x';
+        input.value = input.getAttribute('data-original-value');
+        button.textContent = 'x';
       } else {
-      input.setAttribute('data-original-value', input.value);
-      input.value = '';
-      button.textContent = 'undo';
+        input.setAttribute('data-original-value', input.value);
+        input.value = '';
+        button.textContent = 'undo';
       }
     }
 
