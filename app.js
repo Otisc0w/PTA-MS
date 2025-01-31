@@ -5873,15 +5873,13 @@ app.get("/events-details/:id", async function (req, res) {
     console.log("Grouped Poomsae Players with Judge Scores:", sortedGroupedByRound);
 
     // Fetch the top 4 players with the highest totalscore
-    const { data: poomsaetop4, error: poomsaetop4Error } = await supabase
-      .from("poomsae_players")
-      .select("*")
-      .eq("eventid", id)
-      .in("ranking", [1, 2, 3, 4])
-      .order("ranking", { ascending: true });
+    const poomsaetop4 = Object.values(sortedGroupedByRound)
+      .flat()
+      .sort((a, b) => b.averageScore - a.averageScore)
+      .slice(0, 4);
 
-    if (poomsaetop4Error) {
-      return res.status(400).json({ error: poomsaetop4Error.message });
+    if (!poomsaetop4) {
+      return res.status(400).json({ error: "Error fetching top 4 players." });
     }
 
     const { data: poomsaenontop4, error: poomsaenontop4Error } = await supabase
