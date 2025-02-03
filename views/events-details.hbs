@@ -375,7 +375,11 @@
                   </td>
                   <td class="totalscore">
                       <div class="judge-score">
-                        {{averageScore}}
+                        {{#if totalscore}}
+                          {{totalscore}}
+                        {{else}}
+                          TBD
+                        {{/if}}
                       </div>
                   </td>
                   <td>
@@ -616,7 +620,7 @@
                   <td>Accuracy in basic Movement</td>
                   <td rowspan="3">4.0 (deduct -0.1, -0.3)</td>
                   <td><input type="number" class="deduction-input" name="basicmovement" step="0.1" min="0" max="4"
-                      data-max="4"></td>
+                      data-max="4" value="0"></td>
                   <td class="final-score" data-base="4">4.0</td>
                 </tr>
                 <tr>

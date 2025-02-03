@@ -4489,33 +4489,51 @@ app.post("/submit-poomsae-scores", async (req, res) => {
   const performancescore = 6 - parseFloat(powerspeed) - parseFloat(coord) - parseFloat(energy);
 
   try {
-    // const { error } = await supabase.from("poomsae_players")
-    // .update({ 
-    //   totalscore: parseFloat(totalscore),
-    //   performancescore: performancescore,
-    //   technicalscore: technicalscore, 
-    //  })
-    // .eq("id", id); // Ensure you pass the player ID in the request body
-
-    // if (error) {
-    //   return res.status(400).json({ error: error.message });
-    // }
 
     // Insert scores into judge_scores table
-    const { error: judgeScoresError } = await supabase
+    // Check if the judge has already scored the player
+    const { data: existingScore, error: existingScoreError } = await supabase
+      .from("poomsae_judge_scores")
+      .select("*")
+      .eq("judgeid", req.session.user.id)
+      .eq("poomsaeplayerid", id)
+      .single();
+
+    if (existingScoreError && existingScoreError.code !== 'PGRST116') {
+      return res.status(400).json({ error: existingScoreError.message });
+    }
+
+    if (existingScore) {
+      // Update the existing score
+      const { error: updateScoreError } = await supabase
+      .from("poomsae_judge_scores")
+      .update({
+        techscore: technicalscore,
+        performancescore: performancescore,
+        totalscore: parseFloat(totalscore),
+      })
+      .eq("id", existingScore.id);
+
+      if (updateScoreError) {
+      return res.status(400).json({ error: updateScoreError.message });
+      }
+    } else {
+      // Insert a new score
+      const { error: judgeScoresError } = await supabase
       .from("poomsae_judge_scores")
       .insert([
         {
-          judgeid: req.session.user.id, // Assuming the judge ID is the current user's ID
-          poomsaeplayerid: id,
-          techscore: technicalscore,
-          performancescore: performancescore,
-          totalscore: parseFloat(totalscore),
+        judgeid: req.session.user.id, // Assuming the judge ID is the current user's ID
+        poomsaeplayerid: id,
+        techscore: technicalscore,
+        performancescore: performancescore,
+        totalscore: parseFloat(totalscore),
         },
       ]);
 
-    if (judgeScoresError) {
+      if (judgeScoresError) {
       return res.status(400).json({ error: judgeScoresError.message });
+      }
     }
 
     // Calculate the average total score for the poomsae player
