@@ -61,6 +61,14 @@
             <option value="instructorregs">Instructor Registrations</option>
             <option value="clubregs">Club Registrations</option>
           </select>
+          <select>
+            <option value="all">All</option>
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+            <option value="underreview">Under Review</option>
+            <option value="idshipped">ID Shipped</option>
+          </select>
         </div>
         <div class="nccregs">
           {{#if ncc_registrations}}
@@ -151,6 +159,22 @@
     document.addEventListener('DOMContentLoaded', function() {
       toggleSection('nccregs');
     });
+
+    function filterStatus(selectedValue) {
+            const allPosts = document.querySelectorAll('.post-content');
+            allPosts.forEach(post => {
+              const status = post.querySelector('h3').innerText.split(': ')[1].toLowerCase().replace(' ', '');
+              if (selectedValue === 'all' || status === selectedValue) {
+                post.style.display = 'block';
+              } else {
+                post.style.display = 'none';
+              }
+            });
+          }
+
+          document.querySelector('.statusfilter select:nth-child(2)').addEventListener('change', function() {
+            filterStatus(this.value);
+          });
 
   </script>
 </body>
