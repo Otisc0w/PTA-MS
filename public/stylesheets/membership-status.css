@@ -204,3 +204,23 @@ a:hover {
   color: var(--text-color);
 }
 
+.statusfilter {
+  margin-bottom: 20px;
+  font-size: 1em;
+  color: var(--text-color);
+}
+
+.statusfilter select {
+  background-color: var(--accent-bg);
+  color: var(--text-color);
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 5px;
+  margin-left: 10px;
+}
+
+.statusfilter select:focus {
+  outline: none;
+  border-color: #0066ff;
+}
+

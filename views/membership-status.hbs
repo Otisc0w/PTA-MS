@@ -37,7 +37,6 @@
         <div id="dropdown" class="dropdown-content">
           <a href="/profile">Profile</a>
           <a href="/settings">Settings</a>
-        
           <a href="/">Logout</a>
         </div>
       </li>
@@ -53,55 +52,71 @@
 
     <div class="membership-rightside">
       <div class="membership-statuses">
-        {{#if ncc_registrations}}
-        <h2>NCC ID's</h2>
-        {{#reverseEach ncc_registrations}}
-        <div class='post-content'>
-          <span class='small'>Applicant: <h2>{{firstname}} {{lastname}}</h2>{{formatCreatedAt created_at}}<br>
-            {{#if (eq status 3)}}
-            expires on {{formatDate expireson "MM/DD/YYYY"}}
-            {{/if}}
-          </span>
-          <span>
-            <h3>Status: {{{formatStatus status}}}</h3>
-          </span>
-          <a href="/membership-review/{{id}}">Review</a>
-        </div><br>
-        {{/reverseEach}}
-        {{else}}
-        No pending NCC applications <br>
-        {{/if}}
 
-        {{#if instructor_registrations}}
-        <h2>Instructor ID's</h2>
-        {{#reverseEach instructor_registrations}}
-        <div class='post-content'>
-          <span class='small'>by <h2>{{firstname}} {{lastname}}</h2>{{formatCreatedAt created_at}}<br> expires on
-            {{formatDate expireson "MM/DD/YYYY"}}</span>
-          <span>
-            <h3>Status: {{{formatStatus status}}}</h3>
-          </span>
-          <a href="/instructor-review/{{id}}">Review</a>
-        </div><br>
-        {{/reverseEach}}
-        {{else}}
-        No pending instructor applications <br>
-        {{/if}}
+        <div class="statusfilter">
+          Show:
+          <select onchange="toggleSection(this.value)">
+            <option value="all">All</option>
+            <option value="nccregs">NCC Registrations</option>
+            <option value="instructorregs">Instructor Registrations</option>
+            <option value="clubregs">Club Registrations</option>
+          </select>
+        </div>
+        <div class="nccregs">
+          {{#if ncc_registrations}}
+          <h2>NCC ID's</h2>
+          {{#reverseEach ncc_registrations}}
+          <div class='post-content'>
+            <span class='small'>Applicant: <h2>{{firstname}} {{lastname}}</h2>{{formatCreatedAt created_at}}<br>
+              {{#if (eq status 3)}}
+              expires on {{formatDate expireson "MM/DD/YYYY"}}
+              {{/if}}
+            </span>
+            <span>
+              <h3>Status: {{{formatStatus status}}}</h3>
+            </span>
+            <a href="/membership-review/{{id}}">Review</a>
+          </div><br>
+          {{/reverseEach}}
+          {{else}}
+          No pending NCC applications <br>
+          {{/if}}
+        </div>
 
-        {{#if club_registrations}}
-        <h2>Club Registrations</h2>
-        {{#reverseEach club_registrations}}
-        <div class='post-content'>
-          <span class='small'>Applicant: <h2>{{firstname}} {{lastname}}</h2>{{formatCreatedAt created_at}}</span>
-          <span>
-            <h3>Status: {{{formatStatus status}}}</h3>
-          </span>
-          <a href="/clubreg-review/{{id}}">Review</a>
-        </div><br>
-        {{/reverseEach}}
-        {{else}}
-        No pending club registrations
-        {{/if}}
+        <div class="instructorregs">
+          {{#if instructor_registrations}}
+          <h2>Instructor ID's</h2>
+          {{#reverseEach instructor_registrations}}
+          <div class='post-content'>
+            <span class='small'>by <h2>{{firstname}} {{lastname}}</h2>{{formatCreatedAt created_at}}<br> expires on
+              {{formatDate expireson "MM/DD/YYYY"}}</span>
+            <span>
+              <h3>Status: {{{formatStatus status}}}</h3>
+            </span>
+            <a href="/instructor-review/{{id}}">Review</a>
+          </div><br>
+          {{/reverseEach}}
+          {{else}}
+          No pending instructor applications <br>
+          {{/if}}
+        </div>
+
+        <div class="clubregs">
+          {{#if club_registrations}}
+          <h2>Club Registrations</h2>
+          {{#reverseEach club_registrations}}
+          <div class='post-content'>
+            <span class='small'>Applicant: <h2>{{firstname}} {{lastname}}</h2>{{formatCreatedAt created_at}}</span>
+            <span>
+              <h3>Status: {{{formatStatus status}}}</h3>
+            </span>
+            <a href="/clubreg-review/{{id}}">Review</a>
+          </div><br>
+          {{/reverseEach}}
+          {{else}}
+          No pending club registrations
+          {{/if}}
+        </div>
       </div>
       <div class="backtomembership">
         <a href="/membership">Back</a>
@@ -112,15 +127,30 @@
     <p>&copy; 2024 Philippine Taekwondo Association. All rights reserved.</p>
   </div>
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const form = document.getElementById("nccform");
-
-      const nccstep1 = document.getElementById("nccstep1");
-      const ncc1 = document.querySelector(".ncc1");
-    });
 
     function toggleDropdown() {
       document.getElementById("dropdown").classList.toggle("show");
     }
+  
+    function toggleSection(selectedValue) {
+      const sections = document.querySelectorAll('.nccregs, .instructorregs, .clubregs');
+      sections.forEach(section => section.style.display = 'none');
+      
+      if (selectedValue === 'nccregs') {
+      document.querySelector('.nccregs').style.display = 'block';
+      } else if (selectedValue === 'instructorregs') {
+      document.querySelector('.instructorregs').style.display = 'block';
+      } else if (selectedValue === 'clubregs') {
+      document.querySelector('.clubregs').style.display = 'block';
+      } else if (selectedValue === 'all') {
+      sections.forEach(section => section.style.display = 'block');
+      }
+    }
+
+    // Initialize the default section to be displayed
+    document.addEventListener('DOMContentLoaded', function() {
+      toggleSection('nccregs');
+    });
+
   </script>
 </body>
