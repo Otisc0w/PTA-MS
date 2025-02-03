@@ -467,6 +467,7 @@ body {
     gap: 20px;
     justify-content: left;
     margin: 20px 0;
+    border-block-color: white;
 }
 
 .ownedclubcard {
@@ -483,6 +484,8 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 1); /* White glowing effect */
+    transition: box-shadow 0.3s ease-in-out;
 }
 
 .ownedclubcard img {
