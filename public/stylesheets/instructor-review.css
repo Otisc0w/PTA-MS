@@ -654,4 +654,49 @@ button.clear-input:hover {
 
 .submit-changes-btn:hover {
     background-color: darkblue;
+}/* Confirm Suspend Screen Container */
+#confirmsuspendscreen {
+    background-color: var(--dark-bg);
+    border: 1px solid var(--accent-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 20px;
+    max-width: 600px; /* Ensures a consistent width */
+    margin: 30px auto; /* Centers the container */
+    color: var(--primary-color);
+    text-align: center; /* Aligns content to the center */
+}
+
+/* Title Styling */
+#confirmsuspendscreen h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+    text-align: center;
+}
+
+/* Select and Textarea Styling */
+#confirmsuspendscreen select,
+#confirmsuspendscreen textarea {
+    width: 100%;
+    padding: 0;
+    border: 1px solid var(--accent-bg);
+    border-radius: var(--border-radius);
+    background-color: var(--light-bg);
+    color: var(--text-color);
+    margin-bottom: 20px;
+    font-size: 16px;
+    box-shadow: inset var(--box-shadow);
+}
+
+#cancelsuspend{
+    padding: 5px 10px;
+    border: none;
+    border-radius: var(--border-radius);
+    background-color: red;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
+    transition: background-color 0.3s;
 }
