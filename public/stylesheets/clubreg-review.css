@@ -6,24 +6,22 @@
     --light-bg: #3A3A3A;
     --accent-bg: #444;
     --text-color: #ffffff;
-    /* Changed to white for better contrast */
     --background-color: #121212;
-    /* Dark background color for contrast */
+    --primary-color: #004085;
+    --secondary-color: #0056b3;
+    --hover-color: #0056b3;
+    --border-radius: 8px;
+    --box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-family);
     margin: 0;
     padding: 0;
     background-color: var(--background-color);
-    /* Updated background color */
     color: var(--text-color);
-    /* Updated text color */
-    background-color: #f9f9f9;
-    color: #333;
-    /* Ensures text is visible */
 }
-
 .membership-navbar {
     display: flex;
     align-items: center;
@@ -296,8 +294,9 @@ body {
 }
 
 .backtolist a {
-    color: var(--primary-color);
+    color: white;
     text-decoration: none;
+    font-size: 13px;
 }
 
 .backtolist a:hover {
@@ -434,3 +433,94 @@ button.clear-input:hover {
 .input-container .clear-input:hover {
     background-color: darkred;
 }
+
+/* Confirm Reject Screen Container */
+#confirmrejectscreen {
+    background-color: var(--dark-bg);
+    border: 1px solid var(--accent-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 20px;
+    max-width: 600px; /* Ensures a consistent width */
+    margin: 30px auto; /* Centers the container */
+    color: var(--primary-color);
+    text-align: center; /* Aligns content to the center */
+}
+
+/* Title Styling */
+#confirmrejectscreen h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+    text-align: center;
+}
+
+/* Select and Textarea Styling */
+#confirmrejectscreen select,
+#confirmrejectscreen textarea {
+    width: 100%;
+    padding: 0;
+    border: 1px solid var(--accent-bg);
+    border-radius: var(--border-radius);
+    background-color: var(--light-bg);
+    color: var(--text-color);
+    margin-bottom: 20px;
+    font-size: 16px;
+    box-shadow: inset var(--box-shadow);
+}
+
+/* Button Styling */
+#confirmrejectscreen button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--border-radius);
+    background-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
+    transition: background-color 0.3s;
+}
+
+#confirmrejectscreen button:hover {
+    background-color: var(--hover-color);
+}
+
+#confirmrejectscreen .cancelreject {
+    background-color: red;
+}
+
+#confirmrejectscreen .cancelreject:hover {
+    background-color: darkred;
+}
+
+
+#cancel{
+    padding: 5px 10px;
+    border: none;
+    border-radius: var(--border-radius);
+    background-color: red;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
+    transition: background-color 0.3s;
+}
+
+#confirm{
+    padding: 5px 10px;
+    border: none;
+    border-radius: var(--border-radius);
+    background-color: blue;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
+    transition: background-color 0.3s;
+}
+
+.status-rejected p{
+    font-size: 10px;
+    color: red;
+    font-weight: lighter;
+  }
