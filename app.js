@@ -1245,6 +1245,10 @@ app.post("/update-nccstatus", async (req, res) => {
       return res.status(500).send("Error updating status");
     }
 
+    if (!registration) {
+      return res.status(404).send("Registration not found");
+    }
+
     // Add a notification for the user about their registration status
     let statusMessage;
     const statusInt = parseInt(status, 10);
@@ -1254,23 +1258,23 @@ app.post("/update-nccstatus", async (req, res) => {
         statusMessage = "Your NCC registration is under review.";
         statusDesc = "Your NCC registration is under review. You will receive a notification once your registration has been processed.";
         break;
-            case 2:
+      case 2:
         statusMessage = "Your NCC ID is en route to your regional office.";
         statusDesc = "Your NCC ID is on its way to your regional office. You will be notified once it arrives.";
         break;
-            case 3:
+      case 3:
         statusMessage = "Your NCC ID is now ready for pickup at your regional office.";
         statusDesc = "Your NCC ID is ready for pickup at your regional office. Please visit the office to collect it.";
         break;
-            case 4:
+      case 4:
         statusMessage = "Your NCC registration has been rejected.";
         statusDesc = "Sorry, your NCC registration has been rejected. Please check your membership status for more information.";
         break;
-            case 6:
+      case 6:
         statusMessage = "Your NCC registration has been suspended.";
         statusDesc = "Sorry, your NCC registration has been rejected. Please check the reason for your suspension in your membership status.";
         break;
-            default:
+      default:
         statusMessage = "Unknown status.";
         statusDesc = "The status of your NCC registration is unknown. Please contact support for more information.";
     }
@@ -1278,12 +1282,12 @@ app.post("/update-nccstatus", async (req, res) => {
     const { error: notificationError } = await supabase
       .from("notifications")
       .insert([
-      {
-        userid: registration.submittedby,
-        type: "Registration",
-        message: statusMessage,
-        desc: statusDesc,
-      },
+        {
+          userid: registration.submittedby,
+          type: "Registration",
+          message: statusMessage,
+          desc: statusDesc,
+        },
       ]);
 
     if (notificationError) {
@@ -1298,13 +1302,13 @@ app.post("/update-nccstatus", async (req, res) => {
 
       // Update the suspendmsg column
       const { error: updatesuspendmsgError } = await supabase
-      .from("ncc_registrations")
-      .update({ suspendmsg: suspendmsg, susdescription: susdescription })
-      .eq("id", applicationId);
+        .from("ncc_registrations")
+        .update({ suspendmsg: suspendmsg, susdescription: susdescription })
+        .eq("id", applicationId);
 
       if (updatesuspendmsgError) {
-      console.error("Error updating suspendmsg:", updatesuspendmsgError.message);
-      return res.status(500).send("Error updating suspendmsg");
+        console.error("Error updating suspendmsg:", updatesuspendmsgError.message);
+        return res.status(500).send("Error updating suspendmsg");
       }
 
       const { error: updateAthleteVerifiedError } = await supabase
@@ -1320,55 +1324,98 @@ app.post("/update-nccstatus", async (req, res) => {
 
     // Check if status is 4, indicating the need to update the rejectmsg
     if (status == 4) {
-      const { rejectmsg, description } = req.body; // Capture the reject message from the form
+      const { 
+        rejectmsg,
+        description,
+        portrait,
+        firstname,
+        middlename,
+        lastname,
+        gender,
+        bday,
+        phonenum,
+        email,
+        lastpromo,
+        promolocation,
+        clubregion,
+        beltlevel,
+        instructorfirstname,
+        instructormi,
+        instructorlastname,
+        instructormobile,
+        instructoremail,
+        birthcert,
+        paymentproof,
+      } = req.body; // Capture the reject message from the form
 
+      const bdayValue = bday ? bday : null;
+      const lastpromoValue = lastpromo ? lastpromo : null;
       // Update the rejectmsg column
       const { error: updateRejectMsgError } = await supabase
-      .from("ncc_registrations")
-      .update({ 
-        rejectmsg: rejectmsg,
-        description: description,
-       })
-      .eq("id", applicationId);
+        .from("ncc_registrations")
+        .update({
+          rejectmsg: rejectmsg,
+          description: description,
+          portrait,
+          firstname,
+          middlename,
+          lastname,
+          gender,
+          bday: bdayValue,
+          phonenum,
+          email,
+          lastpromo: lastpromoValue,
+          promolocation,
+          clubregion,
+          beltlevel,
+          instructorfirstname,
+          instructormi,
+          instructorlastname,
+          instructormobile,
+          instructoremail,
+          birthcert,
+          paymentproof,
+        })
+        .eq("id", applicationId);
 
       if (updateRejectMsgError) {
-      console.error("Error updating rejectmsg:", updateRejectMsgError.message);
-      return res.status(500).send("Error updating rejectmsg");
+        console.error("Error updating rejectmsg:", updateRejectMsgError.message);
+        return res.status(500).send("Error updating rejectmsg");
       }
     }
 
     // Check if status is 3, indicating the need to update the user's athleteverified column and insert into athletes table
     if (status == 3) {
       const {
-      firstname,
-      middlename,
-      lastname,
-      gender,
-      bday,
-      clubregion,
-      beltlevel,
-      portrait,
-      height,
-      weight,
-      submittedby,
-      instructorfirstname,
-      instructorlastname,
-      age,
+        firstname,
+        middlename,
+        lastname,
+        gender,
+        bday,
+        clubregion,
+        beltlevel,
+        portrait,
+        height,
+        weight,
+        submittedby,
+        instructorfirstname,
+        instructorlastname,
+        age,
       } = registration;
 
       console.log("Updating user with ID:", submittedby);
 
       // Update the corresponding user's registered column to true
       const { data: user, error: updateUserError } = await supabase
-      .from("users")
-      .update({ athleteverified: true })
-      .eq("id", submittedby)
-      .select("*")
-      .single();
+        .from("users")
+        .update({ athleteverified: true })
+        .eq("id", submittedby)
+        .select("*")
+        .single();
 
       if (updateUserError) {
-      console.error("Error updating user:", updateUserError.message);
-      return res.status(500).send("Error updating user");
+        console.error("Error updating user:", updateUserError.message);
+        return res.status(500).send("Error updating user");
       }
 
       // Update the expireson column
@@ -1387,7 +1434,7 @@ app.post("/update-nccstatus", async (req, res) => {
       const instructor = `${instructorfirstname} ${instructorlastname}`;
 
       const userid = submittedby;
-      
+
       let division;
       if (age >= 10 && age <= 11) {
         division = "Youth";
@@ -1405,71 +1452,71 @@ app.post("/update-nccstatus", async (req, res) => {
 
       // Check if the athlete already exists
       const { data: existingAthlete, error: fetchAthleteError } = await supabase
-      .from("athletes")
-      .select("*")
-      .eq("userid", userid)
-      .single();
+        .from("athletes")
+        .select("*")
+        .eq("userid", userid)
+        .single();
 
       if (fetchAthleteError && fetchAthleteError.code !== 'PGRST116') {
-      console.error("Error fetching athlete:", fetchAthleteError.message);
-      return res.status(500).send("Error fetching athlete");
+        console.error("Error fetching athlete:", fetchAthleteError.message);
+        return res.status(500).send("Error fetching athlete");
       }
 
       if (existingAthlete) {
-      // Update the existing athlete
-      const { error: updateAthleteError } = await supabase
-        .from("athletes")
-        .update({
-        name,
-        gender,
-        bday,
-        clubregion,
-        beltlevel,
-        portrait,
-        agedivision: division,
-        height,
-        weight,
-        instructor,
-        age,
-        })
-        .eq("userid", userid);
+        // Update the existing athlete
+        const { error: updateAthleteError } = await supabase
+          .from("athletes")
+          .update({
+            name,
+            gender,
+            bday,
+            clubregion,
+            beltlevel,
+            portrait,
+            agedivision: division,
+            height,
+            weight,
+            instructor,
+            age,
+          })
+          .eq("userid", userid);
 
-      if (updateAthleteError) {
-        console.error("Error updating athlete:", updateAthleteError.message);
-        return res.status(500).send("Error updating athlete");
-      }
+        if (updateAthleteError) {
+          console.error("Error updating athlete:", updateAthleteError.message);
+          return res.status(500).send("Error updating athlete");
+        }
 
-      console.log("Athlete updated successfully");
+        console.log("Athlete updated successfully");
       } else {
-      // Insert the new athlete
-      const { error: insertAthleteError } = await supabase
-        .from("athletes")
-        .insert([
-        {
-          name,
-          gender,
-          bday,
-          clubregion,
-          beltlevel,
-          portrait,
-          agedivision: division,
-          height,
-          weight,
-          instructor,
-          userid,
-          age,
-        },
-        ]);
+        // Insert the new athlete
+        const { error: insertAthleteError } = await supabase
+          .from("athletes")
+          .insert([
+            {
+              name,
+              gender,
+              bday,
+              clubregion,
+              beltlevel,
+              portrait,
+              agedivision: division,
+              height,
+              weight,
+              instructor,
+              userid,
+              age,
+            },
+          ]);
 
-      if (insertAthleteError) {
-        console.error("Error inserting athlete:", insertAthleteError.message);
-        return res.status(500).send("Error inserting athlete");
+        if (insertAthleteError) {
+          console.error("Error inserting athlete:", insertAthleteError.message);
+          return res.status(500).send("Error inserting athlete");
+        }
+
+        console.log("Athlete inserted successfully");
       }
 
-      console.log("Athlete inserted successfully");
-      }
-
-      const { data: transactions, error: transactionError } = await supabase
+      const { error: transactionError } = await supabase
         .from("transactions")
         .insert([
           {
@@ -1486,17 +1533,17 @@ app.post("/update-nccstatus", async (req, res) => {
 
       // Store athlete data in session
       req.session.athlete = {
-      firstname,
-      middlename,
-      lastname,
-      gender,
-      bday,
-      clubregion,
-      beltlevel,
-      portrait,
-      division,
-      height,
-      weight,
+        firstname,
+        middlename,
+        lastname,
+        gender,
+        bday,
+        clubregion,
+        beltlevel,
+        portrait,
+        division,
+        height,
+        weight,
       };
     }
 

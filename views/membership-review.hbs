@@ -44,9 +44,8 @@
     <div class="review-details">
       <table class="profile-section">
         <tr>
-          <form action={{#if user.ptaverified}}"/reject-ncc-fields"{{else}}"/submit-ncc" enctype="multipart/form-data"
-            {{/if}} method="post">
-
+          <form action="/update-nccstatus" method="post" class="review-form">
+          {{#unless user.ptaverified}} <form "/submit-ncc" enctype="multipart/form-data" method="post">{{/unless}}
             <td><img class="athlete-picture" src="{{registration.portrait}}" alt="Profile Picture">
               <input type="text" name="portrait" value="{{registration.portrait}}" hidden readonly>
               {{#if user.ptaverified}}<button type="button" class="clear-input"
@@ -97,7 +96,7 @@
                 <tr>
                   <td><strong>Birthday:</strong></td>
                   <td class="information">
-                    <input type="date" name="bday" value="{{formatDate registration.bday " YYYY-MM-DD"}}" {{#if (or
+                    <input type="date" name="bday" value="{{formatDate registration.bday " MM-DD-YYYY"}}" {{#if (or
                       user.ptaverified registration.bday)}}readonly{{else}}required{{/if}}>
                     {{#if user.ptaverified}}<button type="button" class="clear-input"
                       onclick="clearInput(this)">x</button>{{/if}}
@@ -176,7 +175,7 @@
           <td><strong>Promotion Location:</strong></td>
           <td class="information">
             <input type="text" name="promolocation" value="{{registration.promolocation}}" {{#if (or user.ptaverified
-              registration.middlename)}}readonly{{else}}required{{/if}}>
+              registration.promolocation)}}readonly{{else}}required{{/if}}>
             {{#if user.ptaverified}}<button type="button" class="clear-input"
               onclick="clearInput(this)">x</button>{{/if}}
           </td>
@@ -203,7 +202,7 @@
           <td><strong>Instructor First Name:</strong></td>
           <td class="information">
             <input type="text" name="instructorfirstname" value="{{registration.instructorfirstname}}" {{#if (or
-              user.ptaverified registration.middlename)}}readonly{{else}}required{{/if}}>
+              user.ptaverified registration.instructorfirstname)}}readonly{{else}}required{{/if}}>
             {{#if user.ptaverified}}<button type="button" class="clear-input"
               onclick="clearInput(this)">x</button>{{/if}}
           </td>
@@ -212,7 +211,7 @@
           <td><strong>Instructor Middle Initial:</strong></td>
           <td class="information">
             <input type="text" name="instructormi" value="{{registration.instructormi}}" {{#if (or user.ptaverified
-              registration.middlename)}}readonly{{else}}required{{/if}}>
+              registration.instructormi)}}readonly{{else}}required{{/if}}>
             {{#if user.ptaverified}}<button type="button" class="clear-input"
               onclick="clearInput(this)">x</button>{{/if}}
           </td>
@@ -221,7 +220,7 @@
           <td><strong>Instructor Last Name:</strong></td>
           <td class="information">
             <input type="text" name="instructorlastname" value="{{registration.instructorlastname}}" {{#if (or
-              user.ptaverified registration.middlename)}}readonly{{else}}required{{/if}}>
+              user.ptaverified registration.instructorlastname)}}readonly{{else}}required{{/if}}>
             {{#if user.ptaverified}}<button type="button" class="clear-input"
               onclick="clearInput(this)">x</button>{{/if}}
           </td>
@@ -230,7 +229,7 @@
           <td><strong>Instructor Mobile:</strong></td>
           <td class="information">
             <input type="text" name="instructormobile" value="{{registration.instructormobile}}" {{#if (or
-              user.ptaverified registration.middlename)}}readonly{{else}}required{{/if}}>
+              user.ptaverified registration.instructormobile)}}readonly{{else}}required{{/if}}>
             {{#if user.ptaverified}}<button type="button" class="clear-input"
               onclick="clearInput(this)">x</button>{{/if}}
           </td>
@@ -245,19 +244,20 @@
           </td>
         </tr>
         <tr>
-          <td colspan="2"> <!-- Span across both columns -->
-            <button type="submit" class="rejectbtn1">
+          <td colspan="2"> 
+            <button type="button" class="rejectbtn1" onclick="openConfirmRejectScreen()">
               {{#if user.ptaverified}}Confirm Rejections{{else}}Submit Changes{{/if}}
             </button>
           </td>
         </tr>
       </table>
 
-      </form>
+      {{#unless user.ptaverified}}</form>{{/unless}}
     </div>
 
-    <form action="/update-nccstatus" method="post" class="review-form">
+    {{!-- <form action="/update-nccstatus" method="post" class="review-form"> --}}
       <input type="hidden" name="applicationId" value="{{registration.id}}">
+      <input type="hidden" name="submittedby" value="{{registration.submittedby}}">
       <section class="application-actions">
         <h1 class="status">
           {{#if (eq registration.status 1)}}
@@ -345,10 +345,7 @@
           <p><strong>Birthdate:</strong> {{formatDate registration.birthday "MMMM D, YYYY"}}</p>
         </div>
       </div>
-
-
     </form>
-
   </main>
 
   <script>
@@ -401,6 +398,12 @@
       confirmrejectscreen.style.display = "block";
       actionButtons.style.display = "none";
     });
+
+    function openConfirmRejectScreen() {
+      const confirmrejectscreen = document.getElementById("confirmrejectscreen");
+      confirmrejectscreen.style.display = "block";
+      actionButtons.style.display = "none";
+    }
 
     function clearInput(button) {
       const input = button.previousElementSibling;
