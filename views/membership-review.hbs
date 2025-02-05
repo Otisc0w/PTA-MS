@@ -44,8 +44,7 @@
     <div class="review-details">
       <table class="profile-section">
         <tr>
-          <form action="/update-nccstatus" method="post" class="review-form">
-          {{#unless user.ptaverified}} <form "/submit-ncc" enctype="multipart/form-data" method="post">{{/unless}}
+          <form action={{#if user.ptaverified}}"/update-nccstatus"{{else}}"/submit-ncc" enctype="multipart/form-data"{{/if}}  method="post" class="review-form">
             <td><img class="athlete-picture" src="{{registration.portrait}}" alt="Profile Picture">
               <input type="text" name="portrait" value="{{registration.portrait}}" hidden readonly>
               {{#if user.ptaverified}}<button type="button" class="clear-input"
@@ -96,7 +95,7 @@
                 <tr>
                   <td><strong>Birthday:</strong></td>
                   <td class="information">
-                    <input type="date" name="bday" value="{{formatDate registration.bday " MM-DD-YYYY"}}" {{#if (or
+                    <input type="date" name="bday" value="{{formatDate registration.bday "MM-DD-YYYY"}}" {{#if (and
                       user.ptaverified registration.bday)}}readonly{{else}}required{{/if}}>
                     {{#if user.ptaverified}}<button type="button" class="clear-input"
                       onclick="clearInput(this)">x</button>{{/if}}
@@ -124,39 +123,29 @@
                   <td><strong>Birth Certificate:</strong></td>
                   <td class="information">
                     {{#if registration.birthcert}}
-                    <a href="{{registration.birthcert}}" target="_blank">View Payment Proof</a>
+                      <a href="{{registration.birthcert}}" target="_blank">View Payment Proof</a>
+                      <input type="text" name="birthcert" value="{{registration.birthcert}}" hidden>
+                      {{#if user.ptaverified}}<button type="button" class="clear-input"
+                        onclick="clearInput(this)">x</button>{{/if}}
                     {{else}}
-                    No File
+                      No upload <input type="file" name="birthcert" required>
                     {{/if}}
-                    {{#if (or user.ptaverified registration.birthcert)}}
-                    <input type="text" name="birthcert" value="{{registration.birthcert}}" hidden readonly>
-                    {{else}}
-                    <input type="file" name="birthcert" value="{{registration.birthcert}}" required>
-                    {{/if}}
-                    {{#if user.ptaverified}}<button type="button" class="clear-input"
-                      onclick="clearInput(this)">x</button>{{/if}}
                   </td>
                 </tr>
                 <tr>
                   <td><strong>Payment Proof:</strong></td>
                   <td class="information">
                     {{#if registration.paymentproof}}
-                    <a href="{{registration.paymentproof}}" target="_blank">View Payment Proof</a>
+                      <a href="{{registration.paymentproof}}" target="_blank">View Payment Proof</a>
+                      <input type="text" name="paymentproof" value="{{registration.paymentproof}}" hidden>
+                      {{#if user.ptaverified}}<button type="button" class="clear-input"
+                        onclick="clearInput(this)">x</button>{{/if}}
                     {{else}}
-                    No Payment
+                      No payment <input type="file" name="paymentproof" required>
                     {{/if}}
-                    {{#if (or user.ptaverified registration.paymentproof)}}
-                    <input type="text" name="paymentproof" value="{{registration.paymentproof}}" hidden readonly>
-                    {{else}}
-                    <input type="file" name="paymentproof" value="{{registration.paymentproof}}" required>
-                    {{/if}}
-                    {{#if user.ptaverified}}<button type="button" class="clear-input"
-                      onclick="clearInput(this)">x</button>{{/if}}
                   </td>
                 </tr>
               </table>
-
-
             </td>
         </tr>
       </table>
@@ -165,7 +154,7 @@
         <tr>
           <td><strong>Last Promotion:</strong></td>
           <td class="information">
-            <input type="date" name="lastpromo" value="{{formatDate registration.lastpromo " YYYY-MM-DD"}}" {{#if (or
+            <input type="date" name="lastpromo" value="{{formatDate registration.lastpromo "MM-DD-YYYY"}}" {{#if (and
               user.ptaverified registration.lastpromo)}}readonly{{else}}required{{/if}}>
             {{#if user.ptaverified}}<button type="button" class="clear-input"
               onclick="clearInput(this)">x</button>{{/if}}
@@ -245,17 +234,20 @@
         </tr>
         <tr>
           <td colspan="2"> 
-            <button type="button" class="rejectbtn1" onclick="openConfirmRejectScreen()">
-              {{#if user.ptaverified}}Confirm Rejections{{else}}Submit Changes{{/if}}
-            </button>
+            {{#if user.ptaverified}}
+              <button type="button" class="rejectbtn1" onclick="openConfirmRejectScreen()">
+                Confirm Rejections
+              </button>
+            {{else}}
+              <button type="submit" class="rejectbtn1">
+                Submit Changes
+              </button>
+            {{/if}}
           </td>
         </tr>
       </table>
-
-      {{#unless user.ptaverified}}</form>{{/unless}}
     </div>
 
-    {{!-- <form action="/update-nccstatus" method="post" class="review-form"> --}}
       <input type="hidden" name="applicationId" value="{{registration.id}}">
       <input type="hidden" name="submittedby" value="{{registration.submittedby}}">
       <section class="application-actions">
