@@ -571,6 +571,7 @@ app.post("/submit-instructor", upload.fields([
   let poomsaecertUrl = null;
   let kukkiwoncertUrl = null;
   let ptablackbeltcertUrl = null;
+  let paymentproofUrl = null;
 
   if (req.files) {
     try {

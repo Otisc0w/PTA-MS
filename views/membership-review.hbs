@@ -47,16 +47,15 @@
           <form action={{#if user.ptaverified}}"/update-nccstatus"{{else}}"/submit-ncc" enctype="multipart/form-data"{{/if}}  method="post" class="review-form">
             <td>
               {{#if registration.portrait}}
-                <img class="athlete-picture" src="{{registration.portrait}}" alt="Profile Picture">
-              {{else}}
-                
+                <img src="{{registration.portrait}}" target="_blank">
                 <input type="text" name="portraittext" value="{{registration.portrait}}" hidden>
-                {{#if user.ptaverified}}
-                  <button type="button" class="clear-input"
-                  onclick="clearInput(this)">x</button>
-                {{/if}}
-                <p>Upload a new 1:1 portrait of the player</p>
-                <input type="file" name="portrait" required>
+                {{#if user.ptaverified}}<button type="button" class="clear-input"
+                  onclick="clearInput(this)">x</button>{{/if}}
+              {{else}}
+                No Picture
+                {{#unless user.ptaverified}}
+                    <input type="file" name="portrait" required>
+                {{/unless}}
               {{/if}}
               
             </td>
@@ -138,7 +137,10 @@
                       {{#if user.ptaverified}}<button type="button" class="clear-input"
                         onclick="clearInput(this)">x</button>{{/if}}
                     {{else}}
-                      No upload <input type="file" name="birthcert" required>
+                      No upload
+                      {{#unless user.ptaverified}}
+                         <input type="file" name="birthcert" required>
+                      {{/unless}}
                     {{/if}}
                   </td>
                 </tr>
@@ -151,7 +153,10 @@
                       {{#if user.ptaverified}}<button type="button" class="clear-input"
                         onclick="clearInput(this)">x</button>{{/if}}
                     {{else}}
-                      No payment <input type="file" name="paymentproof" required>
+                      No payment
+                      {{#unless user.ptaverified}}
+                         <input type="file" name="paymentproof" required>
+                      {{/unless}}
                     {{/if}}
                   </td>
                 </tr>
