@@ -23,7 +23,7 @@ hbs.registerHelper('json', function (context) {
   return JSON.stringify(context, null, 2);
 });
 
-// Middleware to parse JSON
+// Middleware to parse JaSON
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Middleware to parse URL-encoded data
 app.use(session({
