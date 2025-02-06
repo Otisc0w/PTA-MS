@@ -45,10 +45,20 @@
       <table class="profile-section">
         <tr>
           <form action={{#if user.ptaverified}}"/update-nccstatus"{{else}}"/submit-ncc" enctype="multipart/form-data"{{/if}}  method="post" class="review-form">
-            <td><img class="athlete-picture" src="{{registration.portrait}}" alt="Profile Picture">
-              <input type="text" name="portrait" value="{{registration.portrait}}" hidden readonly>
-              {{#if user.ptaverified}}<button type="button" class="clear-input"
-                onclick="clearInput(this)">x</button>{{/if}}
+            <td>
+              {{#if registration.portrait}}
+                <img class="athlete-picture" src="{{registration.portrait}}" alt="Profile Picture">
+              {{else}}
+                
+                <input type="text" name="portrait" value="{{registration.portrait}}" hidden>
+                {{#if user.ptaverified}}
+                  <button type="button" class="clear-input"
+                  onclick="clearInput(this)">x</button>
+                {{/if}}
+                <p>Upload a new 1:1 portrait of the player</p>
+                <input type="file" name="portrait" required>
+              {{/if}}
+              
             </td>
             <td>
               <table class="details-section">
@@ -95,7 +105,7 @@
                 <tr>
                   <td><strong>Birthday:</strong></td>
                   <td class="information">
-                    <input type="date" name="bday" value="{{formatDate registration.bday "MM-DD-YYYY"}}" {{#if (and
+                    <input type="date" name="bday" value="{{registration.bday}}" {{#if (or
                       user.ptaverified registration.bday)}}readonly{{else}}required{{/if}}>
                     {{#if user.ptaverified}}<button type="button" class="clear-input"
                       onclick="clearInput(this)">x</button>{{/if}}
@@ -154,7 +164,7 @@
         <tr>
           <td><strong>Last Promotion:</strong></td>
           <td class="information">
-            <input type="date" name="lastpromo" value="{{formatDate registration.lastpromo "MM-DD-YYYY"}}" {{#if (and
+            <input type="date" name="lastpromo" value="{{registration.lastpromo}}" {{#if (or
               user.ptaverified registration.lastpromo)}}readonly{{else}}required{{/if}}>
             {{#if user.ptaverified}}<button type="button" class="clear-input"
               onclick="clearInput(this)">x</button>{{/if}}

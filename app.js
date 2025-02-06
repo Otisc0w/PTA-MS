@@ -338,6 +338,9 @@ app.post("/submit-ncc", upload.fields([
       instructorlastname,
       instructormobile,
       instructoremail,
+      birthcert,
+      portrait,
+      paymentproof,
     } = req.body; // Capture user input from the form
 
     if (!req.session.user) {
@@ -354,9 +357,7 @@ app.post("/submit-ncc", upload.fields([
     if (req.files) {
       try {
         if (req.files.birthcert) {
-          const birthcertPath = `documents/${Date.now()}-${
-            req.files.birthcert[0].originalname
-          }`;
+          const birthcertPath = `documents/${Date.now()}-${req.files.birthcert[0].originalname}`;
           const { error: birthcertUploadError } = await supabase.storage
             .from("documents")
             .upload(birthcertPath, req.files.birthcert[0].buffer, {
@@ -364,10 +365,7 @@ app.post("/submit-ncc", upload.fields([
             });
 
           if (birthcertUploadError) {
-            console.error(
-              "Error uploading birth certificate:",
-              birthcertUploadError.message
-            );
+            console.error("Error uploading birth certificate:", birthcertUploadError.message);
             return res.status(500).send("Error uploading birth certificate");
           }
 
@@ -375,9 +373,7 @@ app.post("/submit-ncc", upload.fields([
         }
 
         if (req.files.portrait) {
-          const portraitPath = `documents/${Date.now()}-${
-            req.files.portrait[0].originalname
-          }`;
+          const portraitPath = `documents/${Date.now()}-${req.files.portrait[0].originalname}`;
           const { error: portraitUploadError } = await supabase.storage
             .from("documents")
             .upload(portraitPath, req.files.portrait[0].buffer, {
@@ -385,10 +381,7 @@ app.post("/submit-ncc", upload.fields([
             });
 
           if (portraitUploadError) {
-            console.error(
-              "Error uploading portrait:",
-              portraitUploadError.message
-            );
+            console.error("Error uploading portrait:", portraitUploadError.message);
             return res.status(500).send("Error uploading portrait");
           }
 
@@ -396,9 +389,7 @@ app.post("/submit-ncc", upload.fields([
         }
 
         if (req.files.paymentproof) {
-          const paymentproofPath = `documents/${Date.now()}-${
-            req.files.paymentproof[0].originalname
-          }`;
+          const paymentproofPath = `documents/${Date.now()}-${req.files.paymentproof[0].originalname}`;
           const { error: paymentproofUploadError } = await supabase.storage
             .from("documents")
             .upload(paymentproofPath, req.files.paymentproof[0].buffer, {
@@ -406,10 +397,7 @@ app.post("/submit-ncc", upload.fields([
             });
 
           if (paymentproofUploadError) {
-            console.error(
-              "Error uploading paymentproof:",
-              paymentproofUploadError.message
-            );
+            console.error("Error uploading paymentproof:", paymentproofUploadError.message);
             return res.status(500).send("Error uploading paymentproof");
           }
 
@@ -419,6 +407,45 @@ app.post("/submit-ncc", upload.fields([
         console.error("Server error during file upload:", error.message);
         return res.status(500).json({ error: error.message });
       }
+    }
+
+    const updateData = {
+      firstname,
+      middlename,
+      lastname,
+      gender,
+      bday,
+      age,
+      phonenum,
+      email,
+      lastpromo,
+      promolocation,
+      clubregion,
+      beltlevel,
+      instructorfirstname,
+      instructormi,
+      instructorlastname,
+      instructormobile,
+      instructoremail,
+      status,
+      expireson: null,
+    };
+
+    if (birthcertUrl) updateData.birthcert = birthcertUrl;
+    if (portraitUrl) updateData.portrait = portraitUrl;
+    if (paymentproofUrl) updateData.paymentproof = paymentproofUrl;
+
+    const { data, error } = await supabase
+      .from("ncc_registrations")
+      .update(updateData)
+      .eq("submittedby", submittedby);
+
+    if (error) {
+      console.error("Error updating registration:", error.message);
+      return res.status(500).render("membership", {
+        error: "Error updating registration.",
+        users: [], // Optionally pass users array if you need it in the view
+      });
     }
 
     try {
@@ -529,7 +556,7 @@ app.post("/submit-ncc", upload.fields([
         return res.status(500).send("Error creating notification");
       }
 
-      res.redirect("/membership");
+      res.redirect("/membership-status");
     } catch (error) {
       console.error("Server error:", error.message);
       res.status(500).json({ error: error.message });
@@ -832,7 +859,7 @@ app.post("/submit-instructor", upload.fields([
       return res.status(500).send("Error creating notification");
     }
 
-    res.redirect("/membership");
+    res.redirect("/membership-status");
   } catch (error) {
     console.error("Server error:", error.message);
     res.status(500).json({ error: error.message });
