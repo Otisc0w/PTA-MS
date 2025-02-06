@@ -431,9 +431,23 @@ app.post("/submit-ncc", upload.fields([
       expireson: null,
     };
 
-    if (birthcertUrl) updateData.birthcert = birthcertUrl;
-    if (portraitUrl) updateData.portrait = portraitUrl;
-    if (paymentproofUrl) updateData.paymentproof = paymentproofUrl;
+    if (birthcertUrl) {
+      updateData.birthcert = birthcertUrl;
+    } else {
+      updateData.birthcert = req.body.birthcert;
+    }
+
+    if (portraitUrl) {
+      updateData.portrait = portraitUrl;
+    } else {
+      updateData.portrait = req.body.portrait;
+    }
+
+    if (paymentproofUrl) {
+      updateData.paymentproof = paymentproofUrl;
+    } else {
+      updateData.paymentproof = req.body.paymentproof;
+    }
 
     const { data, error } = await supabase
       .from("ncc_registrations")
