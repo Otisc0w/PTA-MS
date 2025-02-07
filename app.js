@@ -1724,6 +1724,15 @@ app.post("/reject-club-fields", async (req, res) => {
       return res.status(400).json({ error: error.message });
     }
 
+    const { error: updateStatusError } = await supabase
+      .from("club_registrations")
+      .update({ status: 4 })
+      .eq("id", clubregid);
+
+    if (updateStatusError) {
+      return res.status(400).json({ error: updateStatusError.message });
+    }
+
     res.redirect(`/clubreg-review/${clubregid}`);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -1984,12 +1993,39 @@ app.post("/update-clubstatus", async (req, res) => {
       break;
       case 4:
 
-      const { rejectmsg, rejectdescription } = req.body; // Capture the reject message from the form
+      const { rejectmsg, rejectdescription,  } = req.body; // Capture the reject message from the form
+      const {
+        firstname,
+        lastname,
+        phonenum,
+        email,
+        clubname,
+        clubaddress,
+        province,
+        idfile,
+        proofdoc,
+        clubpic,
+        paymentproof,
+      } = req.body;
 
       // Update the rejectmsg column
       const { error: updateRejectMsgError } = await supabase
         .from("club_registrations")
-        .update({ rejectmsg: rejectmsg, rejectdescription: rejectdescription })
+        .update({ 
+          rejectmsg: rejectmsg,
+          rejectdescription: rejectdescription,
+          firstname,
+          lastname,
+          phonenum,
+          email,
+          clubname,
+          clubaddress,
+          province,
+          idfile,
+          proofdoc,
+          clubpic,
+          paymentproof,
+        })
         .eq("id", applicationId);
 
       if (updateRejectMsgError) {
@@ -2191,25 +2227,64 @@ app.post("/submit-club",
     console.log("Club Picture URL:", clubpicUrl);
 
     try {
-      // Insert the new club registration into the database
+      // Check if a row with the same submittedby already exists
+      const { data: existingRegistration, error: existingRegistrationError } = await supabase
+      .from("club_registrations")
+      .select("*")
+      .eq("submittedby", submittedby)
+      .single();
+
+      if (existingRegistrationError && existingRegistrationError.code !== 'PGRST116') {
+      console.error("Error checking existing registration:", existingRegistrationError.message);
+      return res.status(500).send("Error checking existing registration");
+      }
+
+      if (existingRegistration) {
+      // Update the existing registration
       const { data, error } = await supabase
-        .from("club_registrations") // Replace 'club_registrations' with your actual table name if different
+        .from("club_registrations")
+        .update({
+        firstname,
+        lastname,
+        phonenum,
+        email,
+        clubname,
+        clubaddress,
+        province,
+        idfile: idfileUrl,
+        proofdoc: proofdocUrl,
+        clubpic: clubpicUrl, // Include the club picture URL
+        paymentproof: paymentproofUrl, // Include the payment proof URL
+        status,
+        })
+        .eq("submittedby", submittedby);
+
+      if (error) {
+        console.error("Error updating club registration:", error.message);
+        return res.status(500).send("Error updating club registration");
+      }
+
+      console.log("Club registration updated successfully:", data);
+      } else {
+      // Insert a new registration
+      const { data, error } = await supabase
+        .from("club_registrations")
         .insert([
-          {
-            firstname,
-            lastname,
-            phonenum,
-            email,
-            clubname,
-            clubaddress,
-            province,
-            idfile: idfileUrl,
-            proofdoc: proofdocUrl,
-            clubpic: clubpicUrl, // Include the club picture URL
-            paymentproof: paymentproofUrl, // Include the payment proof URL
-            submittedby,
-            status,
-          },
+        {
+          firstname,
+          lastname,
+          phonenum,
+          email,
+          clubname,
+          clubaddress,
+          province,
+          idfile: idfileUrl,
+          proofdoc: proofdocUrl,
+          clubpic: clubpicUrl, // Include the club picture URL
+          paymentproof: paymentproofUrl, // Include the payment proof URL
+          submittedby,
+          status,
+        },
         ])
         .select(); // Ensure the data is returned
 
@@ -2219,25 +2294,26 @@ app.post("/submit-club",
       }
 
       console.log("Club registration submitted successfully:", data);
+      }
 
       // Add a notification for the user about their club registration submission
       const { error: notificationError } = await supabase
-        .from("notifications")
-        .insert([
-          {
-            userid: submittedby,
-            type: "Registration",
-            message: "Your club registration has been successfully submitted.",
-            desc: "Your club registration has been successfully submitted and is now awaiting review. You will receive notifications for the status of your application.",
-          },
-        ]);
+      .from("notifications")
+      .insert([
+        {
+        userid: submittedby,
+        type: "Registration",
+        message: "Your club registration has been successfully submitted.",
+        desc: "Your club registration has been successfully submitted and is now awaiting review. You will receive notifications for the status of your application.",
+        },
+      ]);
 
       if (notificationError) {
-        console.error("Error creating notification:", notificationError.message);
-        return res.status(500).send("Error creating notification");
+      console.error("Error creating notification:", notificationError.message);
+      return res.status(500).send("Error creating notification");
       }
 
-      res.redirect("membership"); // Redirect to a success page or another appropriate route
+      res.redirect("membership-status"); // Redirect to a success page or another appropriate route
     } catch (error) {
       console.error("Server error during database insertion:", error.message);
       res.status(500).json({ error: error.message });

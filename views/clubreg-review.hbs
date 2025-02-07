@@ -87,9 +87,14 @@
                   <td><strong>Valid ID:</strong></td>
                   <td class="information">
                     <div class="input-container">
-                      <a href="{{clubregistration.idfile}}" target="_blank">View Payment Proof</a>
-                      {{#if user.ptaverified}}
-                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                      {{#if registration.idfile}}
+                        <a href="{{registration.idfile}}" target="_blank">View Document</a>
+                        <input type="text" name="idfiletext" value="{{registration.idfile}}" hidden>
+                        {{#if user.ptaverified}}<button type="button" class="clear-input"
+                          onclick="clearInput(this)">x</button>{{/if}}
+                      {{else}}
+                        No File
+                        {{#unless user.ptaverified}}<input type="file" name="idfile" required> {{/unless}}
                       {{/if}}
                     </div>
                   </td>
@@ -99,9 +104,14 @@
                   <td><strong>Proof of Club Operations:</strong></td>
                   <td class="information">
                     <div class="input-container">
-                      <a href="{{clubregistration.proofdoc}}" target="_blank">View Payment Proof</a>
-                      {{#if user.ptaverified}}
-                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                      {{#if registration.proofdoc}}
+                        <a href="{{registration.proofdoc}}" target="_blank">View Document</a>
+                        <input type="text" name="proofdoctext" value="{{registration.proofdoc}}" hidden>
+                        {{#if user.ptaverified}}<button type="button" class="clear-input"
+                          onclick="clearInput(this)">x</button>{{/if}}
+                      {{else}}
+                        No File
+                        {{#unless user.ptaverified}}<input type="file" name="proofdoc" required> {{/unless}}
                       {{/if}}
                     </div>
                   </td>
@@ -111,9 +121,14 @@
                   <td><strong>Proof of Payment:</strong></td>
                   <td class="information">
                     <div class="input-container">
-                      <a href="{{clubregistration.paymentproof}}" target="_blank">View Payment Proof</a>
-                      {{#if user.ptaverified}}
-                      <button type="button" class="clear-input" onclick="clearInput(this)">x</button>
+                      {{#if registration.paymentproof}}
+                        <a href="{{registration.paymentproof}}" target="_blank">View Document</a>
+                        <input type="text" name="paymentprooftext" value="{{registration.paymentproof}}" hidden>
+                        {{#if user.ptaverified}}<button type="button" class="clear-input"
+                          onclick="clearInput(this)">x</button>{{/if}}
+                      {{else}}
+                        No File
+                        {{#unless user.ptaverified}}<input type="file" name="paymentproof" required> {{/unless}}
                       {{/if}}
                     </div>
                   </td>
@@ -132,7 +147,7 @@
     </form>
 
     <form action="/update-clubstatus" method="post">
-      <input type="hidden" name="applicationId" value="59">
+      <input type="hidden" name="applicationId" value="{{clubregistration.id}}">
       <div class="application-actions">
         <h1 class="status">
           {{#if (eq clubregistration.status 1)}}
