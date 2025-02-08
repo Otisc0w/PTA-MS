@@ -41,13 +41,14 @@
             <td colspan="2">
               {{#if clubregistration.clubpic}}
                 <img class="clubpic" src="{{clubregistration.clubpic}}">
-              {{else}}
-                <h2>no picture</h2>
-              {{/if}}
-              <input type="hidden" name="clubpic" value="{{clubregistration.clubpic}}" {{#if (or user.ptaverified
+                <input type="hidden" name="clubpic" value="{{clubregistration.clubpic}}" {{#if (or user.ptaverified
                 clubregistration.clubpic)}}readonly{{else}}required{{/if}}>
               {{#if user.ptaverified}}<button type="button" class="clear-input"
                 onclick="clearInput(this)">x</button>{{/if}}
+              {{else}}
+                <h2>no picture</h2>
+              {{/if}}
+              
             </td>
             <td>
               <table>
@@ -143,10 +144,23 @@
           </tr>
         </table>
         {{#if user.ptaverified}}
-        <button type="submit" class="confirm-reject-btn">Confirm rejections</button>
+          <button type="button" class="confirmrejectionsbtn" id="confirmrejectionsbtn" onclick="showConfirmRejectScreen2()">Confirm rejections</button>
         {{else}}
-        <button type="submit" class="submit-changes-btn">Submit Changes</button>
+          <button type="submit" class="submit-changes-btn">Submit Changes</button>
         {{/if}}
+      </div>
+
+      <div class="confirmrejectscreen2" id="confirmrejectscreen2" style="display: none;">
+        <h3>Please state reason for rejection.</h3>
+        <select name="rejectmsg" id="rejectmsg">
+          <option value="Incomplete Documentation">Incomplete Documentation</option>
+          <option value="Invalid Information">Invalid Information</option>
+          <option value="Failed Background Check">Failed Background Check</option>
+          <option value="Other">Other</option>
+        </select>
+        <textarea name="rejectdescription" id="rejectdescription" cols="30" rows="10"></textarea>
+        <button type="button" class="cancelreject" id="cancelreject2">Cancel</button>
+        <button type="submit" value="4" name="status" id="confirm">Confirm</button>
       </div>
     </form>
 
@@ -169,28 +183,28 @@
           {{/if}}
         </h1>
         {{#if user.ptaverified}}
-        <div class="status-buttons" id="status-buttons"> {{!-- VALUES NAMES AND TYPES NEED TO STAY THE SAME --}}
-          <button type="submit" name="status" value="1">Processing Application</button>
-          <button type="button" id="accepted" class="accepted">Accepted and Registered</button>
-          <button type="button" id="rejectbtn" class="rejectbtn">Reject Application</button>
-        </div>
-        <div class="confirmscreen" id="confirmscreen" style="display: none;">
-          <h3>Are you sure? This will be added to the clubs page for the public to see.</h3>
-          <button class="cancel" id="cancel">Cancel</button>
-          <button type="submit" value="3" name="status">Confirm</button>
-        </div>
-        <div class="confirmrejectscreen" id="confirmrejectscreen" style="display: none;">
-          <h3>Please state reason for rejection.</h3>
-          <select name="rejectmsg" id="rejectmsg">
-            <option value="Incomplete Documentation">Incomplete Documentation</option>
-            <option value="Invalid Information">Invalid Information</option>
-            <option value="Failed Background Check">Failed Background Check</option>
-            <option value="Other">Other</option>
-          </select>
-          <textarea name="rejectdescription" id="rejectdescription" cols="30" rows="10"></textarea>
-          <button type="button" class="cancelreject" id="cancelreject">Cancel</button>
-          <button type="submit" value="4" name="status" id="confirm">Confirm</button>
-        </div>
+          <div class="status-buttons" id="status-buttons"> {{!-- VALUES NAMES AND TYPES NEED TO STAY THE SAME --}}
+            <button type="submit" name="status" value="1">Processing Application</button>
+            <button type="button" id="accepted" class="accepted">Accepted and Registered</button>
+            <button type="button" id="rejectbtn" class="rejectbtn">Reject Application</button>
+          </div>
+          <div class="confirmscreen" id="confirmscreen" style="display: none;">
+            <h3>Are you sure? This will be added to the clubs page for the public to see.</h3>
+            <button class="cancel" id="cancel">Cancel</button>
+            <button type="submit" value="3" name="status">Confirm</button>
+          </div>
+          <div class="confirmrejectscreen" id="confirmrejectscreen" style="display: none;">
+            <h3>Please state reason for rejection.</h3>
+            <select name="rejectmsg" id="rejectmsg">
+              <option value="Incomplete Documentation">Incomplete Documentation</option>
+              <option value="Invalid Information">Invalid Information</option>
+              <option value="Failed Background Check">Failed Background Check</option>
+              <option value="Other">Other</option>
+            </select>
+            <textarea name="rejectdescription" id="rejectdescription" cols="30" rows="10"></textarea>
+            <button type="button" class="cancelreject" id="cancelreject">Cancel</button>
+            <button type="submit" value="4" name="status" id="confirm">Confirm</button>
+          </div>
         {{/if}}
         <div class="backtolist">
           <a href="/membership-status">Back to list</a>
@@ -240,10 +254,34 @@
         confirmButton.value = accepted.getAttribute("data-status");
       });
 
+
+
       confirmButton.addEventListener("click", function () {
         const status = confirmButton.value;
         const applicationId = document.querySelector('input[name="applicationId"]').value;
       });
+
+      const confirmrejectscreen2 = document.getElementById("confirmrejectscreen2");
+      const confirmrejectionsbtn = document.getElementById("confirmrejectionsbtn");
+
+      const cancelreject2 = document.getElementById("cancelreject2");
+
+      cancelreject2.addEventListener("click", function (event) {
+        event.preventDefault();
+        confirmrejectscreen2.style.display = "none";
+        actionButtons.style.display = "block";
+      });
+
+     /* confirmrejectionsbtn.addEventListener("click", function (event) {
+        event.preventDefault();
+        confirmrejectscreen2.style.display = "block";
+        actionButtons.style.display = "none";
+      }); */
+
+      function showConfirmRejectScreen2() {
+        confirmrejectscreen2.style.display = "block";
+        actionButtons.style.display = "none";
+      }
 
       function printDiv(divName) {
         var printContents = document.getElementById(divName).innerHTML;

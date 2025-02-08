@@ -1698,6 +1698,8 @@ app.post("/reject-club-fields", async (req, res) => {
     proofdoc,
     clubpic,
     paymentproof,
+    rejectmsg,
+    rejectdescription,
   } = req.body;
 
   try {
@@ -1716,6 +1718,8 @@ app.post("/reject-club-fields", async (req, res) => {
           proofdoc,
           clubpic,
           paymentproof,
+          rejectmsg,
+          rejectdescription,
         }
       )
       .eq("id", clubregid);
