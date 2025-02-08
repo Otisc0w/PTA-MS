@@ -39,7 +39,11 @@
         <table class="details-section">
           <tr>
             <td colspan="2">
-              <img class="clubpic" src="{{clubregistration.clubpic}}">
+              {{#if clubregistration.clubpic}}
+                <img class="clubpic" src="{{clubregistration.clubpic}}">
+              {{else}}
+                <h2>no picture</h2>
+              {{/if}}
               <input type="hidden" name="clubpic" value="{{clubregistration.clubpic}}" {{#if (or user.ptaverified
                 clubregistration.clubpic)}}readonly{{else}}required{{/if}}>
               {{#if user.ptaverified}}<button type="button" class="clear-input"
@@ -87,9 +91,9 @@
                   <td><strong>Valid ID:</strong></td>
                   <td class="information">
                     <div class="input-container">
-                      {{#if registration.idfile}}
-                        <a href="{{registration.idfile}}" target="_blank">View Document</a>
-                        <input type="text" name="idfiletext" value="{{registration.idfile}}" hidden>
+                      {{#if clubregistration.idfile}}
+                        <a href="{{clubregistration.idfile}}" target="_blank">View Document</a>
+                        <input type="text" name="idfile" value="{{clubregistration.idfile}}" hidden>
                         {{#if user.ptaverified}}<button type="button" class="clear-input"
                           onclick="clearInput(this)">x</button>{{/if}}
                       {{else}}
@@ -104,9 +108,9 @@
                   <td><strong>Proof of Club Operations:</strong></td>
                   <td class="information">
                     <div class="input-container">
-                      {{#if registration.proofdoc}}
-                        <a href="{{registration.proofdoc}}" target="_blank">View Document</a>
-                        <input type="text" name="proofdoctext" value="{{registration.proofdoc}}" hidden>
+                      {{#if clubregistration.proofdoc}}
+                        <a href="{{clubregistration.proofdoc}}" target="_blank">View Document</a>
+                        <input type="text" name="proofdoc" value="{{clubregistration.proofdoc}}" hidden>
                         {{#if user.ptaverified}}<button type="button" class="clear-input"
                           onclick="clearInput(this)">x</button>{{/if}}
                       {{else}}
@@ -121,9 +125,9 @@
                   <td><strong>Proof of Payment:</strong></td>
                   <td class="information">
                     <div class="input-container">
-                      {{#if registration.paymentproof}}
-                        <a href="{{registration.paymentproof}}" target="_blank">View Document</a>
-                        <input type="text" name="paymentprooftext" value="{{registration.paymentproof}}" hidden>
+                      {{#if clubregistration.paymentproof}}
+                        <a href="{{clubregistration.paymentproof}}" target="_blank">View Document</a>
+                        <input type="text" name="paymentproof" value="{{clubregistration.paymentproof}}" hidden>
                         {{#if user.ptaverified}}<button type="button" class="clear-input"
                           onclick="clearInput(this)">x</button>{{/if}}
                       {{else}}
