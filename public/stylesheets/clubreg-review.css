@@ -524,3 +524,15 @@ button.clear-input:hover {
     color: red;
     font-weight: lighter;
   }
+
+.confirmrejectionsbtn{
+    padding: 8px 10px;
+    border: none;
+    border-radius: var(--border-radius);
+    background-color: red;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 5px;
+    transition: background-color 0.3s;
+}
