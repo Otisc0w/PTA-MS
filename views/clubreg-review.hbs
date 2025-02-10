@@ -31,8 +31,8 @@
       <h1>Review Club Application</h1>
     </div>
 
-    <form action="/reject-club-fields" method="post" {{#unless user.ptaverified}}enctype="multipart/form-data"
-      {{/unless}}>
+    <form action={{#if user.ptaverified}}"/reject-club-fields" {{else}} "/submit-club" enctype="multipart/form-data"
+      {{/if}} method="post" >
       <input type="hidden" name="clubregid" value="{{clubregistration.id}}">
       <div class="review-details">
         <h2>Club Application Information</h2>
@@ -43,10 +43,11 @@
                 <img class="clubpic" src="{{clubregistration.clubpic}}">
                 <input type="hidden" name="clubpic" value="{{clubregistration.clubpic}}" {{#if (or user.ptaverified
                 clubregistration.clubpic)}}readonly{{else}}required{{/if}}>
-              {{#if user.ptaverified}}<button type="button" class="clear-input"
-                onclick="clearInput(this)">x</button>{{/if}}
+                {{#if user.ptaverified}}<button type="button" class="clear-input"
+                  onclick="clearInput(this)">x</button>{{/if}}
               {{else}}
                 <h2>no picture</h2>
+                {{#unless user.ptaverified}}<input type="file" name="clubpic" required>{{/unless}}
               {{/if}}
               
             </td>
