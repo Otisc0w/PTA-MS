@@ -198,6 +198,8 @@
                 <label for="location">Location:</label>
                 <input type="text" id="location" name="location" value="{{event.location}}" required>
               </div>
+
+              {{#if (eq event.eventtype 'Poomsae')}}
               <div class="form-group">
                 <label for="additional-selects">Add Judges for this Event:</label>
                 <div id="additional-selects-container">
@@ -209,6 +211,7 @@
                 </div>
                 <button type="button" onclick="addSelect()">Add More</button>
               </div>
+              {{/if}}
               <button onclick="closeModal()" class="cancel">Cancel</button>
               <button type="submit" class="default-submit-button">Update Event</button>
             </div>

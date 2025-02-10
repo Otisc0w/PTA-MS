@@ -49,11 +49,11 @@
 
   <div class="events-create-container">
     <form id="eventform" class="event-form" action="/create-event" method="post" enctype="multipart/form-data">
-      {{#if (eq eventtype 'kyurogi')}}
+      {{#if (eq eventtype 'Kyorugi')}}
       <h3>Create Kyurogi Event</h3>
-      {{else if (eq eventtype 'poomsae')}}
+      {{else if (eq eventtype 'Poomsae')}}
       <h3>Create Poomsae Event</h3>
-      {{else if (eq eventtype 'promo')}}
+      {{else if (eq eventtype 'Promotion')}}
       <h3>Create Promotion Test Event</h3>
       {{/if}}
       <input type="hidden" value="{{eventtype}}" name="eventtype">
@@ -148,6 +148,8 @@
         <input type="text" id="location" name="location" value="{{event.location}}" required>
       </div>
 
+
+      {{#if (eq eventtype 'Poomsae')}}
       <div class="form-group">
         <label for="additional-selects">Add Judges for this Event:</label>
         <div id="additional-selects-container">
@@ -159,6 +161,7 @@
         </div>
         <button type="button" onclick="addSelect()">Add More</button>
       </div>
+      {{/if}}
       
       <button type="button" class="cancel" onclick="window.location.href='/events'">Cancel</button>
       <button type="submit">Create Event</button>
