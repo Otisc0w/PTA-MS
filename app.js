@@ -461,9 +461,9 @@ app.post("/submit-ncc", upload.fields([
             instructoremail,
             status,
             expireson: null,
-            birthcert: birthcertUrl, // Include the birth certificate URL
-            portrait: portraitUrl, // Include the portrait URL
-            paymentproof: paymentproofUrl, // Include the payment proof URL
+            birthcert: birthcertUrl || existingRegistration.birthcert, // Use existing URL if no new file
+            portrait: portraitUrl || existingRegistration.portrait, // Use existing URL if no new file
+            paymentproof: paymentproofUrl || existingRegistration.paymentproof, // Use existing URL if no new file
           })
           .eq("submittedby", submittedby);
 
@@ -765,13 +765,13 @@ app.post("/submit-instructor", upload.fields([
       email,
       clubregion,
       status,
-      birthcert: birthcertUrl, // Include the birth certificate URL
-      portrait: portraitUrl, // Include the portrait URL
-      educproof: educproofUrl,
-      poomsaecert: poomsaecertUrl,
-      kukkiwoncert: kukkiwoncertUrl,
-      ptablackbeltcert: ptablackbeltcertUrl,
-      paymentproof: paymentproofUrl, // Include the payment proof URL
+      birthcert: birthcertUrl || existingRegistration.birthcert, // Use existing URL if no new file
+      portrait: portraitUrl || existingRegistration.portrait, // Use existing URL if no new file
+      educproof: educproofUrl || existingRegistration.educproof, // Use existing URL if no new file
+      poomsaecert: poomsaecertUrl || existingRegistration.poomsaecert, // Use existing URL if no new file
+      kukkiwoncert: kukkiwoncertUrl || existingRegistration.kukkiwoncert, // Use existing URL if no new file
+      ptablackbeltcert: ptablackbeltcertUrl || existingRegistration.ptablackbeltcert, // Use existing URL if no new file
+      paymentproof: paymentproofUrl || existingRegistration.paymentproof, // Use existing URL if no new file
       })
       .eq("submittedby", submittedby);
 
