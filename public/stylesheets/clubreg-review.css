@@ -536,3 +536,62 @@ button.clear-input:hover {
     margin: 5px;
     transition: background-color 0.3s;
 }
+
+.confirmrejectscreen2{
+    background-color: var(--dark-bg);
+    border: 1px solid var(--accent-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 20px;
+    max-width: 600px; /* Ensures a consistent width */
+    margin: 30px auto; /* Centers the container */
+    color: var(--primary-color);
+    text-align: center; /* Aligns content to the center */
+}
+
+/* Title Styling */
+#confirmrejectscreen2 h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+    text-align: center;
+}
+
+/* Select and Textarea Styling */
+#confirmrejectscreen2 select,
+#confirmrejectscreen2 textarea {
+    width: 100%;
+    padding: 0;
+    border: 1px solid var(--accent-bg);
+    border-radius: var(--border-radius);
+    background-color: var(--light-bg);
+    color: var(--text-color);
+    margin-bottom: 20px;
+    font-size: 16px;
+    box-shadow: inset var(--box-shadow);
+}
+
+/* Button Styling */
+#confirmrejectscreen2 button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--border-radius);
+    background-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
+    transition: background-color 0.3s;
+}
+
+#confirmrejectscreen2 button:hover {
+    background-color: var(--hover-color);
+}
+
+#confirmrejectscreen2 .cancelreject {
+    background-color: red;
+}
+
+#confirmrejectscreen2 .cancelreject:hover {
+    background-color: darkred;
+}
