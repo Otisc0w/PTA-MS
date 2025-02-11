@@ -75,16 +75,21 @@
           <h2>NCC ID's</h2>
           {{#reverseEach ncc_registrations}}
           <div class='post-content'>
-            <span class='small'>Applicant: <h2>{{firstname}} {{lastname}}</h2>{{formatCreatedAt created_at}}<br>
+            <div class="post-details">
+              <span class='small'>Applicant: <h2>{{firstname}} {{lastname}}</h2>{{formatCreatedAt created_at}}</span>
               {{#if (eq status 3)}}
-              expires on {{formatDate expireson "MM/DD/YYYY"}}
+              <span class='small'>Expires on {{formatDate expireson "MM/DD/YYYY"}}</span>
               {{/if}}
-            </span>
-            <span>
+            </div>
+
+            <div class="post-status">
               <h3>Status: {{{formatStatus status}}}</h3>
-            </span>
-            <a href="/membership-review/{{id}}">Review</a>
-          </div><br>
+            </div>
+
+            <div class="post-action">
+              <a href="/membership-review/{{id}}">Review</a>
+            </div>
+          </div>
           {{/reverseEach}}
           {{else}}
           No pending NCC applications <br>
@@ -96,12 +101,20 @@
           <h2>Instructor ID's</h2>
           {{#reverseEach instructor_registrations}}
           <div class='post-content'>
-            <span class='small'>by <h2>{{firstname}} {{lastname}}</h2>{{formatCreatedAt created_at}}<br> expires on
-              {{formatDate expireson "MM/DD/YYYY"}}</span>
-            <span>
+            <div class="post-details">
+              <span class='small'>Applicant: <h2>{{firstname}} {{lastname}}</h2>{{formatCreatedAt created_at}}</span>
+              {{#if (eq status 3)}}
+              <span class='small'>Expires on {{formatDate expireson "MM/DD/YYYY"}}</span>
+              {{/if}}
+            </div>
+
+            <div class="post-status">
               <h3>Status: {{{formatStatus status}}}</h3>
-            </span>
-            <a href="/instructor-review/{{id}}">Review</a>
+            </div>
+
+            <div class="post-action">
+              <a href="/membership-review/{{id}}">Review</a>
+            </div>
           </div><br>
           {{/reverseEach}}
           {{else}}
@@ -114,11 +127,20 @@
           <h2>Club Registrations</h2>
           {{#reverseEach club_registrations}}
           <div class='post-content'>
-            <span class='small'>Applicant: <h2>{{firstname}} {{lastname}}</h2>{{formatCreatedAt created_at}}</span>
-            <span>
+            <div class="post-details">
+              <span class='small'>Applicant: <h2>{{firstname}} {{lastname}}</h2>{{formatCreatedAt created_at}}</span>
+              {{#if (eq status 3)}}
+              <span class='small'>Expires on {{formatDate expireson "MM/DD/YYYY"}}</span>
+              {{/if}}
+            </div>
+
+            <div class="post-status">
               <h3>Status: {{{formatStatus status}}}</h3>
-            </span>
-            <a href="/clubreg-review/{{id}}">Review</a>
+            </div>
+
+            <div class="post-action">
+              <a href="/membership-review/{{id}}">Review</a>
+            </div>
           </div><br>
           {{/reverseEach}}
           {{else}}
