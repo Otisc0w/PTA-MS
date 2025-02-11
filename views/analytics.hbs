@@ -60,22 +60,38 @@
   <!-- Analytics Content -->
   <div class="analytics-container">
 
-    <div class="card top-performers-card">
+    <div class="transactions-card">
       <h2>Transactions</h2>
-      <div class="performers">
-        {{#each transactions}}
-        <div class="performer-card">
-          <!--<img src="{{this.image}}" alt="Performer Photo" class="performer-photo"> -->
-          <h3>{{this.type}}</h3>
-          <p>Date: {{this.date}}</p>
-          <p>Amount: {{this.amount}}</p>
-        </div>
-        {{/each}}
-      </div>
+      <table class="transactions-table">
+        <thead>
+          <tr>
+          <th>Type</th>
+          <th>Date</th>
+          <th>Completed by</th>
+          <th>Name</th>
+          <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each transactions}}
+          <tr>
+            <td>{{this.type}}</td>
+            <td>{{formatCreatedAt this.created_at}}</td>
+            <td>{{this.completedby}}</td>
+            <td>{{this.name}}</td>
+            <td>{{this.amount}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      
     </div>
     <!-- Top 5 Performers of the Year -->
     <!-- Top 10 Performers of the Year -->
-    <div class="card top-performers-card">
+    {{!-- <div class="card top-performers-card">
       <h2>Top 10 Performers of the Year</h2>
       <div class="performers">
         {{#each topPerformers}}
@@ -140,7 +156,7 @@
         <li>Banned Athletes: <span>{{participantCounts.banned}}</span></li>
       </ul>
       <!-- <button onclick="viewParticipantList()">View Full List</button> -->
-    </div>
+    </div> --}}
 
 
 

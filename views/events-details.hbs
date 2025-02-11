@@ -64,7 +64,7 @@
           {{/if}}><a href="#" id="announcements-tab">Announcements</a></li>
         <li {{#unless (eq event.status 'Concluded' )}}style="display: none" {{/unless}}><a href="#"
               id="results-tab">Results</a></li>
-
+        
       </ul>
     </div><br>
 
@@ -96,6 +96,7 @@
           <p><strong>Weight Class:</strong> {{event.weightclass}}</p>
           <p><strong>Event Type:</strong> {{event.eventtype}}</p>
           <p><strong>Registration Cap:</strong> {{registrationcount}} / {{event.registrationcap}}</p>
+          <p>Judges:</p>{{event.judgeids}} here it is
 
         </div>
       </div>

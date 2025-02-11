@@ -1836,12 +1836,49 @@ app.post("/update-instructorstatus", async (req, res) => {
 
     // Check if status is 4, indicating the need to update the rejectmsg
     if (status == 4) {
-      const { rejectmsg, rejectdescription } = req.body; // Capture the reject message from the form
-
+      const { 
+        rejectmsg,
+        rejectdescription,
+        firstname,
+        middlename,
+        lastname,
+        gender,
+        bday,
+        phonenum,
+        email,
+        clubregion,
+        birthcert,
+        portrait,
+        educproof,
+        poomsaecert,
+        kukkiwoncert,
+        ptablackbeltcert,
+        paymentproof,
+      } = req.body; // Capture the reject message and other fields from the form
+      
+      const bdayValue = bday ? bday : null;
       // Update the rejectmsg column
       const { error: updateRejectMsgError } = await supabase
       .from("instructor_registrations")
-      .update({ rejectmsg: rejectmsg, rejectdescription: rejectdescription })
+      .update({
+        rejectmsg,
+        rejectdescription,
+        firstname,
+        middlename,
+        lastname,
+        gender,
+        bday: bdayValue,
+        phonenum,
+        email,
+        clubregion,
+        birthcert,
+        portrait,
+        educproof,
+        poomsaecert,
+        kukkiwoncert,
+        ptablackbeltcert,
+        paymentproof,
+      })
       .eq("id", applicationId);
 
       if (updateRejectMsgError) {
@@ -1885,7 +1922,7 @@ app.post("/update-instructorstatus", async (req, res) => {
         .insert([
           {
             userid: registration.submittedby,
-            type: "instructor",
+            type: "Instructor Registration",
             amount: 500, // Adjust the amount as needed
           },
         ]);

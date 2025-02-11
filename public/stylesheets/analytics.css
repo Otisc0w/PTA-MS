@@ -278,4 +278,45 @@ button:hover {
   .download-btn:hover {
     background-color: #45a049;
   }
+
+/* ------------------ Transactions Table ------------------ */
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 1em;
+    min-width: 400px;
+    background-color: #333;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.transactions-table thead tr {
+    background-color: #444;
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+}
+
+.transactions-table th,
+.transactions-table td {
+    padding: 12px 15px;
+}
+
+.transactions-table tbody tr {
+    border-bottom: 1px solid #444;
+}
+
+.transactions-table tbody tr:nth-of-type(even) {
+    background-color: #3a3a3a;
+}
+
+.transactions-table tbody tr:last-of-type {
+    border-bottom: 2px solid #5c6bc0;
+}
+
+.transactions-table tbody tr:hover {
+    background-color: #5c6bc0;
+    color: #ffffff;
+}
   
