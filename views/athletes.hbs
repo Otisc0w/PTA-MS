@@ -91,7 +91,7 @@
             <button class="dropbtn">Choose club here</button>
             <div class="dropdown-content">
               {{#each clubs}}
-              <label><input type="checkbox" value="{{id}}"> {{this.clubname}}</label>
+                <label><input type="checkbox" value="{{clubname}}"> {{clubname}}</label>
               {{/each}}
               <button class="done-btn">Done</button>
             </div>
@@ -119,7 +119,7 @@
       </thead>
       <tbody id="athletes-tbody">
         {{#each athletes}}
-          <tr data-athlete-id="{{id}}" onclick="toggleAthleteDetails()">
+          <tr data-athlete-id="{{id}}" onclick="toggleAthleteDetails('{{id}}')">
             <td>{{index}}</td>
             <td>{{name}}</td>
             <td>{{club}}</td>
@@ -249,17 +249,16 @@
       }
     }
 
-    function toggleAthleteDetails(id, name, portrait, userid, gender, beltlevel, agedivision, club) {
-      document.querySelectorAll('.rankings tbody tr').forEach(row => {
-      row.addEventListener('click', function () {
-        const detailsRow = document.getElementById(`details-${this.dataset.athleteId}`);
-        if (detailsRow.style.display === 'none' || detailsRow.style.display === '') {
-        detailsRow.style.display = 'table-row';
-        } else {
-        detailsRow.style.display = 'none';
+    function toggleAthleteDetails(id) {
+      const detailsRow = document.getElementById(`details-${id}`);
+      // Collapse all other details rows
+      document.querySelectorAll('.details-row').forEach(row => {
+        if (row !== detailsRow) {
+          row.style.display = 'none';
         }
       });
-      });
+      // Toggle the clicked details row
+      detailsRow.style.display = detailsRow.style.display === 'none' || detailsRow.style.display === '' ? 'table-row' : 'none';
     }
 
     // Modal functionality
@@ -282,19 +281,32 @@
     }
 
     document.querySelector('.apply-btn').addEventListener('click', function () {
-      const searchInput = document.getElementById('athlete-search').value.toLowerCase(); // Get the search input
-      console.log("Search input: ", searchInput);
-      // Get all rows in the athlete table
-      const athleteRows = document.querySelectorAll('#athletes-tbody tr');
+      const searchInput = document.getElementById('athlete-search').value.toLowerCase().trim();
+      const selectedBeltColors = Array.from(document.querySelectorAll('.filter-group:nth-child(1) .dropdown-content input[type="checkbox"]:checked'))
+        .map(checkbox => checkbox.value.toLowerCase());
+      const selectedClubs = Array.from(document.querySelectorAll('.filter-group:nth-child(2) .dropdown-content input[type="checkbox"]:checked'))
+        .map(checkbox => checkbox.value.toLowerCase());
+
+      const athleteRows = document.querySelectorAll('#athletes-tbody > tr:not(.details-row)');
+
+      // Collapse all details rows before filtering
+      document.querySelectorAll('.details-row').forEach(detailsRow => {
+        detailsRow.style.display = 'none';
+      });
 
       athleteRows.forEach(row => {
-        const athleteName = row.querySelector('td:nth-child(2)').textContent.toLowerCase(); // Get athlete's name from the 2nd column
-        console.log("Checking athlete: ", athleteName);
-        // Check if the athlete's name includes the search query
-        if (athleteName.includes(searchInput)) {
-          row.style.display = ''; // Show the row if it matches
+        const athleteName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+        const athleteBeltLevel = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+        const athleteClub = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+
+        const matchesSearch = searchInput === '' || athleteName.includes(searchInput);
+        const matchesBeltColor = selectedBeltColors.length === 0 || selectedBeltColors.includes(athleteBeltLevel);
+        const matchesClub = selectedClubs.length === 0 || selectedClubs.includes(athleteClub);
+
+        if (matchesSearch && matchesBeltColor && matchesClub) {
+          row.style.display = '';
         } else {
-          row.style.display = 'none'; // Hide the row if it doesn't match
+          row.style.display = 'none';
         }
       });
     });
@@ -310,50 +322,6 @@
       button.addEventListener('click', function () {
         const dropdownContent = this.nextElementSibling;
         dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
-      });
-    });
-
-    // filter
-    /* document.querySelector('.apply-btn').addEventListener('click', function () {
-       // Get selected belt colors
-       const selectedBeltColors = Array.from(document.querySelectorAll('.dropdown-content input[type="checkbox"]:checked'))
-         .map(checkbox => checkbox.value.toLowerCase());
- 
-       // Get all athlete rows in the table
-       const athleteRows = document.querySelectorAll('#athletes-tbody tr');
- 
-       athleteRows.forEach(row => {
-         const athleteBeltLevel = row.querySelector('td:nth-child(4)').textContent.toLowerCase(); // Get athlete's belt level
- 
-         // Check if the athlete's belt level is in the selected belt colors
-         if (selectedBeltColors.includes(athleteBeltLevel) || selectedBeltColors.length === 0) {
-           row.style.display = ''; // Show row if it matches or if no filter is selected
-         } else {
-           row.style.display = 'none'; // Hide row if it doesn't match
-         }
-       });
-     }); */
-
-    //FILTER
-    document.querySelector('.apply-btn').addEventListener('click', function () {
-      const searchInput = document.getElementById('athlete-search').value.toLowerCase().trim();
-      const selectedBeltColors = Array.from(document.querySelectorAll('.dropdown-content input[type="checkbox"]:checked'))
-        .map(checkbox => checkbox.value.toLowerCase());
-
-      const athleteRows = document.querySelectorAll('#athletes-tbody tr');
-
-      athleteRows.forEach(row => {
-        const athleteName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-        const athleteBeltLevel = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
-
-        const matchesSearch = searchInput === '' || athleteName.includes(searchInput);
-        const matchesBeltColor = selectedBeltColors.length === 0 || selectedBeltColors.includes(athleteBeltLevel);
-
-        if (matchesSearch && matchesBeltColor) {
-          row.style.display = '';
-        } else {
-          row.style.display = 'none';
-        }
       });
     });
 

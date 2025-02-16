@@ -5273,167 +5273,21 @@ app.get("/clubs", async (req, res) => {
 });
 
 
-app.get("/clubs-details/:id", async function (req, res) {
+app.get("/clubs-details/:id", async (req, res) => {
   const { id } = req.params;
-
-  if (!req.session.user) {
-    return res.redirect("/");
-  }
-
   try {
-    // Fetch the club, owner, and other details
-    const { data: club, error: clubsError } = await supabase
+    const { data: club, error: clubError } = await supabase
       .from("clubs")
       .select("*")
       .eq("id", id)
-      .single();
+      .single(); // Fetch a single club by ID
 
-    if (clubsError) {
-      return res.status(400).json({ clubsError: clubsError.message });
+    if (clubError) {
+      return res.status(400).json({ error: clubError.message });
     }
 
-    const { data: clubOwner, error: clubOwnerError } = await supabase
-      .from("users")
-      .select("*")
-      .eq("id", club.registeredby)
-      .single();
-
-    if (clubOwnerError) {
-      return res.status(400).json({ clubOwnerError: clubOwnerError.message });
-    }
-
-    const { data: allUsers, error: allUsersError } = await supabase
-      .from("users")
-      .select("*");
-
-    if (allUsersError) {
-      return res.status(400).json({ allUsersError: allUsersError.message });
-    }
-
-    const { data: athletes, error: athleteserror } = await supabase
-      .from("athletes")
-      .select("*");
-
-    if (athleteserror) {
-      return res.status(400).json({ athleteserror: athleteserror.message });
-    }
-
-    const { data: announcements, error: announcementserror } = await supabase
-      .from("club_announcements")
-      .select("*")
-      .eq("clubid", id);
-
-    if (announcementserror) {
-      return res.status(400).json({ announcementserror: announcementserror.message });
-    }
-
-    const { data: club_requests, error: club_requestsError } = await supabase
-      .from("club_requests")
-      .select("*")
-      .eq("clubid", id);
-
-    if (club_requestsError) {
-      return res.status(400).json({ club_requestsError: club_requestsError.message });
-    }
-
-    const { data: users, error: usersError } = await supabase
-      .from("users")
-      .select("*");
-
-    if (usersError) {
-      return res.status(400).json({ usersError: usersError.message });
-    }
-
-    // Merge user data with club requests
-    const clubRequestsWithUserDetails = club_requests.map((request) => {
-      const user = users.find((user) => user.id === request.userid);
-      return {
-        ...request,
-        firstname: user ? user.firstname : null,
-        lastname: user ? user.lastname : null,
-      };
-    });
-
-    const { data: clubMembers, error: clubMembersError } = await supabase
-      .from("users")
-      .select("*")
-      .eq("clubid", club.id);
-
-    if (clubMembersError) {
-      return res.status(400).json({ error: clubMembersError.message });
-    }
-
-    const clubMembersWithAthleteData = clubMembers.map((member) => {
-      const athlete = athletes.find((athlete) => athlete.userid === member.id);
-      return {
-        ...member,
-        athleteData: athlete || null,
-      };
-    });
-
-    const { data: clubactivities, error: clubactivitiesError } = await supabase
-      .from("club_activities")
-      .select("*")
-      .eq("clubid", id)
-      .order("created_at", { ascending: false });
-
-    if (clubactivitiesError) {
-      return res.status(400).json({ clubactivitiesError: clubactivitiesError.message });
-    }
-
-    const { data: attendees, error: attendeesError } = await supabase
-      .from("users")
-      .select("id, firstname, lastname");
-
-    if (attendeesError) {
-      return res.status(400).json({ attendeesError: attendeesError.message });
-    }
-
-    // Calculate attendance count for each member
-    const attendanceCounts = {};
-    clubactivities.forEach((activity) => {
-      (activity.attendees || []).forEach((attendeeId) => {
-        if (attendanceCounts[attendeeId]) {
-          attendanceCounts[attendeeId]++;
-        } else {
-          attendanceCounts[attendeeId] = 1;
-        }
-      });
-    });
-
-    // Add attendance count to each club member
-    const clubMembersWithAttendanceData = clubMembersWithAthleteData.map((member) => ({
-      ...member,
-      attended_count: attendanceCounts[member.id] || 0, // Set count or default to 0 if no attendance
-    }));
-
-    const clubActivitiesWithUserDetails = clubactivities.map((activity) => {
-      const attendeesWithDetails = (activity.attendees || []).map((attendeeId) => {
-        const user = attendees.find((user) => user.id === attendeeId);
-        return user ? { id: user.id, firstname: user.firstname, lastname: user.lastname } : null;
-      }).filter((attendee) => attendee !== null);
-
-      return {
-        ...activity,
-        attendees: attendeesWithDetails,
-      };
-    });
-
-    console.log("clubactivitieswithuserdetails", clubActivitiesWithUserDetails);
-
-    // Render the clubs-details.hbs template with the fetched data
-    res.render("clubs-details", {
-      club,
-      clubOwner,
-      allUsers,
-      clubMembersWithAthleteData: clubMembersWithAttendanceData, // Use updated data with attendance count
-      announcements,
-      club_requests,
-      clubRequestsWithUserDetails,
-      clubactivities,
-      clubActivitiesWithUserDetails,
-      user: req.session.user,
-    });
+    // Render the clubs-details.hbs template with the fetched club data
+    res.render("clubs-details", { club });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -6279,72 +6133,73 @@ app.get("/profile", async function (req, res) {
   }
 });
 
-app.get("/athletes", async function (req, res) {
+app.get("/athletes", async (req, res) => {
   if (!req.session.user) {
     return res.redirect("/");
   }
 
-  const userId = req.session.user.id;
   try {
-    // Fetch athletes data sorted by ranking points in descending order
-    const { data: athletes, error: athletesError } = await supabase
-      .from("athletes")
-      .select("*")
-      .order("gp", { ascending: false });
-
-    if (athletesError) {
-      return res.status(400).json({ error: athletesError.message });
-    }
-
-    // Fetch clubs data
-    const { data: clubs, error: clubsError } = await supabase
-      .from("clubs")
-      .select("*")
-      .eq("registeredby", userId);
-      
-
-    if (clubsError) {
-      return res.status(400).json({ error: clubsError.message });
-    }
-    // Fetch user data to get the club information
+    // First fetch users with their club information
     const { data: users, error: usersError } = await supabase
       .from("users")
       .select("id, club");
 
     if (usersError) {
-      return res.status(400).json({ error: usersError.message });
+      throw usersError;
     }
 
-    const { data: userData, error: userError } = await supabase
-    .from("users")
-    .select("ptaverified")
-    .eq("id", userId)
-    .single();
+    // Fetch athletes data with all necessary fields
+    const { data: athletes, error: athletesError } = await supabase
+      .from("athletes")
+      .select(`
+        id,
+        name,
+        userid,
+        beltlevel,
+        gp,
+        gender,
+        agedivision,
+        portrait
+      `)
+      .order("gp", { ascending: false });
 
-    if (userError) {
-      return res.status(400).json({ error: userError.message });
+    if (athletesError) {
+      throw athletesError;
     }
 
-    // Determine if the user is an admin based on ptaverified
-    const isAdmin = userData.ptaverified === true;
+    // Fetch all clubs with their details
+    const { data: clubs, error: clubsError } = await supabase
+      .from("clubs")
+      .select("id, clubname")
+      .not("clubname", "eq", "EMPTY");
 
-    // Merge the club information with the athletes data
-    athletes.forEach((athlete, index) => {
-      const user = users.find((user) => user.id === athlete.userid);
-      athlete.club = user ? user.club : "N/A";
-      athlete.index = index + 1; // Add the index property, starting from 1
+    if (clubsError) {
+      throw clubsError;
+    }
+
+    // Merge the club information with athletes data
+    const athletesWithClub = athletes.map((athlete, index) => {
+      const user = users.find(user => user.id === athlete.userid);
+      return {
+        ...athlete,
+        index: index + 1,
+        club: user ? user.club : 'No Club' // Add club information from user data
+      };
     });
 
-    console.log("Fetched athletes data:", athletes); // Log the athletes data to the console
-    console.log("Fetched clubs data:", clubs); // Log the clubs data to the console
+    // Log the data to verify it's being fetched correctly
+    console.log("Fetched athletes data with clubs:", athletesWithClub);
+    console.log("Fetched clubs for filtering:", clubs);
 
-    // Render the athletes.hbs template with the fetched data
-    res.render("athletes", { 
-      athletes, 
-      clubs, 
-      user: { ...req.session.user, isAdmin },
-     });
+    // Render the athletes page with complete data
+    res.render("athletes", {
+      athletes: athletesWithClub,
+      clubs,
+      user: req.session.user
+    });
+
   } catch (error) {
+    console.error("Error in athletes route:", error);
     res.status(500).json({ error: error.message });
   }
 });
