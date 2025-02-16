@@ -71,30 +71,33 @@
           </select>
         </div>
         <div class="nccregs">
-          {{#if ncc_registrations}}
-          <h2>NCC ID's</h2>
-          {{#reverseEach ncc_registrations}}
-          <div class='post-content'>
-            <div class="post-details">
-              <span class='small'>Applicant: <h2>{{firstname}} {{lastname}}</h2>{{formatCreatedAt created_at}}</span>
-              {{#if (eq status 3)}}
-              <span class='small'>Expires on {{formatDate expireson "MM/DD/YYYY"}}</span>
-              {{/if}}
-            </div>
+  {{#if ncc_registrations}}
+    <h2>NCC ID's</h2>
+    {{#reverseEach ncc_registrations}}
 
-            <div class="post-status">
-              <h3>Status: {{{formatStatus status}}}</h3>
-            </div>
+    <div class="post-content">
+      <span class="post-details">
+        <span class='small'>Applicant: <h2>{{firstname}} {{lastname}}</h2>{{formatCreatedAt created_at}}</span>
+        {{#if (eq status 3)}}
+         <span class='small'>Expires on {{formatDate expireson "MM/DD/YYYY"}}</span>
+        {{/if}}
+      </span>
 
-            <div class="post-action">
-              <a href="/membership-review/{{id}}">Review</a>
-            </div>
-          </div>
-          {{/reverseEach}}
-          {{else}}
-          No pending NCC applications <br>
-          {{/if}}
-        </div>
+      <span class="post-status">
+        Status: {{{formatStatus status}}}
+      </span>
+
+      <span class="post-action">
+        <a href="/membership-review/{{id}}">Review</a>
+      </span>
+    </div>
+
+    {{/reverseEach}}
+  {{else}}
+    No pending NCC applications <br>
+  {{/if}}
+</div>
+
 
         <div class="instructorregs">
           {{#if instructor_registrations}}
@@ -108,13 +111,13 @@
               {{/if}}
             </div>
 
-            <div class="post-status">
+            <span class="post-status">
               <h3>Status: {{{formatStatus status}}}</h3>
-            </div>
+            </span>
 
-            <div class="post-action">
+            <span class="post-action">
               <a href="/membership-review/{{id}}">Review</a>
-            </div>
+            </span>
           </div><br>
           {{/reverseEach}}
           {{else}}
