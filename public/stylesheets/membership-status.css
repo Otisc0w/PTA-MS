@@ -121,7 +121,7 @@ a:hover {
 
 
 .post-details {
-  flex: 2;
+  flex: 1;
   text-align: left;
   white-space: nowrap; 
   overflow: hidden;
