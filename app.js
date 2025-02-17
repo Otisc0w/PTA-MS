@@ -500,6 +500,7 @@ app.post("/submit-ncc", upload.fields([
             submittedby,
             birthcert: birthcertUrl, // Include the birth certificate URL
             portrait: portraitUrl, // Include the portrait URL
+            paymentproof: paymentproofUrl, // Include the payment proof URL
           },
         ]);
 
