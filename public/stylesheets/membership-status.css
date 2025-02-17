@@ -103,58 +103,52 @@ a:hover {
   border: 1px solid #ccc;
   padding: 10px;
 }
-
+/* Container for each membership entry */
 .post-content {
   display: flex;
-  align-items: center; 
-  justify-content: space-between; 
+  align-items: center;
+  justify-content: space-between;
   background-color: var(--accent-bg);
   padding: 15px;
   border-radius: 5px;
   margin-bottom: 10px;
-  width: 99%;
-  font-size: 20px;
-  height: 90px; 
-  gap: 20px; 
-  overflow: hidden; 
+  width: 100%;
 }
 
-
+/* Left-aligned applicant details */
 .post-details {
   flex: 1;
   text-align: left;
-  white-space: nowrap; 
-  overflow: hidden;
-  text-overflow: ellipsis; 
 }
 
-
+/* Center-aligned status */
 .post-status {
   flex: 1;
-  text-align: center; 
-  white-space: nowrap;
+  text-align: center;
   font-weight: bold;
 }
 
-
+/* Right-aligned review button */
 .post-action {
   flex: 1;
-  text-align: right;
+  display: flex;
+  justify-content: flex-end;
 }
 
-
+/* Review button styling */
 .post-action a {
-  font-size: 20px;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  text-decoration: none;
   display: inline-block;
-  white-space: nowrap;
+  padding: 10px 15px;
+  background-color: #0044cc;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
 }
 
-
+.post-action a:hover {
+  background-color: #002a80;
+}
 
 
 .small {
