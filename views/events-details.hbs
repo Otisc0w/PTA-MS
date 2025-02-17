@@ -434,22 +434,25 @@
                 <tr>
                   <td>{{round}}</td>
                   <td>
+                    
                       {{#if matchtime}}
-                      <p class="match-time" id="match-time-{{id}}">{{matchtime}}</p><button id="edittime-{{id}}" class="edittime" onclick="showmatchtimeform('{{id}}')"></button>
+                      <p class="match-time" id="match-time-{{id}}">{{matchtime}}</p>{{#if ../user.ptaverifeid}}<button id="edittime-{{id}}" class="edittime" onclick="showmatchtimeform('{{id}}')"></button>{{/if}}
                       {{else}}
-                      <form class="matchtime" action="/update-matchtime" method="post">
-                      <input type="hidden" name="id" value="{{id}}">
-                      <input type="hidden" name="eventid" value="{{eventid}}">
-                      <input type="time" class="matchtime" name="matchtime">
-                      <button type="submit">OK</button>
-                      </form>
+                      {{#if ../user.ptaverified}}
+                        <form class="matchtime" action="/update-matchtime" method="post">
+                        <input type="hidden" name="id" value="{{id}}">
+                        <input type="hidden" name="eventid" value="{{eventid}}">
+                        <input type="time" class="matchtime" name="matchtime">
+                        <button type="submit">OK</button>
+                        </form>
                       {{/if}}
-                      <form class="matchtime" id="matchtimeform-{{id}}" action="/update-matchtime" method="post" style="display:none">
-                      <input type="hidden" name="id" value="{{id}}">
-                      <input type="hidden" name="eventid" value="{{eventid}}">
-                      <input type="time" class="matchtime" name="matchtime">
-                      <button type="submit">OK</button>
-                      </form>
+                        <form class="matchtime" id="matchtimeform-{{id}}" action="/update-matchtime" method="post" style="display:none">
+                        <input type="hidden" name="id" value="{{id}}">
+                        <input type="hidden" name="eventid" value="{{eventid}}">
+                        <input type="time" class="matchtime" name="matchtime">
+                        <button type="submit">OK</button>
+                        </form>
+                      {{/if}}
                   </td>
                   <td>{{player1_name}}:<p class="playerscore">{{player1score}}</p>
                   </td>
@@ -707,18 +710,18 @@
               <tbody>
                 <tr>
                   <td>1</td>
-                  <td><input type="number" name="player1_round1" required></td>
-                  <td><input type="number" name="player2_round1" required></td>
+                  <td><input type="number" name="player1_round1" {{#unless user.ptaverified}}readonly{{/unless}} required></td>
+                  <td><input type="number" name="player2_round1" {{#unless user.ptaverified}}readonly{{/unless}} required></td>
                 </tr>
                 <tr>
                   <td>2</td>
-                  <td><input type="number" name="player1_round2"></td>
-                  <td><input type="number" name="player2_round2"></td>
+                  <td><input type="number" name="player1_round2" {{#unless user.ptaverified}}readonly{{/unless}}></td>
+                  <td><input type="number" name="player2_round2" {{#unless user.ptaverified}}readonly{{/unless}}></td>
                 </tr>
                 <tr>
                   <td>3</td>
-                  <td><input type="number" name="player1_round3"></td>
-                  <td><input type="number" name="player2_round3"></td>
+                  <td><input type="number" name="player1_round3" {{#unless user.ptaverified}}readonly{{/unless}}></td>
+                  <td><input type="number" name="player2_round3" {{#unless user.ptaverified}}readonly{{/unless}}></td>
                 </tr>
                 <tr>
                   <td>Total</td>
@@ -727,7 +730,7 @@
                 </tr>
               </tbody>
             </table>
-            <button type="submit">Submit Scores</button>
+            {{#if user.ptaverified}}<button type="submit">Submit Scores</button>{{/if}}
           </form>
         </div>
       </div>
