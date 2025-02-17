@@ -87,8 +87,8 @@
                 </tr>
                 <tr>
                   <td><strong>Birthday:</strong></td>
-                  <td><input type="date" name="bday" value="{{registration.bday}}" {{#if (or
-                      user.ptaverified registration.bday)}}readonly{{else}}required{{/if}}>
+                  <td><input type="date" name="bday" value="{{registration.bday}}" {{#if (or user.ptaverified
+                      registration.bday)}}readonly{{else}}required{{/if}}>
                     {{#if user.ptaverified}}<button type="button" class="clear-input"
                       onclick="clearInput(this)">x</button>{{/if}}
                   </td>
@@ -206,10 +206,11 @@
           </tr>
         </table>
         {{#if user.ptaverified}}
-          <button type="button" class="confirm-reject-btn" onclick="openConfirmRejectionScreen()">Confirm rejections</button>
+         <button class="confirm-reject-btn" onclick="openConfirmRejectionScreen()">Confirm rejections</button>
         {{else}}
-          <button type="submit" class="submit-changes-btn">Submit Changes</button>
+        <button type="submit" class="submit-changes-btn">Submit Changes</button>
         {{/if}}
+      </form>
     </section>
 
       <input type="hidden" name="applicationId" value="{{registration.id}}">
