@@ -206,11 +206,10 @@
           </tr>
         </table>
         {{#if user.ptaverified}}
-         <button class="confirm-reject-btn" onclick="openConfirmRejectionScreen()">Confirm rejections</button>
+         <button type="button" class="confirm-reject-btn" onclick="openConfirmRejectionScreen()">Confirm rejections</button>
         {{else}}
         <button type="submit" class="submit-changes-btn">Submit Changes</button>
         {{/if}}
-      </form>
     </section>
 
       <input type="hidden" name="applicationId" value="{{registration.id}}">

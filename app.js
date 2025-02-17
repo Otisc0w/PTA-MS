@@ -5236,21 +5236,167 @@ app.get("/clubs", async (req, res) => {
 });
 
 
-app.get("/clubs-details/:id", async (req, res) => {
+app.get("/clubs-details/:id", async function (req, res) {
   const { id } = req.params;
+
+  if (!req.session.user) {
+    return res.redirect("/");
+  }
+
   try {
-    const { data: club, error: clubError } = await supabase
+    // Fetch the club, owner, and other details
+    const { data: club, error: clubsError } = await supabase
       .from("clubs")
       .select("*")
       .eq("id", id)
-      .single(); // Fetch a single club by ID
+      .single();
 
-    if (clubError) {
-      return res.status(400).json({ error: clubError.message });
+    if (clubsError) {
+      return res.status(400).json({ clubsError: clubsError.message });
     }
 
-    // Render the clubs-details.hbs template with the fetched club data
-    res.render("clubs-details", { club });
+    const { data: clubOwner, error: clubOwnerError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", club.registeredby)
+      .single();
+
+    if (clubOwnerError) {
+      return res.status(400).json({ clubOwnerError: clubOwnerError.message });
+    }
+
+    const { data: allUsers, error: allUsersError } = await supabase
+      .from("users")
+      .select("*");
+
+    if (allUsersError) {
+      return res.status(400).json({ allUsersError: allUsersError.message });
+    }
+
+    const { data: athletes, error: athleteserror } = await supabase
+      .from("athletes")
+      .select("*");
+
+    if (athleteserror) {
+      return res.status(400).json({ athleteserror: athleteserror.message });
+    }
+
+    const { data: announcements, error: announcementserror } = await supabase
+      .from("club_announcements")
+      .select("*")
+      .eq("clubid", id);
+
+    if (announcementserror) {
+      return res.status(400).json({ announcementserror: announcementserror.message });
+    }
+
+    const { data: club_requests, error: club_requestsError } = await supabase
+      .from("club_requests")
+      .select("*")
+      .eq("clubid", id);
+
+    if (club_requestsError) {
+      return res.status(400).json({ club_requestsError: club_requestsError.message });
+    }
+
+    const { data: users, error: usersError } = await supabase
+      .from("users")
+      .select("*");
+
+    if (usersError) {
+      return res.status(400).json({ usersError: usersError.message });
+    }
+
+    // Merge user data with club requests
+    const clubRequestsWithUserDetails = club_requests.map((request) => {
+      const user = users.find((user) => user.id === request.userid);
+      return {
+        ...request,
+        firstname: user ? user.firstname : null,
+        lastname: user ? user.lastname : null,
+      };
+    });
+
+    const { data: clubMembers, error: clubMembersError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("clubid", club.id);
+
+    if (clubMembersError) {
+      return res.status(400).json({ error: clubMembersError.message });
+    }
+
+    const clubMembersWithAthleteData = clubMembers.map((member) => {
+      const athlete = athletes.find((athlete) => athlete.userid === member.id);
+      return {
+        ...member,
+        athleteData: athlete || null,
+      };
+    });
+
+    const { data: clubactivities, error: clubactivitiesError } = await supabase
+      .from("club_activities")
+      .select("*")
+      .eq("clubid", id)
+      .order("created_at", { ascending: false });
+
+    if (clubactivitiesError) {
+      return res.status(400).json({ clubactivitiesError: clubactivitiesError.message });
+    }
+
+    const { data: attendees, error: attendeesError } = await supabase
+      .from("users")
+      .select("id, firstname, lastname");
+
+    if (attendeesError) {
+      return res.status(400).json({ attendeesError: attendeesError.message });
+    }
+
+    // Calculate attendance count for each member
+    const attendanceCounts = {};
+    clubactivities.forEach((activity) => {
+      (activity.attendees || []).forEach((attendeeId) => {
+        if (attendanceCounts[attendeeId]) {
+          attendanceCounts[attendeeId]++;
+        } else {
+          attendanceCounts[attendeeId] = 1;
+        }
+      });
+    });
+
+    // Add attendance count to each club member
+    const clubMembersWithAttendanceData = clubMembersWithAthleteData.map((member) => ({
+      ...member,
+      attended_count: attendanceCounts[member.id] || 0, // Set count or default to 0 if no attendance
+    }));
+
+    const clubActivitiesWithUserDetails = clubactivities.map((activity) => {
+      const attendeesWithDetails = (activity.attendees || []).map((attendeeId) => {
+        const user = attendees.find((user) => user.id === attendeeId);
+        return user ? { id: user.id, firstname: user.firstname, lastname: user.lastname } : null;
+      }).filter((attendee) => attendee !== null);
+
+      return {
+        ...activity,
+        attendees: attendeesWithDetails,
+      };
+    });
+
+    console.log("clubactivitieswithuserdetails", clubActivitiesWithUserDetails);
+
+    // Render the clubs-details.hbs template with the fetched data
+    res.render("clubs-details", {
+      club,
+      clubOwner,
+      allUsers,
+      clubMembersWithAthleteData: clubMembersWithAttendanceData, // Use updated data with attendance count
+      announcements,
+      club_requests,
+      clubRequestsWithUserDetails,
+      clubactivities,
+      clubActivitiesWithUserDetails,
+      user: req.session.user,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
