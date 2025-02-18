@@ -111,8 +111,8 @@
                 </tr>
                 <tr>
                   <td><strong>Club Region:</strong></td>
-                  <td><input type="text" name="clubregion" value="{{registration.clubregion}}" {{#if (or
-                      user.ptaverified registration.clubregion)}}readonly{{else}}required{{/if}}>
+                  <td><input type="text" name="clubprovince" value="{{registration.clubprovince}}" {{#if (or
+                      user.ptaverified registration.clubprovince)}}readonly{{else}}required{{/if}}>
                     {{#if user.ptaverified}}<button type="button" class="clear-input"
                       onclick="clearInput(this)">x</button>{{/if}}
                   </td>

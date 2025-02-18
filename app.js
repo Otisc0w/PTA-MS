@@ -757,7 +757,7 @@ app.post("/submit-instructor", upload.fields([
       bday,
       phonenum,
       email,
-      clubregion,
+      clubprovince,
       status,
       birthcert: birthcertUrl || existingRegistration.birthcert, // Use existing URL if no new file
       portrait: portraitUrl || existingRegistration.portrait, // Use existing URL if no new file
@@ -789,7 +789,7 @@ app.post("/submit-instructor", upload.fields([
         bday,
         phonenum,
         email,
-        clubregion,
+        clubprovince,
         status,
         submittedby,
         birthcert: birthcertUrl, // Include the birth certificate URL
@@ -5647,9 +5647,9 @@ app.get("/events-registration/:id", async function (req, res) {
 
 
 app.get("/events-review-registration/:id", async function (req, res) {
-  if (!req.session.user) {
-    return res.redirect("/");
-  }
+  // if (!req.session.user) {
+  //   return res.redirect("/");
+  // }
 
   const { id } = req.params; // Get the event registration ID from the URL
   const userId = req.session.user.id; // Get the user ID from the session
@@ -5665,6 +5665,22 @@ app.get("/events-review-registration/:id", async function (req, res) {
     if (eventregError) {
       return res.status(400).json({ error: eventregError.message });
     }
+
+    const { data: registeredathlete, error: registeredathleteError } = await supabase
+      .from("athletes")
+      .select("*")
+      .eq("id", eventregistration.athleteid)
+      .single();
+
+    if (registeredathleteError) {
+      return res.status(400).json({ error: registeredathleteError.message });
+    }
+
+    if (!registeredathlete) {
+      return res.status(404).json({ error: "Athlete not found" });
+    }
+
+    console.log("Fetched athlete portrait:", registeredathlete.portrait);
 
     // Fetch the event details using the eventid from the event registration
     const { data: event, error: eventError } = await supabase
@@ -5693,6 +5709,7 @@ app.get("/events-review-registration/:id", async function (req, res) {
       event,
       athlete,
       user: req.session.user,
+      registeredathlete
     });
   } catch (error) {
     res.status(500).json({ error: error.message });

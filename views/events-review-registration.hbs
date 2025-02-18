@@ -40,31 +40,60 @@
     <section class="review-header">
       <h1>Review Player Application for {{event.name}}</h1>
     </section>
-    <form action="/update-eventreg-status " method="post" class="review-form">
+    <form action="/update-eventreg-status" method="post" class="review-form">
       <section class="review-details">
         <h2>Player Applicant Information</h2>
-
         <input type="hidden" name="applicationId" value="{{eventregistration.id}}">
-        <div>
-          <img src="{{registration.portrait}}">
-        </div>
-        <div>
-          <p><strong>ID:</strong> {{eventregistration.id}}</p>
-          <p><strong>First Name:</strong> {{eventregistration.playername}}</p>
-          <p><strong>Middle Initial:</strong> {{eventregistration.mi}}</p>
-          <p><strong>Last Name:</strong> {{eventregistration.club}}</p>
-          <p><strong>Gender:</strong> {{eventregistration.age}}</p>
-          <p><strong>Birthday:</strong> {{formatDate eventregistration.bday "MMMM DD, YYYY"}}</p>
-          <p><strong>height:</strong> {{eventregistration.height}}</p>
-          <a href="#" onclick="openLightbox('heightPictureFull')">
-          <img src="{{eventregistration.heightpicture}}" alt="Height Picture" style="max-width: 200px; height: auto; cursor: pointer;">
-          </a>
-          <p><strong>Weight:</strong> {{eventregistration.weight}}</p>
-          <a href="#" onclick="openLightbox('weightPictureFull')">
-          <img src="{{eventregistration.weightpicture}}" alt="Weight Picture" style="max-width: 200px; height: auto; cursor: pointer;">
-          </a>
-        </div>
-        </div>
+        <table class="profile-section">
+          <tr>
+            <td colspan="2">
+              <img src="{{registeredathlete.portrait}}" alt="Player Portrait">
+              {{registeredathlete.firstname}} {{registeredathlete.mi}} {{registeredathlete.lastname}}
+            </td>
+          </tr>
+          <tr>
+            <td><strong>ID:</strong></td>
+            <td>{{eventregistration.id}}</td>
+          </tr>
+          <tr>
+            <td><strong>First Name:</strong></td>
+            <td>{{eventregistration.playername}}</td>
+          </tr>
+          <tr>
+            <td><strong>Middle Initial:</strong></td>
+            <td>{{eventregistration.mi}}</td>
+          </tr>
+          <tr>
+            <td><strong>Last Name:</strong></td>
+            <td>{{eventregistration.club}}</td>
+          </tr>
+          <tr>
+            <td><strong>Gender:</strong></td>
+            <td>{{eventregistration.age}}</td>
+          </tr>
+          <tr>
+            <td><strong>Birthday:</strong></td>
+            <td>{{formatDate eventregistration.bday "MMMM DD, YYYY"}}</td>
+          </tr>
+          <tr>
+            <td><strong>Height:</strong></td>
+            <td>
+              {{eventregistration.height}}
+              <a href="#" onclick="openLightbox('heightPictureFull')">
+                <img src="{{eventregistration.heightpicture}}" alt="Height Picture" style="max-width: 200px; height: auto; cursor: pointer;">
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Weight:</strong></td>
+            <td>
+              {{eventregistration.weight}}
+              <a href="#" onclick="openLightbox('weightPictureFull')">
+                <img src="{{eventregistration.weightpicture}}" alt="Weight Picture" style="max-width: 200px; height: auto; cursor: pointer;">
+              </a>
+            </td>
+          </tr>
+        </table>
       </section>
 
       <section class="application-actions">
@@ -76,14 +105,13 @@
           {{/if}}
         </h1>
         {{#if user.ptaverified}}
-        <div class="action-buttons"> <!-- TYPES NAMES ID'S CLASSES VALUES NEED TO STAY THE SAME -->
+        <div class="action-buttons">
           <button type="button" id="idshipped" class="idshipped">Accept</button>
           <button type="submit" name="registered" value="false">Reject</button>
         </div>
 
         <div class="confirmscreen" id="confirmscreen" style="display: none;">
-          <h3>Are you sure? The player will be notified that his ID is ready. This registration will also disappear
-            after a few days.</h3>
+          <h3>Are you sure? The player will be notified that his ID is ready. This registration will also disappear after a few days.</h3>
           <button type="button" class="cancel" id="cancel">Cancel</button>
           <button type="submit" value="true" name="registered" id="confirm">Confirm</button>
         </div>
@@ -91,7 +119,6 @@
         <div class="backtolist">
           <a href="/events-details/{{event.id}}">Back to list</a>
         </div>
-
       </section>
 
       <div class="printwindow" id="printableArea">
@@ -104,16 +131,33 @@
       </div>
 
       <div id="heightPictureFull" class="lightbox" onclick="closeLightbox()">
-      <span class="close" onclick="closeLightbox()">&times;</span>
-      <img src="{{eventregistration.heightpicture}}" alt="Full Size Height Picture">
+        <span class="close" onclick="closeLightbox()">&times;</span>
+        <img src="{{eventregistration.heightpicture}}" alt="Full Size Height Picture">
       </div>
 
       <div id="weightPictureFull" class="lightbox" onclick="closeLightbox()">
-      <span class="close" onclick="closeLightbox()">&times;</span>
-      <img src="{{eventregistration.weightpicture}}" alt="Full Size Weight Picture">
+        <span class="close" onclick="closeLightbox()">&times;</span>
+        <img src="{{eventregistration.weightpicture}}" alt="Full Size Weight Picture">
       </div>
     </form>
   </main>
+
+  <style>
+    table.profile-section {
+      width: 100%;
+      margin: 20px 0;
+    }
+
+    table.profile-section td, table.profile-section th {
+      padding: 8px;
+    }
+
+    table.profile-section th {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-align: left;
+    }
+  </style>
 
   <script>
     const confirmscreen = document.getElementById("confirmscreen");
