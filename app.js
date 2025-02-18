@@ -556,7 +556,7 @@ app.post("/submit-instructor", upload.fields([
     bday,
     phonenum,
     email,
-    clubregion,
+    clubprovince,
   } = req.body; // Capture user input from the form
 
   if (!req.session.user) {
