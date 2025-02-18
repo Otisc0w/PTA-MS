@@ -578,157 +578,150 @@ app.post("/submit-instructor", upload.fields([
     try {
     if (req.files.birthcert) {
       const birthcertPath = `documents/${Date.now()}-${
-      req.files.birthcert[0].originalname
+        req.files.birthcert[0].originalname
       }`;
       const { error: birthcertUploadError } = await supabase.storage
-      .from("documents")
-      .upload(birthcertPath, req.files.birthcert[0].buffer, {
-        contentType: req.files.birthcert[0].mimetype,
-      });
+        .from("documents")
+        .upload(birthcertPath, req.files.birthcert[0].buffer, {
+          contentType: req.files.birthcert[0].mimetype,
+        });
 
       if (birthcertUploadError) {
-      console.error(
-        "Error uploading birth certificate:",
-        birthcertUploadError.message
-      );
-      return res.status(500).send("Error uploading birth certificate");
+        console.error(
+          "Error uploading birth certificate:",
+          birthcertUploadError.message
+        );
+      } else {
+        birthcertUrl = `${supabaseUrl}/storage/v1/object/public/documents/${birthcertPath}`;
       }
-
-      birthcertUrl = `${supabaseUrl}/storage/v1/object/public/documents/${birthcertPath}`;
     }
 
     if (req.files.portrait) {
       const portraitPath = `documents/${Date.now()}-${
-      req.files.portrait[0].originalname
+        req.files.portrait[0].originalname
       }`;
       const { error: portraitUploadError } = await supabase.storage
-      .from("documents")
-      .upload(portraitPath, req.files.portrait[0].buffer, {
-        contentType: req.files.portrait[0].mimetype,
-      });
+        .from("documents")
+        .upload(portraitPath, req.files.portrait[0].buffer, {
+          contentType: req.files.portrait[0].mimetype,
+        });
 
       if (portraitUploadError) {
-      console.error(
-        "Error uploading portrait:",
-        portraitUploadError.message
-      );
-      return res.status(500).send("Error uploading portrait");
+        console.error(
+          "Error uploading portrait:",
+          portraitUploadError.message
+        );
+      } else {
+        portraitUrl = `${supabaseUrl}/storage/v1/object/public/documents/${portraitPath}`;
       }
-
-      portraitUrl = `${supabaseUrl}/storage/v1/object/public/documents/${portraitPath}`;
     }
 
     if (req.files.educproof) {
       const educproofPath = `documents/${Date.now()}-${
-      req.files.educproof[0].originalname
+        req.files.educproof[0].originalname
       }`;
       const { error: educproofUploadError } = await supabase.storage
-      .from("documents")
-      .upload(educproofPath, req.files.educproof[0].buffer, {
-        contentType: req.files.educproof[0].mimetype,
-      });
+        .from("documents")
+        .upload(educproofPath, req.files.educproof[0].buffer, {
+          contentType: req.files.educproof[0].mimetype,
+        });
 
       if (educproofUploadError) {
-      console.error(
-        "Error uploading educproof:",
-        educproofUploadError.message
-      );
-      return res.status(500).send("Error uploading educproof");
+        console.error(
+          "Error uploading educproof:",
+          educproofUploadError.message
+        );
+      } else {
+        educproofUrl = `${supabaseUrl}/storage/v1/object/public/documents/${educproofPath}`;
       }
-
-      educproofUrl = `${supabaseUrl}/storage/v1/object/public/documents/${educproofPath}`;
     }
 
     if (req.files.poomsaecert) {
       const poomsaecertPath = `documents/${Date.now()}-${
-      req.files.poomsaecert[0].originalname
+        req.files.poomsaecert[0].originalname
       }`;
       const { error: poomsaecertUploadError } = await supabase.storage
-      .from("documents")
-      .upload(poomsaecertPath, req.files.poomsaecert[0].buffer, {
-        contentType: req.files.poomsaecert[0].mimetype,
-      });
+        .from("documents")
+        .upload(poomsaecertPath, req.files.poomsaecert[0].buffer, {
+          contentType: req.files.poomsaecert[0].mimetype,
+        });
 
       if (poomsaecertUploadError) {
-      console.error(
-        "Error uploading poomsaecert:",
-        poomsaecertUploadError.message
-      );
-      return res.status(500).send("Error uploading poomsaecert");
+        console.error(
+          "Error uploading poomsaecert:",
+          poomsaecertUploadError.message
+        );
+      } else {
+        poomsaecertUrl = `${supabaseUrl}/storage/v1/object/public/documents/${poomsaecertPath}`;
       }
-
-      poomsaecertUrl = `${supabaseUrl}/storage/v1/object/public/documents/${poomsaecertPath}`;
     }
 
     if (req.files.kukkiwoncert) {
       const kukkiwoncertPath = `documents/${Date.now()}-${
-      req.files.kukkiwoncert[0].originalname
+        req.files.kukkiwoncert[0].originalname
       }`;
       const { error: kukkiwoncertUploadError } = await supabase.storage
-      .from("documents")
-      .upload(kukkiwoncertPath, req.files.kukkiwoncert[0].buffer, {
-        contentType: req.files.kukkiwoncert[0].mimetype,
-      });
+        .from("documents")
+        .upload(kukkiwoncertPath, req.files.kukkiwoncert[0].buffer, {
+          contentType: req.files.kukkiwoncert[0].mimetype,
+        });
 
       if (kukkiwoncertUploadError) {
-      console.error(
-        "Error uploading kukkiwoncert:",
-        kukkiwoncertUploadError.message
-      );
-      return res.status(500).send("Error uploading kukkiwoncert");
+        console.error(
+          "Error uploading kukkiwoncert:",
+          kukkiwoncertUploadError.message
+        );
+      } else {
+        kukkiwoncertUrl = `${supabaseUrl}/storage/v1/object/public/documents/${kukkiwoncertPath}`;
       }
-
-      kukkiwoncertUrl = `${supabaseUrl}/storage/v1/object/public/documents/${kukkiwoncertPath}`;
     }
 
     if (req.files.ptablackbeltcert) {
       const ptablackbeltcertPath = `documents/${Date.now()}-${
-      req.files.ptablackbeltcert[0].originalname
+        req.files.ptablackbeltcert[0].originalname
       }`;
       const { error: ptablackbeltcertUploadError } = await supabase.storage
-      .from("documents")
-      .upload(
-        ptablackbeltcertPath,
-        req.files.ptablackbeltcert[0].buffer,
-        {
-        contentType: req.files.ptablackbeltcert[0].mimetype,
-        }
-      );
+        .from("documents")
+        .upload(
+          ptablackbeltcertPath,
+          req.files.ptablackbeltcert[0].buffer,
+          {
+            contentType: req.files.ptablackbeltcert[0].mimetype,
+          }
+        );
 
       if (ptablackbeltcertUploadError) {
-      console.error(
-        "Error uploading ptablackbeltcert:",
-        ptablackbeltcertUploadError.message
-      );
-      return res.status(500).send("Error uploading ptablackbeltcert");
+        console.error(
+          "Error uploading ptablackbeltcert:",
+          ptablackbeltcertUploadError.message
+        );
+      } else {
+        ptablackbeltcertUrl = `${supabaseUrl}/storage/v1/object/public/documents/${ptablackbeltcertPath}`;
       }
-
-      ptablackbeltcertUrl = `${supabaseUrl}/storage/v1/object/public/documents/${ptablackbeltcertPath}`;
     }
 
     if (req.files.paymentproof) {
       const paymentproofPath = `documents/${Date.now()}-${
-      req.files.paymentproof[0].originalname
+        req.files.paymentproof[0].originalname
       }`;
       const { error: paymentproofUploadError } = await supabase.storage
-      .from("documents")
-      .upload(
-        paymentproofPath,
-        req.files.paymentproof[0].buffer,
-        {
-        contentType: req.files.paymentproof[0].mimetype,
-        }
-      );
+        .from("documents")
+        .upload(
+          paymentproofPath,
+          req.files.paymentproof[0].buffer,
+          {
+            contentType: req.files.paymentproof[0].mimetype,
+          }
+        );
 
       if (paymentproofUploadError) {
-      console.error(
-        "Error uploading paymentproof:",
-        paymentproofUploadError.message
-      );
-      return res.status(500).send("Error uploading paymentproof");
+        console.error(
+          "Error uploading paymentproof:",
+          paymentproofUploadError.message
+        );
+      } else {
+        paymentproofUrl = `${supabaseUrl}/storage/v1/object/public/documents/${paymentproofPath}`;
       }
-
-      paymentproofUrl = `${supabaseUrl}/storage/v1/object/public/documents/${paymentproofPath}`;
     }
     } catch (error) {
     console.error("Server error during file upload:", error.message);
@@ -805,6 +798,7 @@ app.post("/submit-instructor", upload.fields([
         poomsaecert: poomsaecertUrl,
         kukkiwoncert: kukkiwoncertUrl,
         ptablackbeltcert: ptablackbeltcertUrl,
+        paymentproof: paymentproofUrl, // Include the payment proof URL
       },
       ]);
 
