@@ -51,25 +51,26 @@
     </div>
 
     <div class="membership-rightside">
+      <div class="statusfilter">
+        Show:
+        <select onchange="toggleSection(this.value)">
+          <option value="all">All</option>
+          <option value="nccregs">NCC Registrations</option>
+          <option value="instructorregs">Instructor Registrations</option>
+          <option value="clubregs">Club Registrations</option>
+        </select>
+        <select>
+          <option value="all">All</option>
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+          <option value="underreview">Under Review</option>
+          <option value="idshipped">ID Shipped</option>
+        </select>
+      </div>
       <div class="membership-statuses">
 
-        <div class="statusfilter">
-          Show:
-          <select onchange="toggleSection(this.value)">
-            <option value="all">All</option>
-            <option value="nccregs">NCC Registrations</option>
-            <option value="instructorregs">Instructor Registrations</option>
-            <option value="clubregs">Club Registrations</option>
-          </select>
-          <select>
-            <option value="all">All</option>
-            <option value="pending">Pending</option>
-            <option value="approved">Approved</option>
-            <option value="rejected">Rejected</option>
-            <option value="underreview">Under Review</option>
-            <option value="idshipped">ID Shipped</option>
-          </select>
-        </div>
+        
         <div class="nccregs">
           {{#if ncc_registrations}}
           <h2>NCC ID's</h2>
@@ -83,7 +84,7 @@
             </div>
 
             <div class="post-status">
-              <h3>Status: {{{formatStatus status}}}</h3>
+              Status: {{{formatStatus status}}}
             </div>
 
             <div class="post-action">
@@ -209,6 +210,4 @@
       toggleSection('all');
     });
   </script>
-
-
 </body>
