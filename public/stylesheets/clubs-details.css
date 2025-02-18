@@ -106,6 +106,7 @@
   display: flex;
   justify-content: center;
   height: 100%;
+  margin-top: 15px;
 }
 
 .leftside,
@@ -1458,3 +1459,68 @@ button:hover {
   cursor: pointer;
   transition: background-color 0.3s;
 }
+
+#inviteMembersModal .modal-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+  text-align: left;
+}
+
+#inviteMembersModal .modal-content ul li {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  font-size: 16px;
+}
+
+#inviteMembersModal .modal-content ul li input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+#activityModal .modal-content input,
+.modal-content textarea {
+  width: 90%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: #fff;
+  color: #333;
+}
+
+#activityModal .modal-content label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #fff;
+}
+
+#activityModal .modal-content {
+  max-width: 400px;  /* Adjust for better structure */
+  padding: 20px;
+  border-radius: 10px;
+  background: #1c1c1c; /* Adjust dark mode background */
+  color: white;
+}
+
+#activityModal button[type="submit"] {
+  background-color: #007bff !important; /* Force blue color */
+  color: white !important;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+#activityModal button[type="submit"]:hover {
+  background-color: #0056b3 !important;
+}
+
+
