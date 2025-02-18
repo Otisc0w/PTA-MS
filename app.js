@@ -5680,7 +5680,7 @@ app.get("/events-review-registration/:id", async function (req, res) {
       return res.status(404).json({ error: "Athlete not found" });
     }
 
-    console.log("Fetched athlete portrait:", registeredathlete.portrait);
+    console.log("Fetched athlete portrait:", eventregistration.athleteid);
 
     // Fetch the event details using the eventid from the event registration
     const { data: event, error: eventError } = await supabase
