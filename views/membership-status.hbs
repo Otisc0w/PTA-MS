@@ -61,7 +61,6 @@
         </select>
         <select onchange="filterStatus(this.value, document.querySelector('.statusfilter select:nth-child(1)').value)">
           <option value="all">All</option>
-          <option value="pending">Pending</option>
           <option value="approved">Approved</option>
           <option value="rejected">Rejected</option>
           <option value="underreview">Under Review</option>
@@ -187,7 +186,7 @@
         const allPosts = document.querySelectorAll('.post-content');
 
         allPosts.forEach(post => {
-          const statusText = post.querySelector('h3').innerText.split(': ')[1]?.toLowerCase().replace(/\s/g, '');
+            const statusText = post.querySelector('.post-status').innerText.split(': ')[1]?.toLowerCase().replace(/\s/g, '');
           let parentSection = post.closest('.nccregs, .instructorregs, .clubregs');
 
           if ((selectedStatus === 'all' || statusText === selectedStatus) &&

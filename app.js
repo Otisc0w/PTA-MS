@@ -6985,6 +6985,7 @@ app.get("/analytics", async (req, res) => {
       clubsByMonth,  // Pass grouped clubs
       eventsByMonth, // Pass grouped events
       transactions,
+      user: req.session.user, // Render user session
     });
   } catch (error) {
     console.error("Error fetching analytics data:", error.message);
