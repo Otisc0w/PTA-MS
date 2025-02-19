@@ -49,79 +49,134 @@
   <div class="reports-container">
     <h1>Admin Reports</h1>
     
-    <div class="report-section">
+    <div class="report-tabs">
+      <button class="tablink" onclick="openReport(event, 'payments')">Payments/Transactions</button>
+      <button class="tablink" onclick="openReport(event, 'membership')">Membership Applications</button>
+      <button class="tablink" onclick="openReport(event, 'events')">Upcoming Events</button>
+      <button class="tablink" onclick="openReport(event, 'insights')">Other Insights</button>
+    </div>
+
+    <div class="date-filter">
+      <label for="start-date">Start Date:</label>
+      <input type="date" id="start-date" name="start-date">
+      <label for="end-date">End Date:</label>
+      <input type="date" id="end-date" name="end-date">
+      <button onclick="filterByDate()">Apply</button>
+
+      <button onclick="cancelFilter()">Remove Filter</button>
+    </div>
+
+    <div id="payments" class="report-section" style="display:block">
       <h2>Payments/Transactions</h2>
       <table>
-        <thead>
-          <tr>
-            <th>Transaction ID</th>
-            <th>User</th>
-            <th>Amount</th>
-            <th>Status</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>TXN12345</td>
-            <td>John Doe</td>
-            <td>$100</td>
-            <td>Completed</td>
-            <td>2023-10-01</td>
-          </tr>
-          <tr>
-            <td>TXN12346</td>
-            <td>Jane Smith</td>
-            <td>$50</td>
-            <td>Pending</td>
-            <td>2023-10-02</td>
-          </tr>
-        </tbody>
+      <thead>
+        <tr>
+        <th>Transaction ID</th>
+        <th>User</th>
+        <th>Amount</th>
+        <th>Type</th>
+        <th>Date</th>
+        </tr>
+      </thead>
+      <tbody id="transactions-body">
+        {{#each transactions}}
+        <tr>
+        <td>TXN{{id}}</td>
+        <td>{{name}}</td>
+        <td>{{amount}}</td>
+        <td>{{type}}</td>
+        <td>{{formatDate completedby "MM/DD/YYYY"}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
       </table>
     </div>
 
-    <div class="report-section">
+    <div id="membership" class="report-section" style="display:none">
       <h2>Membership Applications</h2>
       <table>
-        <thead>
-          <tr>
-            <th>Application ID</th>
-            <th>User</th>
-            <th>Status</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>APP12345</td>
-            <td>John Doe</td>
-            <td>Approved</td>
-            <td>2023-09-25</td>
-          </tr>
-          <tr>
-            <td>APP12346</td>
-            <td>Jane Smith</td>
-            <td>Pending</td>
-            <td>2023-09-26</td>
-          </tr>
-        </tbody>
+      <thead>
+        <tr>
+        <th>Application ID</th>
+        <th>User</th>
+        <th>Status</th>
+        <th>Date</th>
+        </tr>
+      </thead>
+      <tbody id="membership-body">
+        <tr>
+        <td>APP{{id}}</td>
+        <td>John Doe</td>
+        <td>Approved</td>
+        <td>02/25/2025</td>
+        </tr>
+        <tr>
+        <td>APP12346</td>
+        <td>Jane Smith</td>
+        <td>Pending</td>
+        <td>4/25/2025</td>
+        </tr>
+      </tbody>
       </table>
     </div>
 
-    <div class="report-section">
+    <div id="events" class="report-section" style="display:none">
       <h2>Upcoming Events</h2>
-      <ul>
-        <li>Event 1 - 2023-11-01</li>
-        <li>Event 2 - 2023-12-15</li>
-      </ul>
+      {{#each eventsByMonth}}
+        <h3>{{@key}}</h3>
+        <div class="events-list">
+          {{#each this}}
+        <div class="event-card">
+          <h4>{{name}}</h4>
+          <p>Date: {{formatDate date "YYYY-MM-DD"}}</p>
+          <p>Location: {{location}}</p>
+          <p>Description: {{description}}</p>
+        </div>
+          {{/each}}
+        </div>
+      {{/each}}
     </div>
 
-    <div class="report-section">
+    
+
+    <div id="insights" class="report-section" style="display:none">
       <h2>Other Insights</h2>
+      <div class="chart-container">
+      <canvas id="membersChart"></canvas>
+      </div>
+      <div class="insights-summary">
       <p>Total Members: 150</p>
       <p>Active Members: 120</p>
       <p>Inactive Members: 30</p>
+      </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+      var ctx = document.getElementById('membersChart').getContext('2d');
+      var membersChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+        labels: ['Active Members', 'Inactive Members'],
+        datasets: [{
+          data: [120, 30],
+          backgroundColor: ['#36A2EB', '#FF6384'],
+          hoverBackgroundColor: ['#36A2EB', '#FF6384']
+        }]
+        },
+        options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+          position: 'bottom',
+          }
+        }
+        }
+      });
+      });
+    </script>
+
   </div>
 
   <footer>
@@ -153,34 +208,84 @@
 
     window.onclick = function (event) {
       if (!event.target.matches('.profile-pic img')) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        for (var i = 0; i < dropdowns.length; i++) {
-          var openDropdown = dropdowns[i];
-          if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
-          }
+      var dropdowns = document.getElementsByClassName("dropdown-content");
+      for (var i = 0; i < dropdowns.length; i++) {
+        var openDropdown = dropdowns[i];
+        if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
         }
       }
+      }
     }
-    // Function to navigate between screens
-    function nextScreen(screenId) {
-      document.querySelectorAll('.onboarding-screen').forEach(screen => {
-        screen.style.display = 'none';
+
+    function openReport(evt, reportName) {
+      var i, reportSection, tablinks;
+      reportSection = document.getElementsByClassName("report-section");
+      for (i = 0; i < reportSection.length; i++) {
+      reportSection[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablink");
+      for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(reportName).style.display = "block";
+      evt.currentTarget.className += " active";
+
+      // Show or hide date filter based on selected report
+      var dateFilter = document.querySelector('.date-filter');
+      if (reportName === 'insights' || reportName === 'events') {
+      dateFilter.style.display = 'none';
+      } else {
+      dateFilter.style.display = 'block';
+      }
+    }
+
+    // Show payments/transactions by default
+    document.addEventListener("DOMContentLoaded", function() {
+      document.querySelector(".tablink").click();
+    });
+
+    function filterByDate() {
+      const startDate = new Date(document.getElementById('start-date').value);
+      const endDate = new Date(document.getElementById('end-date').value);
+      const transactions = document.querySelectorAll('#transactions-body tr');
+      const memberships = document.querySelectorAll('#membership-body tr');
+
+      transactions.forEach(row => {
+      const date = new Date(row.cells[4].innerText);
+      if (date >= startDate && date <= endDate) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
       });
-      document.getElementById(screenId).style.display = 'block';
+
+      memberships.forEach(row => {
+      const date = new Date(row.cells[3].innerText);
+      if (date >= startDate && date <= endDate) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+      });
     }
 
-    // Function to select user type and show relevant options
-    function selectUserType(userType) {
-      nextScreen(userType + '-options');
-    }
+    function cancelFilter() {
+      const transactions = document.querySelectorAll('#transactions-body tr');
+      const memberships = document.querySelectorAll('#membership-body tr');
 
-    // Function to reset onboarding to the first screen
-    function resetOnboarding() {
-      nextScreen('welcome-screen'); // Show the welcome message screen
-    }
+      transactions.forEach(row => {
+      row.style.display = '';
+      });
 
-  </script>
+      memberships.forEach(row => {
+      row.style.display = '';
+      });
+
+      document.getElementById('start-date').value = '';
+      document.getElementById('end-date').value = '';
+    }
+    </script>
 </body>
 
 </html>

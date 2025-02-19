@@ -6918,7 +6918,7 @@ app.get("/analytics", async (req, res) => {
     // Fetch events with name, month created, and event type
     const { data: events, error: eventsError } = await supabase
       .from("events")
-      .select("name, created_at, eventtype");
+      .select("*");
 
     if (eventsError) throw eventsError;
 
