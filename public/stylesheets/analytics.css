@@ -1,281 +1,135 @@
-/* ------------------ Fonts and Imports ------------------ */
-
-@import url('https://fonts.cdnfonts.com/css/sf-pro-display');
-
-/* ------------------ Base Styles ------------------ */
-
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-}
-
 body {
-    font-family: 'SF Pro Display', Arial, sans-serif;
-    background-color: #2C2C2C;
-    color: #FFFFFF;
-}
-
-.header {
-    width: 100%;
-    background-color: #2C2C2C;; /* Ensure the header background matches the navbar */
+    font-family: Arial, sans-serif;
     margin: 0;
-    justify-content: center; /* Centers the navbar inside the header */
     padding: 0;
-}
-/* ------------------ Analytics Container Layout ------------------ */
-.analytics-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 20px;
-    flex: 1; 
-}
-
-/* ------------------ Card Styles ------------------ */
-.card {
-    background-color: #333;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease;
-    margin-bottom: 20px;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-}
-
-.card h2 {
-    font-size: 1.4em;
-    margin-bottom: 15px;
-    color: #f0f0f0;
-    border-bottom: 2px solid #f0f0f0;
-    padding-bottom: 5px;
-}
-
-.card ul,
-.card .performers,
-.card .awards-list {
-    list-style: none;
-    padding: 0;
-}
-
-.card li {
-    margin: 10px 0;
-}
-* ------------------ Top Performers Card ------------------ */
-.performers {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.performer-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 15px;
-    background-color: #444;
-    border-radius: 8px;
-    margin-bottom: 15px;
-}
-
-.performer-card img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    margin-bottom: 10px;
-}
-
-.performer-card h3 {
-    font-size: 1em;
-    color: #fff;
-}
-
-.performer-card p {
-    color: #aaa;
-    font-size: 0.9em;
-}
-
-.performer-card button {
-    margin-top: 10px;
-    padding: 8px 12px;
-    background-color: #5c6bc0;
-    border: none;
-    border-radius: 4px;
-    color: #fff;
-    cursor: pointer;
-    font-size: 0.9em;
-    transition: background-color 0.3s ease;
-}
-
-.performer-card button:hover {
-    background-color: #3f51b5;
-}
-
-/* ------------------ Club Participation Card ------------------ */
-.participation-card .chart {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.club-item {
-    padding: 8px;
-    border-radius: 4px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #fff;
-    background-color: #444;
-    margin-bottom: 15px;
-}
-
-.club-item .tooltip {
-    font-size: 0.8em;
-    color: #bbb;
-}
-
-/* ------------------ List and Button Styles ------------------ */
-.admin-list,
-.participants-list,
-.suggestions-list {
-    list-style: none;
-    padding: 0;
-}
-
-.admin-list li,
-.participants-list li,
-.suggestions-list li {
-    font-size: 0.9em;
-    color: #ccc;
-    margin-bottom: 10px;
-    padding: 8px;
-    background-color: #444;
-    border-radius: 4px;
-    display: flex;
-    justify-content: space-between;
-}
-
-button {
-    padding: 10px;
-    background-color: #5c6bc0;
-    border: none;
-    border-radius: 4px;
-    color: #fff;
-    cursor: pointer;
-    font-size: 0.9em;
-    transition: background-color 0.3s ease;
-    width: 100%;
-    margin-top: 10px;
-}
-
-button:hover {
-    background-color: #3f51b5;
-}
-
-/* ------------------ Footer Styling ------------------ */
-
-.footer-content {
-    background-color: #333;
-    color: #fff;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    margin-top: auto;
-}
-
-.footer-content .pta-logo img {
-    height: 100%;
-}
-
-.footer-content .contact-info {
-    flex: 1;
-    text-align: center;
-    padding: 0 20px;
-}
-
-.footer-content .contact-info p {
-    margin: 5px 0;
-}
-
-.footer-content .social-media {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-}
-
-.footer-content .social-media p {
-    margin-bottom: 5px;
-}
-
-.footer-content .social-media .icons {
-    display: flex;
-    align-items: center;
-}
-
-.footer-content .social-media a {
-    margin-left: 10px;
-}
-
-.footer-content .social-media img {
-    height: 30px;
-}
-
-/* tagline */
-
-.analytics-header {
-    text-align: center;
-    padding: 15px;
-    background: #3a3a3a;
-    color: #FFFFFF;
-    border-radius: 10px;
-    background-size: 200% 200%;
-    min-height: 60px;
-    position: relative;
-    z-index: 10;
-    margin: 0 auto; 
-    width: 95%;
-    max-width: 1200px;
-    margin-top: 100px;
-    margin-bottom: 30px;
-}
-
-.analytics-header h1 {
-    font-size: 3em;
-    font-weight: bold;
-    margin: 0;
-}
-
-.analytics-header p {
-    font-size: 1.2em;
-    font-weight: normal;
-    margin-top: 5px;
-    opacity: 1;
-}
-
-.download-container {
-    position: absolute; /* Use absolute positioning */
-    top: 120px; /* Adjust to place it just below the header */
-    right: 20px; /* Align the container to the rightmost edge */
+    background-color: #f4f4f4;
   }
-  
-  .download-btn {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
+
+  .container {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 0;
+  }
+
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .navbar .logo {
+    height: 50px;
+  }
+
+  .navbar .tabs {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+  }
+
+  .navbar .tabs li {
+    margin: 0 10px;
+  }
+
+  .navbar .tabs li a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 15px;
+    display: block;
+  }
+
+  .navbar .tabs li a:hover {
+    background-color: #575757;
     border-radius: 5px;
   }
-  
-  .download-btn:hover {
-    background-color: #45a049;
+
+  .navbar .profile-pic img {
+    height: 40px;
+    border-radius: 50%;
   }
-  
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+
+  .dropdown-content a:hover {
+    background-color: #f1f1f1;
+  }
+
+  .show {
+    display: block;
+  }
+
+  .reports-container {
+    padding: 20px;
+    background-color: #fff;
+    margin: 20px 0;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+
+  .report-section {
+    margin-bottom: 20px;
+  }
+
+  .report-section h2 {
+    margin-bottom: 10px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+
+  table, th, td {
+    border: 1px solid #ddd;
+  }
+
+  th, td {
+    padding: 10px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f2f2f2;
+  }
+
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #333;
+    color: #fff;
+  }
+
+  .footer-content .pta-logo img {
+    height: 50px;
+  }
+
+  .footer-content .contact-info, .footer-content .social-media {
+    margin: 0;
+  }
+
+  .footer-content .social-media .icons a img {
+    height: 30px;
+    margin: 0 10px;
+  }
