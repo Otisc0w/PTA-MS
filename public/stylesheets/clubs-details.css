@@ -1204,7 +1204,7 @@ button.edit {
 }
 
 button.delete {
-  background-color: #007bff; /* blue */
+  background-color: #dc3545; /* blue */
   color: #fff;
   margin-bottom: 5px;
 }
@@ -1452,7 +1452,7 @@ button:hover {
 .viewattendeesbtn{
   background-color: #007bff;
   color: white;
-  padding: 5px;
+  padding: 10px 10px;
   border: none;
   border-radius: 5px;
   font-size: 0.6em;
@@ -1523,4 +1523,15 @@ button:hover {
   background-color: #0056b3 !important;
 }
 
+.button-container {
+  display: flex;
+  gap: 10px; /* Adds space between buttons */
+  align-items: center; /* Aligns them properly */
+}
 
+.activity-header {
+  display: flex;
+  justify-content: space-between; /* Moves elements apart */
+  align-items: center; /* Aligns them in the same line */
+  width: 100%; /* Ensures full width usage */
+}
