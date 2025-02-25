@@ -149,19 +149,19 @@
       </div>
 
 
-      {{#if (eq eventtype 'Poomsae')}}
+      {{!-- {{#if (eq eventtype 'Poomsae')}} --}}
       <div class="form-group">
         <label for="additional-selects">Add Judges for this Event:</label>
         <div id="additional-selects-container">
-          <select name="judgeids">
+          <select name="judges">
             {{#each ptaadmins}}
-            <option value="{{id}}">{{firstname}} {{lastname}}</option>
+            <option value="{{firstname}} {{lastname}}">{{firstname}} {{lastname}}</option>
             {{/each}}
           </select>
         </div>
         <button type="button" onclick="addSelect()">Add More</button>
       </div>
-      {{/if}}
+      {{!-- {{/if}} --}}
       
       <button type="button" class="cancel" onclick="window.location.href='/events'">Cancel</button>
       <button type="submit">Create Event</button>
@@ -188,8 +188,8 @@
     function addSelect() {
           const container = document.getElementById('additional-selects-container');
           const newSelect = document.createElement('select');
-          newSelect.name = 'judgeids';
-            newSelect.innerHTML = `{{#each ptaadmins}}<option value="{{id}}">{{firstname}} {{lastname}}</option>{{/each}}`;
+          newSelect.name = 'judges';
+            newSelect.innerHTML = `{{#each ptaadmins}}<option value="{{firstname}} {{lastname}}">{{firstname}} {{lastname}}</option>{{/each}}`;
           container.appendChild(newSelect);
         }
   </script>

@@ -96,6 +96,11 @@
           <p><strong>Weight Class:</strong> {{event.weightclass}}</p>
           <p><strong>Event Type:</strong> {{event.eventtype}}</p>
           <p><strong>Registration Cap:</strong> {{registrationcount}} / {{event.registrationcap}}</p>
+          <p><strong>Judges:</strong>
+            {{#each event.judges}}
+              <span>{{this}}</span>{{#unless @last}}, {{/unless}}
+            {{/each}}
+          </p>
 
         </div>
       </div>
@@ -199,19 +204,19 @@
                 <input type="text" id="location" name="location" value="{{event.location}}" required>
               </div>
 
-              {{#if (eq event.eventtype 'Poomsae')}}
+              {{!-- {{#if (eq event.eventtype 'Poomsae')}} --}}
               <div class="form-group">
                 <label for="additional-selects">Add Judges for this Event:</label>
                 <div id="additional-selects-container">
-                  <select name="judgeids">
+                  <select name="judges">
                     {{#each ptaadmins}}
-                    <option value="{{id}}">{{firstname}} {{lastname}}</option>
+                    <option value="{{firstname}} {{lastname}}">{{firstname}} {{lastname}}</option>
                     {{/each}}
                   </select>
                 </div>
                 <button type="button" onclick="addSelect()">Add More</button>
               </div>
-              {{/if}}
+              {{!-- {{/if}} --}}
               <button onclick="closeModal()" class="cancel">Cancel</button>
               <button type="submit" class="default-submit-button">Update Event</button>
             </div>
@@ -1164,8 +1169,8 @@
     function addSelect() {
       const container = document.getElementById('additional-selects-container');
       const newSelect = document.createElement('select');
-      newSelect.name = 'judgeids';
-        newSelect.innerHTML = `{{#each ptaadmins}}<option value="{{id}}">{{firstname}} {{lastname}}</option>{{/each}}`;
+      newSelect.name = 'judges';
+        newSelect.innerHTML = `{{#each ptaadmins}}<option value="{{firstname}} {{lastname}}">{{firstname}} {{lastname}}</option>{{/each}}`;
       container.appendChild(newSelect);
     }
 

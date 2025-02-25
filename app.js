@@ -2767,7 +2767,8 @@ app.post("/create-event", upload.single("eventpicture"), async (req, res) => {
     weightclass,
     beltlevel,
     gender,
-    backoutdl
+    backoutdl,
+    judges
   } = req.body; // Capture user input from the form
 
   if (!req.session.user) {
@@ -2814,7 +2815,7 @@ app.post("/create-event", upload.single("eventpicture"), async (req, res) => {
           starttime,
           endtime,
           location,
-          judgeids,
+          judges,
           agedivision,
           weightclass,
           beltlevel,
@@ -2857,6 +2858,7 @@ app.post("/update-event", upload.single("eventpicture"), async (req, res) => {
     weightclass,
     status,
     gender,
+    judges
   } = req.body;
 
   let eventpicture = null;
@@ -2918,6 +2920,7 @@ app.post("/update-event", upload.single("eventpicture"), async (req, res) => {
         beltlevel: beltlevel,
         gender: gender,
         weightclass: weightclass,
+        judges: judges,
       })
       .eq("id", eventid); // Match the event ID
 
