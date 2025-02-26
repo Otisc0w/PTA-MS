@@ -241,3 +241,8 @@ th {
 #membership .footer-content .social-media img {
   height: 30px;
 }
+
+.report-table{
+  height: 900px;
+  overflow-y: auto;
+}

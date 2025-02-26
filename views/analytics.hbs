@@ -68,86 +68,97 @@
 
     <div id="payments" class="report-section" style="display:block">
       <h2>Payments/Transactions</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Transaction ID</th>
-            <th>User</th>
-            <th>Amount</th>
-            <th>Type</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody id="transactions-body">
-          {{#each transactions}}
-          <tr>
-            <td>TXN{{id}}</td>
-            <td>{{name}}</td>
-            <td>{{amount}}</td>
-            <td>{{type}}</td>
-            <td>{{formatDate created_at "MM/DD/YYYY"}}</td>
-          </tr>
-          {{/each}}
-        </tbody>
-      </table>
+      <div class="report-table">
+        <button onclick="exportTableToCSV('payments.csv')">Export to CSV</button>
+        <button onclick="exportTableToExcel('payments', 'payments.xlsx')">Export to Excel</button>
+        <table>
+          <thead>
+            <tr>
+              <th>Transaction ID</th>
+              <th>User</th>
+              <th>Amount</th>
+              <th>Type</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="transactions-body">
+            {{#each transactions}}
+            <tr>
+              <td>TXN{{id}}</td>
+              <td>{{name}}</td>
+              <td>{{amount}}</td>
+              <td>{{type}}</td>
+              <td>{{formatDate created_at "MM/DD/YYYY"}}</td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <div id="membership" class="report-section" style="display:none">
       <h2>Membership Applications</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Application ID</th>
-            <th>User</th>
-            <th>Status</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody id="membership-body">
-          <tr>
-            <td>APP{{id}}</td>
-            <td>John Doe</td>
-            <td>Approved</td>
-            <td>02/25/2025</td>
-          </tr>
-          <tr>
-            <td>APP12346</td>
-            <td>Jane Smith</td>
-            <td>Pending</td>
-            <td>4/25/2025</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="report-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Application ID</th>
+              <th>User</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="membership-body">
+            <tr>
+              <td>APP{{id}}</td>
+              <td>John Doe</td>
+              <td>Approved</td>
+              <td>02/25/2025</td>
+            </tr>
+            <tr>
+              <td>APP12346</td>
+              <td>Jane Smith</td>
+              <td>Pending</td>
+              <td>4/25/2025</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <div id="events" class="report-section" style="display:none">
       <h2>Upcoming Events</h2>
-      {{#each eventsByMonth}}
-      <h3>{{@key}}</h3>
-      <div class="events-list">
-        {{#each this}}
-        <div class="event-card">
-          <h4>{{name}}</h4>
-          <p>Date: {{formatDate date "YYYY-MM-DD"}}</p>
-          <p>Location: {{location}}</p>
-          <p>Description: {{description}}</p>
+      <div class="report-table">
+        {{#each eventsByMonth}}
+        <h3>{{@key}}</h3>
+        <div class="events-list">
+          {{#each this}}
+          <div class="event-card">
+            <h4>{{name}}</h4>
+            <p>Date: {{formatDate date "YYYY-MM-DD"}}</p>
+            <p>Location: {{location}}</p>
+            <p>Description: {{description}}</p>
+            <p>Status: {{status}}</p>
+          </div>
+          {{/each}}
         </div>
         {{/each}}
       </div>
-      {{/each}}
     </div>
 
 
 
     <div id="insights" class="report-section" style="display:none">
       <h2>Other Insights</h2>
-      <div class="chart-container">
-        <canvas id="membersChart"></canvas>
-      </div>
-      <div class="insights-summary">
-        <p>Total Members: 150</p>
-        <p>Active Members: 120</p>
-        <p>Inactive Members: 30</p>
+      <div class="report-table">
+        <div class="chart-container">
+          <canvas id="membersChart"></canvas>
+        </div>
+        <div class="insights-summary">
+          <p>Total Members: 150</p>
+          <p>Active Members: 120</p>
+          <p>Inactive Members: 30</p>
+        </div>
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -284,6 +295,33 @@
 
       document.getElementById('start-date').value = '';
       document.getElementById('end-date').value = '';
+    }
+
+    function exportTableToCSV(filename) {
+      var csv = [];
+      var rows = document.querySelectorAll("table tr");
+
+      for (var i = 0; i < rows.length; i++) {
+      if (rows[i].style.display !== 'none') { // Only include visible rows
+        var row = [], cols = rows[i].querySelectorAll("td, th");
+
+        for (var j = 0; j < cols.length; j++) {
+        row.push(cols[j].innerText);
+        }
+
+        csv.push(row.join(","));
+      }
+      }
+
+      // Download CSV
+      var csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+      var downloadLink = document.createElement("a");
+      downloadLink.download = filename;
+      downloadLink.href = window.URL.createObjectURL(csvFile);
+      downloadLink.style.display = "none";
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
     }
   </script>
 </body>

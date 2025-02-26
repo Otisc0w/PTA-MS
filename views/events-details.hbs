@@ -693,6 +693,13 @@
       <div class="kyorugi-scoresheet">
         <span class="close" onclick="closeKyorugiScoresheet()">&times;</span>
         <h1>Kyorugi Scoresheet</h1>
+        This is only for the following judges to score: 
+        {{#each event.judges}}
+          <strong style="color: #ff3030">{{this}},</strong>
+        {{/each}}
+        {{!-- {{#if (none (map event.judges 'this') (concat user.firstname ' ' user.lastname))}}
+          youre not allowed
+        {{/if}} --}}
         <div class="match-info">
           <p class="playermatchup"><strong>Match:</strong></p>
           <p class="matchtime"><strong>Time:</strong></p>

@@ -140,6 +140,9 @@ hbs.registerHelper('isBefore', function (date1, date2, options) {
     return options.inverse(this);
   }
 });
+hbs.registerHelper('map', function (array, options) {
+  return array.map(item => options.fn(item)).join('');
+});
 
 
 app.use( session({
@@ -6894,55 +6897,12 @@ app.get("/membership-club", async (req, res) => {
   }
 });
 
-
 app.get("/analytics", async (req, res) => {
   if (!req.session.user) {
     return res.redirect("/");
   }
 
   try {
-    // Fetch top 10 athletes based on ranking points
-    const { data: topPerformers, error: topPerformersError } = await supabase
-      .from("athletes")
-      .select("name, rankingpoints, userid")
-      .order("rankingpoints", { ascending: false })
-      .limit(10);
-
-    if (topPerformersError) throw topPerformersError;
-
-    // Fetch associated clubs for top performers
-    const userIds = topPerformers.map((performer) => performer.userid);
-    const { data: users, error: usersError } = await supabase
-      .from("users")
-      .select("id, club")
-      .in("id", userIds);
-
-    if (usersError) throw usersError;
-
-    // Map club names to top performers
-    const topPerformersWithClubs = topPerformers.map((performer, index) => {
-      const user = users.find((user) => user.id === performer.userid);
-      return {
-        index: index + 1,
-        name: performer.name,
-        club: user ? user.club : "N/A",
-      };
-    });
-
-    // Fetch clubs with their creation date
-    const { data: clubs, error: clubsError } = await supabase
-      .from("clubs")
-      .select("clubname, members, created_at");
-
-    if (clubsError) throw clubsError;
-
-    // Group clubs by month created
-    const clubsByMonth = clubs.reduce((acc, club) => {
-      const monthCreated = new Date(club.created_at).toLocaleString("default", { month: "long" });
-      if (!acc[monthCreated]) acc[monthCreated] = [];
-      acc[monthCreated].push(club);
-      return acc;
-    }, {});
 
     // Fetch events with name, month created, and event type
     const { data: events, error: eventsError } = await supabase
@@ -6965,36 +6925,6 @@ app.get("/analytics", async (req, res) => {
       .select("id", { count: "exact" });
     if (eventsCountError) throw eventsCountError;
 
-    // Fetch total number of athletes
-    const { count: athletesCount, error: athletesError } = await supabase
-      .from("athletes")
-      .select("id", { count: "exact" });
-    if (athletesError) throw athletesError;
-
-    // Fetch counts of participants based on status
-    const { data: participantsData, error: participantsError } = await supabase
-      .from("athletes")
-      .select("status");
-    if (participantsError) throw participantsError;
-
-    const participantCounts = participantsData.reduce(
-      (counts, participant) => {
-        if (participant.status === "Active") counts.active += 1;
-        else if (participant.status === "Suspended") counts.suspended += 1;
-        else if (participant.status === "Banned") counts.banned += 1;
-        return counts;
-      },
-      { active: 0, suspended: 0, banned: 0 }
-    );
-
-    // Fetch total number of clubs
-    const { data: totalClubsData, error: totalClubsError } = await supabase
-      .from("clubs")
-      .select("id", { count: "exact" });
-
-    if (totalClubsError) throw totalClubsError;
-    const totalClubs = totalClubsData.length;
-
     // Fetch transactions data
     const { data: transactions, error: transactionsError } = await supabase
       .from("transactions")
@@ -7006,14 +6936,9 @@ app.get("/analytics", async (req, res) => {
 
     // Render the analytics page with all fetched data
     res.render("analytics", {
-      topPerformers: topPerformersWithClubs,
-      totalEvents: eventsCount || 0,
-      totalAthletes: athletesCount || 0,
-      participantCounts,
-      totalClubs,
-      clubsByMonth,  // Pass grouped clubs
-      eventsByMonth, // Pass grouped events
       transactions,
+      events,
+      eventsByMonth,
       user: req.session.user, // Render user session
     });
   } catch (error) {
