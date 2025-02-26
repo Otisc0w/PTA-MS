@@ -64,14 +64,13 @@
       <button onclick="filterByDate()">Apply</button>
 
       <button onclick="cancelFilter()">Remove Filter</button>
+      <button class="export-csv-btn" onclick="exportTableToCSV('payments.csv')">Export to CSV</button>
     </div>
 
     <div id="payments" class="report-section" style="display:block">
       <h2>Payments/Transactions</h2>
       <div class="report-table">
-        <button onclick="exportTableToCSV('payments.csv')">Export to CSV</button>
-        <button onclick="exportTableToExcel('payments', 'payments.xlsx')">Export to Excel</button>
-        <table>
+        <table class="transactions-table">
           <thead>
             <tr>
               <th>Transaction ID</th>
@@ -109,18 +108,31 @@
             </tr>
           </thead>
           <tbody id="membership-body">
+            {{#each nccRegistrations}}
             <tr>
-              <td>APP{{id}}</td>
-              <td>John Doe</td>
-              <td>Approved</td>
-              <td>02/25/2025</td>
+              <td>NCCAPP{{id}}</td>
+              <td>{{submittedby}}</td>
+              <td>{{status}}</td>
+              <td>{{formatDate date "MM/DD/YYYY"}}</td>
             </tr>
+            {{/each}}
+            {{#each instructorRegistrations}}
             <tr>
-              <td>APP12346</td>
-              <td>Jane Smith</td>
-              <td>Pending</td>
-              <td>4/25/2025</td>
+              <td>INSAPP{{id}}</td>
+              <td>{{submittedby}}</td>
+              <td>{{status}}</td>
+              <td>{{formatDate date "MM/DD/YYYY"}}</td>
             </tr>
+            {{/each}}
+            {{#each clubRegistrations}}
+            <tr>
+              <td>CLUBAPP{{id}}</td>
+              <td>{{submittedby}}</td>
+              <td>{{status}}</td>
+              <td>{{formatDate date "MM/DD/YYYY"}}</td>
+            </tr>
+            {{/each}}
+            
           </tbody>
         </table>
       </div>
@@ -299,7 +311,7 @@
 
     function exportTableToCSV(filename) {
       var csv = [];
-      var rows = document.querySelectorAll("table tr");
+      var rows = document.querySelectorAll(".transactions-table tr");
 
       for (var i = 0; i < rows.length; i++) {
       if (rows[i].style.display !== 'none') { // Only include visible rows

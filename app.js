@@ -6934,11 +6934,41 @@ app.get("/analytics", async (req, res) => {
       throw transactionsError;
     }
 
+    // Fetch NCC registrations data
+    const { data: nccRegistrations, error: nccRegistrationsError } = await supabase
+      .from("ncc_registrations")
+      .select("*");
+
+    if (nccRegistrationsError) {
+      throw nccRegistrationsError;
+    }
+
+    // Fetch instructor registrations data
+    const { data: instructorRegistrations, error: instructorRegistrationsError } = await supabase
+      .from("instructor_registrations")
+      .select("*");
+
+    if (instructorRegistrationsError) {
+      throw instructorRegistrationsError;
+    }
+
+    // Fetch club registrations data
+    const { data: clubRegistrations, error: clubRegistrationsError } = await supabase
+      .from("club_registrations")
+      .select("*");
+
+    if (clubRegistrationsError) {
+      throw clubRegistrationsError;
+    }
+
     // Render the analytics page with all fetched data
     res.render("analytics", {
       transactions,
       events,
       eventsByMonth,
+      nccRegistrations,
+      instructorRegistrations,
+      clubRegistrations,
       user: req.session.user, // Render user session
     });
   } catch (error) {
