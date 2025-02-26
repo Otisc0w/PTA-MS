@@ -292,7 +292,9 @@
           <button onclick="printIdCard('printableArea')" class="printbtn">Print ID</button>
           <button type="submit" name="status" value="1">Under Review</button>
           <button type="submit" name="status" value="2">Accepted and En-route to Regional Office</button>
-          <button type="button" id="idshipped" class="idshipped">ID Shipped</button>
+          {{#unless (eq registration.status 3)}}
+            <button type="button" id="idshipped" class="idshipped">ID Shipped</button>
+          {{/unless}}
           {{#if (eq registration.status 3)}}
           <button type="button" id="suspendbtn" class="suspendbtn">Suspend this Player</button>
           {{else}}

@@ -185,7 +185,9 @@
         {{#if user.ptaverified}}
           <div class="status-buttons" id="status-buttons"> {{!-- VALUES NAMES AND TYPES NEED TO STAY THE SAME --}}
             <button type="submit" name="status" value="1">Processing Application</button>
-            <button type="button" id="accepted" class="accepted">Accepted and Registered</button>
+            {{#unless (eq clubregistration.status 3)}}
+              <button type="button" id="accepted" class="accepted">Accepted and Registered</button>
+            {{/unless}}
             <button type="button" id="rejectbtn" class="rejectbtn">Reject Application</button>
           </div>
           <div class="confirmscreen" id="confirmscreen" style="display: none;">
