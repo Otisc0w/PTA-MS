@@ -64,11 +64,12 @@
       <button onclick="filterByDate()">Apply</button>
 
       <button onclick="cancelFilter()">Remove Filter</button>
-      <button class="export-csv-btn" onclick="exportTableToCSV('payments.csv')">Export to CSV</button>
     </div>
 
     <div id="payments" class="report-section" style="display:block">
       <h2>Payments/Transactions</h2>
+      <button class="export-csv-btn" onclick="exportTransactionsTableToCSV('payments.csv')">Export to CSV</button>
+      <p></p>
       <div class="report-table">
         <table class="transactions-table">
           <thead>
@@ -97,8 +98,10 @@
 
     <div id="membership" class="report-section" style="display:none">
       <h2>Membership Applications</h2>
+      <button class="export-csv-btn" onclick="exportMembershipsTableToCSV('payments.csv')">Export to CSV</button>
+      <p></p>
       <div class="report-table">
-        <table>
+        <table class="membership-table">
           <thead>
             <tr>
               <th>Application ID</th>
@@ -157,8 +160,6 @@
         {{/each}}
       </div>
     </div>
-
-
 
     <div id="insights" class="report-section" style="display:none">
       <h2>Other Insights</h2>
@@ -309,19 +310,46 @@
       document.getElementById('end-date').value = '';
     }
 
-    function exportTableToCSV(filename) {
+    function exportTransactionsTableToCSV(filename) {
       var csv = [];
       var rows = document.querySelectorAll(".transactions-table tr");
 
       for (var i = 0; i < rows.length; i++) {
       if (rows[i].style.display !== 'none') { // Only include visible rows
-        var row = [], cols = rows[i].querySelectorAll("td, th");
+      var row = [], cols = rows[i].querySelectorAll("td, th");
 
-        for (var j = 0; j < cols.length; j++) {
-        row.push(cols[j].innerText);
-        }
+      for (var j = 0; j < cols.length; j++) {
+      row.push(cols[j].innerText);
+      }
 
-        csv.push(row.join(","));
+      csv.push(row.join(","));
+      }
+      }
+
+      // Download CSV
+      var csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+      var downloadLink = document.createElement("a");
+      downloadLink.download = filename;
+      downloadLink.href = window.URL.createObjectURL(csvFile);
+      downloadLink.style.display = "none";
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    }
+
+    function exportMembershipsTableToCSV(filename) {
+      var csv = [];
+      var rows = document.querySelectorAll("#membership-body tr");
+
+      for (var i = 0; i < rows.length; i++) {
+      if (rows[i].style.display !== 'none') { // Only include visible rows
+      var row = [], cols = rows[i].querySelectorAll("td, th");
+
+      for (var j = 0; j < cols.length; j++) {
+      row.push(cols[j].innerText);
+      }
+
+      csv.push(row.join(","));
       }
       }
 
