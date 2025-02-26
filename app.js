@@ -1511,13 +1511,15 @@ app.post("/update-nccstatus", async (req, res) => {
 
         console.log("Athlete inserted successfully");
       }
+      
 
       const { error: transactionError } = await supabase
         .from("transactions")
         .insert([
           {
+            name: user.firstname + " " + user.lastname,
             userid: registration.submittedby,
-            type: "ncc",
+            type: "NCC",
             amount: 500, // Adjust the amount as needed
           },
         ]);
@@ -1875,10 +1877,22 @@ app.post("/update-instructorstatus", async (req, res) => {
         return res.status(500).send("Error updating expireson");
       }
 
+      const { data: applicantuser, error: applicantuserError } = await supabase
+        .from("users")
+        .select("*")
+        .eq("id", submittedby)
+        .single();
+
+      if (applicantuserError) {
+        console.error("Error fetching applicantuser:", applicantuserError.message);
+        return res.status(500).send("Error fetching applicantuser");
+      }
+
       const { data: transactions, error: transactionError } = await supabase
         .from("transactions")
         .insert([
           {
+            name: applicantuser.firstname + " " + applicantuser.lastname,
             userid: registration.submittedby,
             type: "instructor",
             amount: 500, // Adjust the amount as needed
@@ -1958,12 +1972,24 @@ app.post("/update-clubstatus", async (req, res) => {
         return res.status(500).send("Error inserting club");
       }
 
+      const { data: applicantuser, error: applicantuserError } = await supabase
+        .from("users")
+        .select("*")
+        .eq("id", clubregistration.submittedby)
+        .single();
+
+      if (applicantuserError) {
+        console.error("Error fetching applicantuser:", applicantuserError.message);
+        return res.status(500).send("Error fetching applicantuser");
+      }
+
       const { data: transactions, error: transactionError } = await supabase
         .from("transactions")
         .insert([
           {
+            name: applicantuser.firstname + " " + applicantuser.lastname,
             userid: clubregistration.submittedby,
-            type: "club",
+            type: "Club",
             amount: 500, // Adjust the amount as needed
           },
         ]);

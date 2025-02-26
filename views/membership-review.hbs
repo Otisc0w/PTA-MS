@@ -253,6 +253,8 @@
               <button type="button" class="rejectbtn1" onclick="openConfirmRejectScreen()">
                 Confirm Rejections
               </button>
+              <button type="button" class="helpbtn" title="Click to confirm rejections.">?</button>
+              
             {{else}}
               <button type="submit" class="rejectbtn1">
                 Submit Changes
@@ -453,7 +455,10 @@
         }
       });
     });
-
+    
+    document.querySelector(".helpbtn").addEventListener("click", function () {
+      alert("Click the X button beside the fields that you deem as incorrect. After, click 'Confirm Rejections' to finalize the fields you want to reject.");
+    });
   </script>
 </body>
 
