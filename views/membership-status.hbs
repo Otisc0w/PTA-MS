@@ -55,9 +55,9 @@
         Show:
         <select onchange="toggleSection(this.value)">
           <option value="all">All</option>
-          <option value="nccregs">NCC Registrations</option>
-          <option value="instructorregs">Instructor Registrations</option>
-          <option value="clubregs">Club Registrations</option>
+          <option value="ncc">NCC Registrations</option>
+          <option value="instructor">Instructor Registrations</option>
+          <option value="club">Club Registrations</option>
         </select>
         <select onchange="filterStatus(this.value, document.querySelector('.statusfilter select:nth-child(1)').value)">
           <option value="all">All</option>
@@ -165,47 +165,47 @@
       const statusFilter = document.querySelector('.statusfilter select:nth-child(2)');
 
       function toggleSection(selectedCategory) {
-        const sections = document.querySelectorAll('.nccregs, .instructorregs, .clubregs');
-        sections.forEach(section => section.style.display = 'none'); // Hide all sections
+      const sections = document.querySelectorAll('.nccregs, .instructorregs, .clubregs');
+      sections.forEach(section => section.style.display = 'none'); // Hide all sections
 
-        if (selectedCategory === 'nccregs') {
-          document.querySelector('.nccregs').style.display = 'block';
-        } else if (selectedCategory === 'instructorregs') {
-          document.querySelector('.instructorregs').style.display = 'block';
-        } else if (selectedCategory === 'clubregs') {
-          document.querySelector('.clubregs').style.display = 'block';
-        } else if (selectedCategory === 'all') {
-          sections.forEach(section => section.style.display = 'block');
-        }
+      if (selectedCategory === 'nccregs') {
+        document.querySelector('.nccregs').style.display = 'block';
+      } else if (selectedCategory === 'instructorregs') {
+        document.querySelector('.instructorregs').style.display = 'block';
+      } else if (selectedCategory === 'clubregs') {
+        document.querySelector('.clubregs').style.display = 'block';
+      } else if (selectedCategory === 'all') {
+        sections.forEach(section => section.style.display = 'block');
+      }
 
-        // Reset status filter when switching category
-        statusFilter.value = 'all';
-        filterStatus('all', selectedCategory);
+      // Reset status filter when switching category
+      statusFilter.value = 'all';
+      filterStatus('all', selectedCategory);
       }
 
       function filterStatus(selectedStatus, currentCategory) {
-        const allPosts = document.querySelectorAll('.post-content');
+      const allPosts = document.querySelectorAll('.post-content');
 
-        allPosts.forEach(post => {
-            const statusText = post.querySelector('.post-status').innerText.split(': ')[1]?.toLowerCase().replace(/\s/g, '');
-          let parentSection = post.closest('.nccregs, .instructorregs, .clubregs');
+      allPosts.forEach(post => {
+        const statusText = post.querySelector('.post-status').innerText.split(': ')[1]?.toLowerCase().replace(/\s/g, '');
+        let parentSection = post.closest('.nccregs, .instructorregs, .clubregs');
 
-          if ((selectedStatus === 'all' || statusText === selectedStatus) &&
-            (currentCategory === 'all' || parentSection.classList.contains(currentCategory))) {
-            post.style.display = 'block';
-          } else {
-            post.style.display = 'none';
-          }
-        });
+        if ((selectedStatus === 'all' || statusText === selectedStatus) &&
+        (currentCategory === 'all' || parentSection.classList.contains(currentCategory))) {
+        post.style.display = 'block';
+        } else {
+        post.style.display = 'none';
+        }
+      });
       }
 
       // Event Listeners for Filters
       categoryFilter.addEventListener('change', function () {
-        toggleSection(this.value);
+      toggleSection(this.value);
       });
 
       statusFilter.addEventListener('change', function () {
-        filterStatus(this.value, categoryFilter.value);
+      filterStatus(this.value, categoryFilter.value);
       });
 
       // Initialize with "All"
