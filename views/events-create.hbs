@@ -27,7 +27,7 @@
           {{/if}}
         </a>
       </li>
-        <li class="analytics"><a href="analytics">Reports</a></li>
+        <li class="analytics"><a href="/analytics">Reports</a></li>
         <li class="profile-pic">
           {{#if user.profilepic}}
           <a href="#" onclick="toggleDropdown()"><img src="{{user.profilepic}}" alt="Profile Picture"
@@ -57,6 +57,8 @@
       <h3>Create Promotion Test Event</h3>
       {{/if}}
       <input type="hidden" value="{{eventtype}}" name="eventtype">
+
+      <h4>Event Picture:</h4>
 
       <div class="eventpic">
         <input type="file" name="eventpicture">
