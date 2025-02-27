@@ -79,7 +79,28 @@
 
     <div id="payments" class="report-section" style="display:block">
       <h2>Payments/Transactions</h2>
-      <h3>Total Revenue from Registrations Fees:</h3><h2>{{totalMembers}}</h2>
+      <div class="card revenue-card">
+        <div class="total-revenue">
+          <h3>Total Revenue from Registration Fees:</h3>
+          <h2>{{membershiptotalrevenue}}</h2>
+        </div>
+        <div class="total-revenue">
+          <h3>Total Revenue from Registration Fees:</h3>
+          <h2>{{membershiptotalrevenue}}</h2>
+        </div>
+      </div>
+
+      <style>
+        .revenue-card {
+          background-color: #3a3a3a;
+          border: 1px solid #dee2e6;
+          border-radius: 0.25rem;
+          padding: 1rem;
+          margin-bottom: 1rem;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+      </style>
+      
       <button class="export-csv-btn" onclick="exportTransactionsTableToCSV('payments.csv')">Export to CSV</button>
       <p></p>
       <div class="report-table">

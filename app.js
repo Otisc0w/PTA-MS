@@ -6933,6 +6933,19 @@ app.get("/analytics", async (req, res) => {
       throw transactionsError;
     }
 
+    // Fetch the total number of transactions
+    const { count: transactionsCount, error: transactionsCountError } = await supabase
+      .from("transactions")
+      .select("id", { count: "exact" });
+
+    if (transactionsCountError) {
+      throw transactionsCountError;
+    }
+
+    const membershiptotalrevenue = transactionsCount * 500; // Assuming each transaction is worth 500
+
+    console.log("Total number of transactions:", transactionsCount);
+
     // Fetch NCC registrations data
     const { data: nccRegistrations, error: nccRegistrationsError } = await supabase
       .from("ncc_registrations")
@@ -7061,6 +7074,8 @@ app.get("/analytics", async (req, res) => {
       totalMembers,
       athleteVerifiedCount,
       instructorVerifiedCount,
+      transactionsCount,
+      membershiptotalrevenue
     });
   } catch (error) {
     console.error("Error fetching analytics data:", error.message);
