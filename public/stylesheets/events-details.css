@@ -1334,3 +1334,87 @@ input[type="number"]:focus {
   font-size: 16px;
 }
 
+#editmodal button{
+  width: 40%;
+  background-color: #dadcda; 
+  color: black;
+  padding: 8px 10px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+#editmodal button[type="submit"] {
+  background-color:  #007bff;
+  color: white;
+  margin-left: 5px;
+}
+
+#editmodal button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+#editmodal .cancel {
+  background-color: #c9302c;
+  color: white;
+}
+
+#editmodal .cancel:hover {
+  background-color: #d9534f;
+}
+
+/* Event Information */
+.intro p {
+  font-size: 17px;
+  line-height: 1.5;
+  margin: 5px 0;
+  color: #D3D3D3;
+}
+
+/* Strong Labels */
+.intro p strong {
+  color: #f8f8f8;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.intro span{
+  font-size: 17px;
+  line-height: 1.5;
+  margin: 5px 0;
+  color: #D3D3D3;
+}
+
+.details{
+  color: #f8f8f8;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 500px) {
+  .event-details-container {
+      width: 90%;
+  }
+}
+
+.kyorugi-scoresheet form button[type="submit"] {
+  background-color: #007bff !important;
+  color: white !important;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-left: 5px;
+}
+
+.kyorugi-scoresheet form button[type="submit"]:hover {
+  background-color: #0056b3 !important;
+}
