@@ -84,7 +84,7 @@ th {
   margin-bottom: 20px;
 }
 
-.date-filter input[type="date"] {
+.date-filter input[type="date"], input[type="text"] {
   background-color: #2c2c2c;
   color: #e0e0e0;
   border: 1px solid #444;
@@ -245,4 +245,8 @@ th {
 .report-table{
   height: 1000px;
   overflow-y: auto;
+}
+
+.end-date{
+  margin-left:10px;
 }

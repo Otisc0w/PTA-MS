@@ -59,11 +59,22 @@
     <div class="date-filter">
       <label for="start-date">Start Date:</label>
       <input type="date" id="start-date" name="start-date">
-      <label for="end-date">End Date:</label>
+      <label class="end-date" for="end-date">End Date:</label>
       <input type="date" id="end-date" name="end-date">
+
       <button onclick="filterByDate()">Apply</button>
 
       <button onclick="cancelFilter()">Remove Filter</button>
+      
+      <label class="end-date" for="search-user">Search User:</label>
+      <input type="text" id="search-user" name="search-user" onkeyup="searchUser()">
+
+      {{!-- <select onchange="toggleSection(this.value)">
+        <option value="all">All</option>
+        <option value="nccregs">NCC Registrations</option>
+        <option value="instructorregs">Instructor Registrations</option>
+        <option value="clubregs">Club Registrations</option>
+      </select> --}}
     </div>
 
     <div id="payments" class="report-section" style="display:block">
@@ -98,6 +109,7 @@
 
     <div id="membership" class="report-section" style="display:none">
       <h2>Membership Applications</h2>
+      <h3>Total Revenue from Registrations Fees:</h3><h2></h2>
       <button class="export-csv-btn" onclick="exportMembershipsTableToCSV('payments.csv')">Export to CSV</button>
       <p></p>
       <div class="report-table">
@@ -114,7 +126,7 @@
             {{#each nccRegistrations}}
             <tr>
               <td>NCCAPP{{id}}</td>
-              <td>{{submittedby}}</td>
+              <td>{{firstname}} {{lastname}}</td>
               <td>{{status}}</td>
               <td>{{formatDate date "MM/DD/YYYY"}}</td>
             </tr>
@@ -122,7 +134,7 @@
             {{#each instructorRegistrations}}
             <tr>
               <td>INSAPP{{id}}</td>
-              <td>{{submittedby}}</td>
+              <td>{{firstname}} {{lastname}}</td>
               <td>{{status}}</td>
               <td>{{formatDate date "MM/DD/YYYY"}}</td>
             </tr>
@@ -130,12 +142,11 @@
             {{#each clubRegistrations}}
             <tr>
               <td>CLUBAPP{{id}}</td>
-              <td>{{submittedby}}</td>
+              <td>{{firstname}} {{lastname}}</td>
               <td>{{status}}</td>
               <td>{{formatDate date "MM/DD/YYYY"}}</td>
             </tr>
             {{/each}}
-            
           </tbody>
         </table>
       </div>
@@ -326,6 +337,30 @@
       });
     }
 
+    function searchUser() {
+      const input = document.getElementById('search-user').value.toLowerCase();
+      const transactions = document.querySelectorAll('#transactions-body tr');
+      const memberships = document.querySelectorAll('#membership-body tr');
+
+      transactions.forEach(row => {
+        const user = row.cells[1].innerText.toLowerCase();
+        if (user.includes(input)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
+      memberships.forEach(row => {
+        const user = row.cells[1].innerText.toLowerCase();
+        if (user.includes(input)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
     function cancelFilter() {
       const transactions = document.querySelectorAll('#transactions-body tr');
       const memberships = document.querySelectorAll('#membership-body tr');
@@ -340,6 +375,28 @@
 
       document.getElementById('start-date').value = '';
       document.getElementById('end-date').value = '';
+    }
+
+    const categoryFilter = document.querySelector('.statusfilter select:nth-child(1)');
+    const statusFilter = document.querySelector('.statusfilter select:nth-child(2)');
+
+    function toggleSection(selectedCategory) {
+      const sections = document.querySelectorAll('.nccregs, .instructorregs, .clubregs');
+      sections.forEach(section => section.style.display = 'none'); // Hide all sections
+
+      if (selectedCategory === 'nccregs') {
+        document.querySelector('.nccregs').style.display = 'block';
+      } else if (selectedCategory === 'instructorregs') {
+        document.querySelector('.instructorregs').style.display = 'block';
+      } else if (selectedCategory === 'clubregs') {
+        document.querySelector('.clubregs').style.display = 'block';
+      } else if (selectedCategory === 'all') {
+        sections.forEach(section => section.style.display = 'block');
+      }
+
+      // Reset status filter when switching category
+      statusFilter.value = 'all';
+      filterStatus('all', selectedCategory);
     }
 
     function exportTransactionsTableToCSV(filename) {
@@ -395,6 +452,8 @@
       downloadLink.click();
       document.body.removeChild(downloadLink);
     }
+
+
   </script>
 </body>
 
