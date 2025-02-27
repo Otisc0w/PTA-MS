@@ -85,7 +85,7 @@
             </div>
           </div>
 
-          <p>{{event.description}}</p>
+          <p><strong>Event Description: </strong>{{event.description}}</p>
           <p><strong>Registration Deadline:</strong> {{formatDate event.backoutdl "MMMM D, YYYY"}}</p>
           <p><strong>Event Date:</strong> {{formatDate event.date "MMMM D, YYYY"}}</p>
           <p><strong>Time:</strong> {{formatTime event.starttime "h:mm A"}} - {{formatTime event.endtime "h:mm A"}}</p>
@@ -695,7 +695,7 @@
         <h1>Kyorugi Scoresheet</h1>
         This is only for the following judges to score: 
         {{#each event.judges}}
-          <strong style="color: #ff3030">{{this}},</strong>
+          <strong style="color: #ff3030">{{this}}</strong>
         {{/each}}
         {{!-- {{#if (none (map event.judges 'this') (concat user.firstname ' ' user.lastname))}}
           youre not allowed
