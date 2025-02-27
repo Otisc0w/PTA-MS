@@ -69,16 +69,17 @@
       <label class="end-date" for="search-user">Search User:</label>
       <input type="text" id="search-user" name="search-user" onkeyup="searchUser()">
 
-      {{!-- <select onchange="toggleSection(this.value)">
+      <select onchange="toggleSection(this.value)">
         <option value="all">All</option>
         <option value="nccregs">NCC Registrations</option>
         <option value="instructorregs">Instructor Registrations</option>
         <option value="clubregs">Club Registrations</option>
-      </select> --}}
+      </select>
     </div>
 
     <div id="payments" class="report-section" style="display:block">
       <h2>Payments/Transactions</h2>
+      <h3>Total Revenue from Registrations Fees:</h3><h2>{{totalMembers}}</h2>
       <button class="export-csv-btn" onclick="exportTransactionsTableToCSV('payments.csv')">Export to CSV</button>
       <p></p>
       <div class="report-table">
@@ -109,7 +110,6 @@
 
     <div id="membership" class="report-section" style="display:none">
       <h2>Membership Applications</h2>
-      <h3>Total Revenue from Registrations Fees:</h3><h2></h2>
       <button class="export-csv-btn" onclick="exportMembershipsTableToCSV('payments.csv')">Export to CSV</button>
       <p></p>
       <div class="report-table">
@@ -127,7 +127,7 @@
             <tr>
               <td>NCCAPP{{id}}</td>
               <td>{{firstname}} {{lastname}}</td>
-              <td>{{status}}</td>
+              <td>{{{formatStatus status}}}</td>
               <td>{{formatDate date "MM/DD/YYYY"}}</td>
             </tr>
             {{/each}}
@@ -135,7 +135,7 @@
             <tr>
               <td>INSAPP{{id}}</td>
               <td>{{firstname}} {{lastname}}</td>
-              <td>{{status}}</td>
+              <td>{{{formatStatus status}}}</td>
               <td>{{formatDate date "MM/DD/YYYY"}}</td>
             </tr>
             {{/each}}
@@ -143,7 +143,7 @@
             <tr>
               <td>CLUBAPP{{id}}</td>
               <td>{{firstname}} {{lastname}}</td>
-              <td>{{status}}</td>
+              <td>{{{formatStatus status}}}</td>
               <td>{{formatDate date "MM/DD/YYYY"}}</td>
             </tr>
             {{/each}}
