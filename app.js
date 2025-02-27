@@ -6929,7 +6929,6 @@ app.get("/analytics", async (req, res) => {
     const { data: transactions, error: transactionsError } = await supabase
       .from("transactions")
       .select("*");
-
     if (transactionsError) {
       throw transactionsError;
     }
@@ -6938,7 +6937,6 @@ app.get("/analytics", async (req, res) => {
     const { data: nccRegistrations, error: nccRegistrationsError } = await supabase
       .from("ncc_registrations")
       .select("*");
-
     if (nccRegistrationsError) {
       throw nccRegistrationsError;
     }
@@ -6947,7 +6945,6 @@ app.get("/analytics", async (req, res) => {
     const { data: instructorRegistrations, error: instructorRegistrationsError } = await supabase
       .from("instructor_registrations")
       .select("*");
-
     if (instructorRegistrationsError) {
       throw instructorRegistrationsError;
     }
@@ -6956,10 +6953,75 @@ app.get("/analytics", async (req, res) => {
     const { data: clubRegistrations, error: clubRegistrationsError } = await supabase
       .from("club_registrations")
       .select("*");
-
     if (clubRegistrationsError) {
       throw clubRegistrationsError;
     }
+
+    // Fetch the total number of rows in the 'club_registrations' table
+    const { count: clubRegistrationsCount, error: clubRegistrationsCountError } = await supabase
+      .from("club_registrations")
+      .select("id", { count: "exact" });
+
+    if (clubRegistrationsCountError) {
+      throw clubRegistrationsCountError;
+    }
+
+    // Fetch the total number of rows in the 'ncc_registrations' table
+    const { count: nccRegistrationsCount, error: nccRegistrationsCountError } = await supabase
+      .from("ncc_registrations")
+      .select("id", { count: "exact" });
+
+    if (nccRegistrationsCountError) {
+      throw nccRegistrationsCountError;
+    }
+
+    // Fetch the total number of rows in the 'instructor_registrations' table
+    const { count: instructorRegistrationsCount, error: instructorRegistrationsCountError } = await supabase
+      .from("instructor_registrations")
+      .select("id", { count: "exact" });
+
+    if (instructorRegistrationsCountError) {
+      throw instructorRegistrationsCountError;
+    }
+
+    console.log("Total number of club registrations:", clubRegistrationsCount);
+    console.log("Total number of NCC registrations:", nccRegistrationsCount);
+    console.log("Total number of instructor registrations:", instructorRegistrationsCount);
+
+    // Calculate the total number of registrations
+    const totalMembers =  nccRegistrationsCount + instructorRegistrationsCount;
+
+    console.log("Total number of registrations:", totalMembers);
+
+    // Fetch number of rows in 'clubs' where province is 'Pampanga'
+    const provinces = ["Pampanga", "Nueva Ecija", "Tarlac", "Bulacan", "Bataan", "Zambales", "Aurora"];
+    const provinceClubCounts = [];
+
+    for (const province of provinces) {
+      const { count, error } = await supabase
+      .from("clubs")
+      .select("id", { count: "exact" })
+      .eq("province", province);
+
+      if (error) {
+      throw error;
+      }
+
+      provinceClubCounts.push({ province, count });
+    }
+
+    // Fetch the total number of rows in the 'clubs' table
+    const { count: clubsCount, error: clubsCountError } = await supabase
+      .from("clubs")
+      .select("id", { count: "exact" });
+
+    if (clubsCountError) {
+      throw clubsCountError;
+    }
+
+    console.log("Total number of clubs:", clubsCount);
+
+    console.log("Number of clubs by province:", provinceClubCounts)
 
     // Render the analytics page with all fetched data
     res.render("analytics", {
@@ -6970,6 +7032,9 @@ app.get("/analytics", async (req, res) => {
       instructorRegistrations,
       clubRegistrations,
       user: req.session.user, // Render user session
+      provinceClubCounts,
+      clubsCount,
+      totalMembers
     });
   } catch (error) {
     console.error("Error fetching analytics data:", error.message);

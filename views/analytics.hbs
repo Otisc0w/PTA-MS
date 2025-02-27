@@ -165,12 +165,20 @@
       <h2>Other Insights</h2>
       <div class="report-table">
         <div class="chart-container">
-          <canvas id="membersChart"></canvas>
+            <canvas id="membersChart" width="200" height="200"></canvas>
         </div>
         <div class="insights-summary">
-          <p>Total Members: 150</p>
+          <p>Total Members: {{totalMembers}}</p>
           <p>Active Members: 120</p>
           <p>Inactive Members: 30</p>
+        </div>
+      </div>
+      <div class="report-table">
+        <div class="chart-container">
+            <canvas id="clubsChart" width="200" height="200"></canvas>
+        </div>
+        <div class="insights-summary">
+          <p>Total Clubs: {{clubsCount}}</p>
         </div>
       </div>
     </div>
@@ -196,6 +204,30 @@
                 position: 'bottom',
               }
             }
+          }
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        var ctx = document.getElementById('clubsChart').getContext('2d');
+        var clubsChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+        labels: ["Pampanga", "Nueva Ecija", "Tarlac", "Bulacan", "Bataan", "Zambales", "Aurora"],
+        datasets: [{
+            data: [{{provinceClubCounts.[0].count}},{{provinceClubCounts.[1].count}},{{provinceClubCounts.[2].count}},{{provinceClubCounts.[3].count}},{{provinceClubCounts.[4].count}}, {{provinceClubCounts.[5].count}}, {{provinceClubCounts.[6].count}},{{provinceClubCounts.[7].count}}], // Example data, replace with actual values
+          backgroundColor: ['#FFCE56', '#FF6384', '#36A2EB', '#FF9F40', '#4BC0C0', '#9966FF', '#C9CBCF'],
+          hoverBackgroundColor: ['#FFCE56', '#FF6384', '#36A2EB', '#FF9F40', '#4BC0C0', '#9966FF', '#C9CBCF']
+        }]
+          },
+          options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+          }
+        }
           }
         });
       });
