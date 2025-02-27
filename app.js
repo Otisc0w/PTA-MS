@@ -6993,6 +6993,30 @@ app.get("/analytics", async (req, res) => {
 
     console.log("Total number of registrations:", totalMembers);
 
+    // Fetch the total number of users with athleteverified as true
+    const { count: athleteVerifiedCount, error: athleteVerifiedCountError } = await supabase
+      .from("users")
+      .select("id", { count: "exact" })
+      .eq("athleteverified", true);
+
+    if (athleteVerifiedCountError) {
+      throw athleteVerifiedCountError;
+    }
+
+    // Fetch the total number of users with instructorverified as true
+    const { count: instructorVerifiedCount, error: instructorVerifiedCountError } = await supabase
+      .from("users")
+      .select("id", { count: "exact" })
+      .eq("instructorverified", true);
+
+    if (instructorVerifiedCountError) {
+      throw instructorVerifiedCountError;
+    }
+
+    console.log("Total number of users with instructorverified as true:", instructorVerifiedCount);
+
+    console.log("Total number of users with athleteverified as true:", athleteVerifiedCount);
+
     // Fetch number of rows in 'clubs' where province is 'Pampanga'
     const provinces = ["Pampanga", "Nueva Ecija", "Tarlac", "Bulacan", "Bataan", "Zambales", "Aurora"];
     const provinceClubCounts = [];
@@ -7034,7 +7058,9 @@ app.get("/analytics", async (req, res) => {
       user: req.session.user, // Render user session
       provinceClubCounts,
       clubsCount,
-      totalMembers
+      totalMembers,
+      athleteVerifiedCount,
+      instructorVerifiedCount,
     });
   } catch (error) {
     console.error("Error fetching analytics data:", error.message);
