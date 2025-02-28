@@ -2800,6 +2800,8 @@ app.post("/create-event", upload.single("eventpicture"), async (req, res) => {
     judges
   } = req.body; // Capture user input from the form
 
+  const judgesArray = Array.isArray(judges) ? judges : [judges];
+
   if (!req.session.user) {
     return res.status(401).send("Unauthorized: No user logged in");
   }
@@ -2844,7 +2846,7 @@ app.post("/create-event", upload.single("eventpicture"), async (req, res) => {
           starttime,
           endtime,
           location,
-          judges,
+          judges: `{${judgesArray.join(',')}}`,
           agedivision,
           weightclass,
           beltlevel,
@@ -2929,6 +2931,9 @@ app.post("/update-event", upload.single("eventpicture"), async (req, res) => {
       eventpicture = currentEvent.eventpicture;
     }
 
+    // Ensure judges is an array
+    const judgesArray = Array.isArray(judges) ? judges : [judges];
+
     // Update event details in Supabase database
     const { data, error } = await supabase
       .from("events") // Assuming your table is called 'events'
@@ -2949,7 +2954,7 @@ app.post("/update-event", upload.single("eventpicture"), async (req, res) => {
         beltlevel: beltlevel,
         gender: gender,
         weightclass: weightclass,
-        judges: judges,
+        judges: `{${judgesArray.join(',')}}`,
       })
       .eq("id", eventid); // Match the event ID
 
