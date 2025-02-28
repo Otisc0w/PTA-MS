@@ -75,6 +75,36 @@
         <option value="instructorregs">Instructor Registrations</option>
         <option value="clubregs">Club Registrations</option>
       </select>
+
+      <select onchange="filterStatus(this.value)">
+        <option value="all">All</option>
+        <option value="Expired">Expired</option>
+        <option value="approved">Approved</option>
+        <option value="rejected">Rejected</option>
+        <option value="under review">Under Review</option>
+        <option value="id shipped">ID Shipped</option>
+      </select>
+
+      <script>
+        function filterStatus(selectedStatus) {
+          const rows = document.querySelectorAll('#membership-body tr');
+          const selectedCategory = document.querySelector('.statusfilter select:nth-child(1)').value;
+
+          rows.forEach(row => {
+            const status = row.cells[2].innerText.toLowerCase();
+            const category = row.cells[0].innerText.toLowerCase();
+
+            const categoryMatch = selectedCategory === 'all' || category.startsWith(selectedCategory);
+            const statusMatch = selectedStatus === 'all' || status.includes(selectedStatus.toLowerCase());
+
+            if (categoryMatch && statusMatch) {
+              row.style.display = '';
+            } else {
+              row.style.display = 'none';
+            }
+          });
+        }
+      </script>
     </div>
 
     <div id="payments" class="report-section" style="display:block">
@@ -389,25 +419,42 @@
 
     const categoryFilter = document.querySelector('.statusfilter select:nth-child(1)');
     const statusFilter = document.querySelector('.statusfilter select:nth-child(2)');
-
+    
     function toggleSection(selectedCategory) {
-      const sections = document.querySelectorAll('.nccregs, .instructorregs, .clubregs');
-      sections.forEach(section => section.style.display = 'none'); // Hide all sections
+      const rows = document.querySelectorAll('#membership-body tr');
+      rows.forEach(row => row.style.display = 'none'); // Hide all rows
 
       if (selectedCategory === 'nccregs') {
-        document.querySelector('.nccregs').style.display = 'block';
+      rows.forEach(row => {
+        if (row.cells[0].innerText.startsWith('NCCAPP')) {
+        row.style.display = '';
+        }
+      });
       } else if (selectedCategory === 'instructorregs') {
-        document.querySelector('.instructorregs').style.display = 'block';
+      rows.forEach(row => {
+        if (row.cells[0].innerText.startsWith('INSAPP')) {
+        row.style.display = '';
+        }
+      });
       } else if (selectedCategory === 'clubregs') {
-        document.querySelector('.clubregs').style.display = 'block';
+      rows.forEach(row => {
+        if (row.cells[0].innerText.startsWith('CLUBAPP')) {
+        row.style.display = '';
+        }
+      });
       } else if (selectedCategory === 'all') {
-        sections.forEach(section => section.style.display = 'block');
+      rows.forEach(row => row.style.display = '');
       }
 
       // Reset status filter when switching category
       statusFilter.value = 'all';
       filterStatus('all', selectedCategory);
     }
+
+
+    statusFilter.addEventListener('change', function() {
+      filterStatus(this.value, categoryFilter.value);
+    });
 
     function exportTransactionsTableToCSV(filename) {
       var csv = [];

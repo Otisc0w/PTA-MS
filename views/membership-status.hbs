@@ -160,30 +160,27 @@
       document.getElementById("dropdown").classList.toggle("show");
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-      const categoryFilter = document.querySelector('.statusfilter select:nth-child(1)');
-      const statusFilter = document.querySelector('.statusfilter select:nth-child(2)');
-
-      function toggleSection(selectedCategory) {
+    function toggleSection(selectedCategory) {
       const sections = document.querySelectorAll('.nccregs, .instructorregs, .clubregs');
       sections.forEach(section => section.style.display = 'none'); // Hide all sections
 
-      if (selectedCategory === 'nccregs') {
+      if (selectedCategory === 'ncc') {
         document.querySelector('.nccregs').style.display = 'block';
-      } else if (selectedCategory === 'instructorregs') {
+      } else if (selectedCategory === 'instructor') {
         document.querySelector('.instructorregs').style.display = 'block';
-      } else if (selectedCategory === 'clubregs') {
+      } else if (selectedCategory === 'club') {
         document.querySelector('.clubregs').style.display = 'block';
       } else if (selectedCategory === 'all') {
         sections.forEach(section => section.style.display = 'block');
       }
 
       // Reset status filter when switching category
+      const statusFilter = document.querySelector('.statusfilter select:nth-child(2)');
       statusFilter.value = 'all';
       filterStatus('all', selectedCategory);
-      }
+    }
 
-      function filterStatus(selectedStatus, currentCategory) {
+    function filterStatus(selectedStatus, currentCategory) {
       const allPosts = document.querySelectorAll('.post-content');
 
       allPosts.forEach(post => {
@@ -192,20 +189,25 @@
 
         if ((selectedStatus === 'all' || statusText === selectedStatus) &&
         (currentCategory === 'all' || parentSection.classList.contains(currentCategory))) {
-        post.style.display = 'block';
+          parentSection.style.display = 'block'; // Ensure parent section is visible
+          post.style.display = 'block';
         } else {
-        post.style.display = 'none';
+          post.style.display = 'none';
         }
       });
-      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const categoryFilter = document.querySelector('.statusfilter select:nth-child(1)');
+      const statusFilter = document.querySelector('.statusfilter select:nth-child(2)');
 
       // Event Listeners for Filters
       categoryFilter.addEventListener('change', function () {
-      toggleSection(this.value);
+        toggleSection(this.value);
       });
 
       statusFilter.addEventListener('change', function () {
-      filterStatus(this.value, categoryFilter.value);
+        filterStatus(this.value, categoryFilter.value);
       });
 
       // Initialize with "All"
