@@ -53,19 +53,20 @@
     <div class="membership-rightside">
       <div class="statusfilter">
         Show:
-        <select onchange="toggleSection(this.value)">
+        <select id="registrationTypeFilter" onchange="filterRegistrations()">
           <option value="all">All</option>
-          <option value="ncc">NCC Registrations</option>
-          <option value="instructor">Instructor Registrations</option>
+          <option value="ncc">NCC ID's</option>
+          <option value="instructor">Instructor ID's</option>
           <option value="club">Club Registrations</option>
         </select>
-        <select onchange="filterStatus(this.value, document.querySelector('.statusfilter select:nth-child(1)').value)">
+
+        <select id="statusFilter" onchange="filterRegistrations()">
           <option value="all">All</option>
-          <option value="expired">Expired</option>
-          <option value="approved">Approved</option>
+          <option value="under review">Under Review</option>
+          <option value="en-route to regional office">En-route</option>
+          <option value="id shipped">ID Shipped</option>
           <option value="rejected">Rejected</option>
-          <option value="underreview">Under Review</option>
-          <option value="idshipped">ID Shipped</option>
+          <option value="suspended">Suspended</option>
         </select>
       </div>
       <div class="membership-statuses">
@@ -125,22 +126,22 @@
           {{#if club_registrations}}
           <h2>Club Registrations</h2>
           {{#reverseEach club_registrations}}
-          <div class='post-content'>
-            <div class="post-details">
-              <span class='small'>Applicant: <h2>{{firstname}} {{lastname}}</h2>{{formatCreatedAt created_at}}</span>
-              {{#if (eq status 3)}}
-              <span class='small'>Expires on {{formatDate expireson "MM/DD/YYYY"}}</span>
-              {{/if}}
-            </div>
+            <div class='post-content'>
+              <div class="post-details">
+                <span class='small'>Applicant: <h2>{{firstname}} {{lastname}}</h2>{{formatCreatedAt created_at}}</span>
+                {{#if (eq status 3)}}
+                <span class='small'>Expires on {{formatDate expireson "MM/DD/YYYY"}}</span>
+                {{/if}}
+              </div>
 
-            <div class="post-status">
-              Status: {{{formatStatus status}}}
-            </div>
+              <div class="post-status">
+                Status: {{{formatStatus status}}}
+              </div>
 
-            <div class="post-action">
-              <a href="/clubreg-review/{{id}}">Review</a>
-            </div>
-          </div><br>
+              <div class="post-action">
+                <a href="/clubreg-review/{{id}}">Review</a>
+              </div>
+            </div><br>
           {{/reverseEach}}
           {{else}}
           No pending club registrations
@@ -160,58 +161,30 @@
       document.getElementById("dropdown").classList.toggle("show");
     }
 
-    function toggleSection(selectedCategory) {
-      const sections = document.querySelectorAll('.nccregs, .instructorregs, .clubregs');
-      sections.forEach(section => section.style.display = 'none'); // Hide all sections
+    function filterRegistrations() {
+      const typeFilter = document.getElementById('registrationTypeFilter').value;
+      const statusFilter = document.getElementById('statusFilter').value;
 
-      if (selectedCategory === 'ncc') {
-        document.querySelector('.nccregs').style.display = 'block';
-      } else if (selectedCategory === 'instructor') {
-        document.querySelector('.instructorregs').style.display = 'block';
-      } else if (selectedCategory === 'club') {
-        document.querySelector('.clubregs').style.display = 'block';
-      } else if (selectedCategory === 'all') {
-        sections.forEach(section => section.style.display = 'block');
-      }
+      const nccDivs = document.querySelectorAll('.nccregs .post-content');
+      const instructorDivs = document.querySelectorAll('.instructorregs .post-content');
+      const clubDivs = document.querySelectorAll('.clubregs .post-content');
 
-      // Reset status filter when switching category
-      const statusFilter = document.querySelector('.statusfilter select:nth-child(2)');
-      statusFilter.value = 'all';
-      filterStatus('all', selectedCategory);
-    }
+      const allDivs = [...nccDivs, ...instructorDivs, ...clubDivs];
 
-    function filterStatus(selectedStatus, currentCategory) {
-      const allPosts = document.querySelectorAll('.post-content');
+      allDivs.forEach(div => {
+        const type = div.closest('.nccregs') ? 'ncc' : div.closest('.instructorregs') ? 'instructor' : 'club';
+        const status = div.querySelector('.post-status').textContent.toLowerCase();
 
-      allPosts.forEach(post => {
-        const statusText = post.querySelector('.post-status').innerText.split(': ')[1]?.toLowerCase().replace(/\s/g, '');
-        let parentSection = post.closest('.nccregs, .instructorregs, .clubregs');
+        const typeMatch = typeFilter === 'all' || type === typeFilter;
+        const statusMatch = statusFilter === 'all' || status.includes(statusFilter);
 
-        if ((selectedStatus === 'all' || statusText === selectedStatus) &&
-        (currentCategory === 'all' || parentSection.classList.contains(currentCategory))) {
-          parentSection.style.display = 'block'; // Ensure parent section is visible
-          post.style.display = 'block';
+        if (typeMatch && statusMatch) {
+          div.style.display = '';
         } else {
-          post.style.display = 'none';
+          div.style.display = 'none';
         }
       });
     }
-
-    document.addEventListener('DOMContentLoaded', function () {
-      const categoryFilter = document.querySelector('.statusfilter select:nth-child(1)');
-      const statusFilter = document.querySelector('.statusfilter select:nth-child(2)');
-
-      // Event Listeners for Filters
-      categoryFilter.addEventListener('change', function () {
-        toggleSection(this.value);
-      });
-
-      statusFilter.addEventListener('change', function () {
-        filterStatus(this.value, categoryFilter.value);
-      });
-
-      // Initialize with "All"
-      toggleSection('all');
-    });
+    
   </script>
 </body>
