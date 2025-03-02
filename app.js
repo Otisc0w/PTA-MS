@@ -2455,6 +2455,36 @@ app.post("/request-join-club", async (req, res) => {
       return res.status(500).send("Error requesting to join club");
     }
 
+    // Add a notification for the club owner about the join request
+    const { data: club, error: clubError } = await supabase
+      .from("clubs")
+      .select("registeredby")
+      .eq("id", clubid)
+      .single();
+
+    if (clubError) {
+      console.error("Error fetching club owner:", clubError.message);
+      return res.status(500).send("Error fetching club owner");
+    }
+
+    const clubOwnerId = club.registeredby;
+
+    const { error: notificationError } = await supabase
+      .from("notifications")
+      .insert([
+        {
+          userid: clubOwnerId,
+          type: "Club",
+          message: `New join request for your club.`,
+          desc: `${username} has requested to join your club. Please review the request.`,
+        },
+      ]);
+
+    if (notificationError) {
+      console.error("Error creating notification:", notificationError.message);
+      return res.status(500).send("Error creating notification");
+    }
+
     res.redirect(`/clubs-details/${clubid}`);
   } catch (error) {
     console.error("Server error:", error.message);
@@ -6345,6 +6375,18 @@ app.get("/athletes", async (req, res) => {
       };
     });
 
+    // Fetch clubs owned by the user
+    const { data: ownedClubs, error: ownedClubsError } = await supabase
+      .from("clubs")
+      .select("*")
+      .eq("registeredby", req.session.user.id);
+
+    if (ownedClubsError) {
+      return res.status(400).json({ error: ownedClubsError.message });
+    }
+
+    console.log("Fetched owned clubs:", ownedClubs); // Log the owned clubs data to the console
+
     // Log the data to verify it's being fetched correctly
     console.log("Fetched athletes data with clubs:", athletesWithClub);
     console.log("Fetched clubs for filtering:", clubs);
@@ -6353,6 +6395,7 @@ app.get("/athletes", async (req, res) => {
     res.render("athletes", {
       athletes: athletesWithClub,
       clubs,
+      ownedClubs,
       user: req.session.user
     });
 

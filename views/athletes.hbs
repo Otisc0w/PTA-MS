@@ -167,9 +167,13 @@
         <input type="hidden" name="athleteid" id="modal-userid" value="">
         <label for="club">Select Club:</label>
         <select id="clubid" name="clubid">
-          {{#each clubs}}
-          <option value="{{id}}">{{clubname}}</option>
-          {{/each}}
+          {{#if ownedClubs}}
+            {{#each ownedClubs}}
+            <option value="{{id}}">{{clubname}}</option>
+            {{/each}}
+          {{else}}
+          <option value="" disabled selected>You don't have any registered clubs</option>
+          {{/if}}
         </select>
         <button type="submit">Invite</button>
       </form>

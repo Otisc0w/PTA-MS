@@ -641,3 +641,16 @@ button.clear-input:hover {
     margin: 5px;
     transition: background-color 0.3s;
 }
+
+.helpbtn{
+    padding: 5px 10px;
+    border: none;
+    border-radius: 30px;
+    background-color: white;
+    color: black;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight:500;
+    margin: 5px;
+    transition: background-color 0.3s;
+}
