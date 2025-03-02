@@ -73,7 +73,7 @@
         <div class="nccregs">
           {{#if ncc_registrations}}
           <h2>NCC ID's</h2>
-          {{#reverseEach ncc_registrations}}
+          {{#each ncc_registrations}}
           <div class='post-content'>
             <div class="post-details">
               <span class='small'>Applicant: <h2>{{firstname}} {{lastname}}</h2>{{formatCreatedAt created_at}}</span>
@@ -90,7 +90,7 @@
               <a href="/membership-review/{{id}}">Review</a>
             </div>
           </div>
-          {{/reverseEach}}
+          {{/each}}
           {{else}}
           No pending NCC applications <br>
           {{/if}}
@@ -99,7 +99,7 @@
         <div class="instructorregs">
           {{#if instructor_registrations}}
           <h2>Instructor ID's</h2>
-          {{#reverseEach instructor_registrations}}
+          {{#each instructor_registrations}}
           <div class='post-content'>
             <div class="post-details">
               <span class='small'>Applicant: <h2>{{firstname}} {{lastname}}</h2>{{formatCreatedAt created_at}}</span>
@@ -116,7 +116,7 @@
               <a href="/instructor-review/{{id}}">Review</a>
             </div>
           </div><br>
-          {{/reverseEach}}
+          {{/each}}
           {{else}}
           No pending instructor applications <br>
           {{/if}}
@@ -125,7 +125,7 @@
         <div class="clubregs">
           {{#if club_registrations}}
           <h2>Club Registrations</h2>
-          {{#reverseEach club_registrations}}
+          {{#each club_registrations}}
             <div class='post-content'>
               <div class="post-details">
                 <span class='small'>Applicant: <h2>{{firstname}} {{lastname}}</h2>{{formatCreatedAt created_at}}</span>
@@ -142,7 +142,7 @@
                 <a href="/clubreg-review/{{id}}">Review</a>
               </div>
             </div><br>
-          {{/reverseEach}}
+          {{/each}}
           {{else}}
           No pending club registrations
           {{/if}}

@@ -502,7 +502,12 @@
           <div id="gradesheetmodal" class="modal" style="dispaly:none;">
             <div class="modal-content">
               <span class="close" onclick="closeGradeSheetModal()">&times;</span>
-              <h2>Grade Sheet</h2>
+              <h2>Promotion Test Grade Sheet</h2>
+              This is only for the following judges to score:
+              {{#each event.judges}}
+                <strong style="color: #ff3030">{{this}}</strong>
+              {{/each}}
+              <p></p>
               <form id="gradesheetform" action="/submit-grade-sheet" method="post">
                 <input type="hidden" name="id">
                 <input type="hidden" name="eventid" value="{{event.id}}">
@@ -621,6 +626,10 @@
       <div class="poomsae-score-sheet">
         <span class="close" onclick="closePoomsaeScoresheet()">&times;</span>
         <h2 class="title">Judge's Score Sheet</h2>
+        This is only for the following judges to score:
+        {{#each event.judges}}
+          <strong style="color: #ff3030">{{this}}</strong>
+        {{/each}}
         <h3 class="playername"></h3>
         <div class="score-table">
           <form action="/submit-poomsae-scores" method="post">

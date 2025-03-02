@@ -132,7 +132,7 @@
                   <td><strong>Birth Certificate:</strong></td>
                   <td class="information">
                     {{#if registration.birthcert}}
-                      <a href="{{registration.birthcert}}" target="_blank">View Payment Proof</a>
+                      <a href="{{registration.birthcert}}" target="_blank">View Birth Certificate</a>
                       <input type="text" name="birthcerttext" value="{{registration.birthcert}}" hidden>
                       {{#if user.ptaverified}}<button type="button" class="clear-input"
                         onclick="clearInput(this)">x</button>{{/if}}
@@ -149,7 +149,7 @@
                   <td class="information">
                     {{#if registration.paymentproof}}
                       <a href="{{registration.paymentproof}}" target="_blank">View Payment Proof</a>
-                      <input type="text" name="paymentprooftext" value="{{registration.paymentproof}}">
+                      {{!-- <input type="text" name="paymentprooftext" value="{{registration.paymentproof}}"> --}}
                       {{#if user.ptaverified}}<button type="button" class="clear-input"
                         onclick="clearInput(this)">x</button>{{/if}}
                     {{else}}
@@ -256,9 +256,9 @@
               <button type="button" class="helpbtn" title="Click to confirm rejections." onclick="openhelpdialogue()">?</button>
               
             {{else}}
-              <button type="submit" class="rejectbtn1">
+                <button type="submit" class="rejectbtn1" onclick="return confirm('Are you sure you want to submit the changes? You won't be able to change any field until it is reviewed.')">
                 Submit Changes
-              </button>
+                </button>
             {{/if}}
           </td>
         </tr>

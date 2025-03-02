@@ -143,6 +143,9 @@ hbs.registerHelper('isBefore', function (date1, date2, options) {
 hbs.registerHelper('map', function (array, options) {
   return array.map(item => options.fn(item)).join('');
 });
+hbs.registerHelper('formatMoney', function (amount) {
+  return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount);
+});
 
 
 app.use( session({
@@ -2988,6 +2991,34 @@ app.post("/update-event", upload.single("eventpicture"), async (req, res) => {
       })
       .eq("id", eventid); // Match the event ID
 
+      // Notify players of the event update
+      const { data: registeredPlayers, error: registeredPlayersError } = await supabase
+        .from("events_registrations")
+        .select("userid")
+        .eq("eventid", eventid)
+        .eq("registered", "true");
+
+      if (registeredPlayersError) {
+        console.error("Error fetching registered players:", registeredPlayersError.message);
+        return res.status(500).send("Error fetching registered players");
+      }
+
+      const notifications = registeredPlayers.map((player) => ({
+        userid: player.userid,
+        type: "Event",
+        message: `The event ${name} has been updated.`,
+        desc: `The event ${name} has been updated. Please check the event details for more information.`,
+      }));
+
+      const { error: notificationError } = await supabase
+        .from("notifications")
+        .insert(notifications);
+
+      if (notificationError) {
+        console.error("Error creating notifications:", notificationError.message);
+        return res.status(500).send("Error creating notifications");
+      }
+
     if (error) {
       console.error("Supabase error:", error);
       return res.status(500).json({ message: "Failed to update event", error });
@@ -2998,6 +3029,7 @@ app.post("/update-event", upload.single("eventpicture"), async (req, res) => {
     console.error("Server error:", error.message);
     res.status(500).json({ message: "Server error, unable to update event" });
   }
+  
 });
 
 app.post("/cancel-event/:id", async (req, res) => {
@@ -6780,32 +6812,38 @@ app.get("/membership-status", async function (req, res) {
     if (ptaverified) {
       // Fetch all rows if user is 'pta'
       ({ data: nccData, error: nccError } = await supabase
-        .from("ncc_registrations")
-        .select("*"));
+      .from("ncc_registrations")
+      .select("*")
+      .order("created_at", { ascending: false }));
 
       ({ data: clubData, error: clubError } = await supabase
-        .from("club_registrations")
-        .select("*"));
+      .from("club_registrations")
+      .select("*")
+      .order("created_at", { ascending: false }));
 
       ({ data: instData, error: clubError } = await supabase
-        .from("instructor_registrations")
-        .select("*"));
+      .from("instructor_registrations")
+      .select("*")
+      .order("created_at", { ascending: false }));
     } else {
       // Fetch only rows submitted by the current user
       ({ data: nccData, error: nccError } = await supabase
-        .from("ncc_registrations")
-        .select("*")
-        .eq("submittedby", userid));
+      .from("ncc_registrations")
+      .select("*")
+      .eq("submittedby", userid)
+      .order("created_at", { ascending: false }));
 
       ({ data: clubData, error: clubError } = await supabase
-        .from("club_registrations")
-        .select("*")
-        .eq("submittedby", userid));
+      .from("club_registrations")
+      .select("*")
+      .eq("submittedby", userid)
+      .order("created_at", { ascending: false }));
 
       ({ data: instData, error: clubError } = await supabase
-        .from("instructor_registrations")
-        .select("*")
-        .eq("submittedby", userid));
+      .from("instructor_registrations")
+      .select("*")
+      .eq("submittedby", userid)
+      .order("created_at", { ascending: false }));
     }
 
     if (nccError) {

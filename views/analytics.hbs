@@ -8,6 +8,7 @@
   <link rel="stylesheet" type="text/css" href="../stylesheets/navbar.css" />
 </head>
 
+{{#if user.ptaverified}}
 <body class="container">
   <div class="header">
     <div class="navbar">
@@ -69,14 +70,14 @@
       <label class="end-date" for="search-user">Search User:</label>
       <input type="text" id="search-user" name="search-user" onkeyup="searchUser()">
 
-      <select onchange="toggleSection(this.value)">
+      <select id="regtypefilter" onchange="toggleSection(this.value)">
         <option value="all">All</option>
         <option value="nccregs">NCC Registrations</option>
         <option value="instructorregs">Instructor Registrations</option>
         <option value="clubregs">Club Registrations</option>
       </select>
 
-      <select onchange="filterStatus(this.value)">
+      <select id="regstatusfilter" onchange="filterStatus(this.value)">
         <option value="all">All</option>
         <option value="Expired">Expired</option>
         <option value="approved">Approved</option>
@@ -112,7 +113,7 @@
       <div class="report-summary">
         <div class="total-revenue">
           <h3>Total Revenue from Registration Fees:</h3>
-          <h2>PHP {{membershiptotalrevenue}}</h2>
+          <h2>PHP {{formatMoney membershiptotalrevenue}}</h2>
         </div>
         <div class="total-revenue">
           <h3>Total Fee Payments:</h3>
@@ -216,20 +217,22 @@
       <h2>Other Insights</h2>
       <h3>Type of member breakdown:</h3>
       
-      <div class="report-table">
-        <div class="chart-container">
-          <canvas id="membersChart" width="200" height="200"></canvas>
+      <div class="chart-table">
+        <div class="chart-container" style="width: 500px; height: 500px;">
+          <canvas id="membersChart"></canvas>
         </div>
         <div class="insights-summary">
           <p>Total Members: {{totalMembers}}</p>
           <p>Athletes: {{athleteVerifiedCount}}</p>
           <p>Instructors: {{instructorVerifiedCount}}</p>
+
+          {{!-- athletes and instructors have extra 1 each cuz of admin yohan being instructorverified and athleteverified --}}
         </div>
       </div>
       <h3>Club location breakdown:</h3>
-      <div class="report-table">
-        <div class="chart-container">
-          <canvas id="clubsChart" width="200" height="200"></canvas>
+      <div class="chart-table">
+        <div class="chart-container" style="width: 500px; height: 500px;">
+          <canvas id="clubsChart"></canvas>
         </div>
         <div class="insights-summary">
           <p>Total Clubs: {{clubsCount}}</p>
@@ -332,11 +335,11 @@
       var i, reportSection, tablinks;
       reportSection = document.getElementsByClassName("report-section");
       for (i = 0; i < reportSection.length; i++) {
-        reportSection[i].style.display = "none";
+      reportSection[i].style.display = "none";
       }
       tablinks = document.getElementsByClassName("tablink");
       for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
       }
       document.getElementById(reportName).style.display = "block";
       evt.currentTarget.className += " active";
@@ -344,9 +347,20 @@
       // Show or hide date filter based on selected report
       var dateFilter = document.querySelector('.date-filter');
       if (reportName === 'insights' || reportName === 'events') {
-        dateFilter.style.display = 'none';
+      dateFilter.style.display = 'none';
       } else {
-        dateFilter.style.display = 'block';
+      dateFilter.style.display = 'block';
+      }
+
+      // Show or hide regtypefilter and regstatusfilter based on selected report
+      var regTypeFilter = document.getElementById('regtypefilter');
+      var regStatusFilter = document.getElementById('regstatusfilter');
+      if (reportName === 'membership') {
+      regTypeFilter.style.display = 'inline-block';
+      regStatusFilter.style.display = 'inline-block';
+      } else {
+      regTypeFilter.style.display = 'none';
+      regStatusFilter.style.display = 'none';
       }
     }
 
@@ -516,5 +530,9 @@
 
   </script>
 </body>
+{{else}}
+
+Not for your eyes
+{{/if}}
 
 </html>
