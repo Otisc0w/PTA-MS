@@ -215,8 +215,8 @@
 
     <div id="insights" class="report-section" style="display:none">
       <h2>Other Insights</h2>
-      <h3>Type of member breakdown:</h3>
-      
+
+      <h3>Active member type breakdown:</h3>
       <div class="chart-table">
         <div class="chart-container" style="width: 500px; height: 500px;">
           <canvas id="membersChart"></canvas>
@@ -229,6 +229,17 @@
           {{!-- athletes and instructors have extra 1 each cuz of admin yohan being instructorverified and athleteverified --}}
         </div>
       </div>
+
+      <h3>Membership application type breakdown:</h3>
+      <div class="chart-table">
+        <div class="chart-container" style="width: 500px; height: 500px;">
+          <canvas id="clubsChart"></canvas>
+        </div>
+        <div class="insights-summary">
+          <p>Total Clubs: {{clubsCount}}</p>
+        </div>
+      </div>
+
       <h3>Club location breakdown:</h3>
       <div class="chart-table">
         <div class="chart-container" style="width: 500px; height: 500px;">
