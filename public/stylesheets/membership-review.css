@@ -644,7 +644,7 @@ button.clear-input:hover {
 
 .helpbtn{
     padding: 5px 10px;
-    border: none;
+    border: 1px solid black;
     border-radius: 30px;
     background-color: white;
     color: black;
@@ -653,4 +653,11 @@ button.clear-input:hover {
     font-weight:500;
     margin: 5px;
     transition: background-color 0.3s;
+}
+
+/* Hover animation for buttons */
+
+
+.helpbtn:hover {
+    transform: scale(1.05);
 }
