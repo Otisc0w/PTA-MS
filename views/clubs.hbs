@@ -26,14 +26,12 @@
 
   <div class="home-container">
     <div class="filter-panel">
-
       <div class="filter-header">
         <h2>Filter Options</h2>
         <p>Customize your view by selecting relevant filters.</p>
       </div>
 
       <div class="filters-row">
-
         <div class="filter-group search-group">
           <label for="location-search" class="search-label">Search Location</label>
           <input type="text" id="location-search" placeholder="Search...">
@@ -43,55 +41,52 @@
     </div>
 
     <div class="club-name">
-      <div class="upcoming-events">
-        {{#if ownedclub}}
-        <div class="ownedclubcards">
-          <h3>Your Registered Clubs</h3><br>
-          {{#each ownedclub}}
-          <div class="ownedclubcard">
-            <img src="{{clubpic}}" alt="{{clubname}}" class="club-card-image">
-            <div class="club-card-content">
-              <h3>{{clubname}}</h3>
-              <a href="/clubs-details/{{id}}" class="club-card-link">Go to club</a>
-            </div>
-          </div>
-          {{/each}}
-        </div>
-        {{/if}}
-        {{#if userClub}}
-        <div class="ownedclubcards">
-          <h2 class="left-align-title">Your Joined Club</h2><br>
-          <div class="ownedclubcard">
-
-            <img src="{{userClub.clubpic}}" alt="{{userClub.clubname}}" class="club-card-image">
-            <div class="club-card-content">
-              <h3>{{userClub.clubname}}</h3>
-              <a href="/clubs-details/{{userClub.id}}" class="club-card-link">Go to club</a>
-            </div>
-          </div>
-          {{/if}}
-
-          
-          <div id="events" class="horizontal-container">
-              <h2 class="left-align-title">Other Clubs</h2><br>   
-            {{#each clubs}}
-            <div class="event" data-location="{{clubaddress}}">
-              <img src="{{clubpic}}" alt="{{clubname}}" class="club-image"> <!-- Display club picture -->
-              <h3>{{clubname}} - {{province}}</h3>
-              <div class="description">
-                <p><i class="fas fa-info-circle"></i> {{description}}</p>
-              </div>
-              <div class="contact-info">
-                <p><i class="fas fa-user"></i> {{registeree}}</p> <!-- Coach/Registeree -->
-                <p><i class="fas fa-map-marker-alt"></i> {{clubaddress}}</p> <!-- Club address -->
-                <p><i class="fas fa-envelope"></i> {{email}}</p> <!-- Contact email -->
-                <p><i class="fas fa-phone"></i> {{phonenum}}</p> <!-- Contact phone number -->
-              </div>
-              <a href="/clubs-details/{{id}}">Read more</a>
-            </div>
-            {{/each}}
+      {{#if ownedclub}}
+      <div class="ownedclubcards">
+        <h3>Your Registered Clubs</h3><br>
+        {{#each ownedclub}}
+        <div class="ownedclubcard">
+          <img src="{{clubpic}}" alt="{{clubname}}" class="club-card-image">
+          <div class="club-card-content">
+            <h3>{{clubname}}</h3>
+            <a href="/clubs-details/{{id}}" class="club-card-link">Go to club</a>
           </div>
         </div>
+        {{/each}}
+      </div>
+      {{/if}}
+
+      {{#if userClub}}
+      <div class="ownedclubcards">
+        <h2 class="left-align-title">Your Joined Club</h2><br>
+        <div class="ownedclubcard">
+          <img src="{{userClub.clubpic}}" alt="{{userClub.clubname}}" class="club-card-image">
+          <div class="club-card-content">
+            <h3>{{userClub.clubname}}</h3>
+            <a href="/clubs-details/{{userClub.id}}" class="club-card-link">Go to club</a>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      <h2 class="left-align-title">Other Clubs</h2><br>
+      <div id="events" class="horizontal-container">
+        {{#each clubs}}
+        <div class="event" data-location="{{clubaddress}}">
+          <img src="{{clubpic}}" alt="{{clubname}}" class="club-image">
+          <h3>{{clubname}} - {{province}}</h3>
+          <div class="description">
+            <p><i class="fas fa-info-circle"></i> {{description}}</p>
+          </div>
+          <div class="contact-info">
+            <p><i class="fas fa-user"></i> {{registeree}}</p>
+            <p><i class="fas fa-map-marker-alt"></i> {{clubaddress}}</p>
+            <p><i class="fas fa-envelope"></i> {{email}}</p>
+            <p><i class="fas fa-phone"></i> {{phonenum}}</p>
+          </div>
+          <a href="/clubs-details/{{id}}">Read more</a>
+        </div>
+        {{/each}}
       </div>
     </div>
   </div>
