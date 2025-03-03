@@ -7247,6 +7247,17 @@ app.get("/analytics", async (req, res) => {
       provinceClubCounts.push({ province, count });
     }
 
+    // Fetch all clubs data
+    const { data: clubs, error: clubsError } = await supabase
+      .from("clubs")
+      .select("*");
+
+    if (clubsError) {
+      throw clubsError;
+    }
+
+    console.log("Fetched clubs data:", clubs);
+
     // Fetch the total number of rows in the 'clubs' table
     const { count: clubsCount, error: clubsCountError } = await supabase
       .from("clubs")
@@ -7270,6 +7281,7 @@ app.get("/analytics", async (req, res) => {
       clubRegistrations,
       user: req.session.user, // Render user session
       provinceClubCounts,
+      clubs,
       clubsCount,
       nccRegistrationsCount,
       instructorRegistrationsCount,
@@ -7279,7 +7291,7 @@ app.get("/analytics", async (req, res) => {
       athleteVerifiedCount,
       instructorVerifiedCount,
       transactionsCount,
-      membershiptotalrevenue
+      membershiptotalrevenue,
     });
   } catch (error) {
     console.error("Error fetching analytics data:", error.message);

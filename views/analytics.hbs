@@ -33,6 +33,7 @@
       <button class="tablink" onclick="openReport(event, 'payments')">Payments/Transactions</button>
       <button class="tablink" onclick="openReport(event, 'membership')">Membership Applications</button>
       <button class="tablink" onclick="openReport(event, 'events')">Upcoming Events</button>
+      <button class="tablink" onclick="openReport(event, 'clubs')">Clubs</button>
       <button class="tablink" onclick="openReport(event, 'insights')">Other Insights</button>
     </div>
 
@@ -184,12 +185,73 @@
             <p>Date: {{formatDate date "YYYY-MM-DD"}}</p>
             <p>Location: {{location}}</p>
             <p>Description: {{description}}</p>
+            <p>Registration Cap: {{registrationcap}}</p>
             <p>Status: {{status}}</p>
           </div>
           {{/each}}
         </div>
         {{/each}}
       </div>
+    </div>
+
+    <div id="clubs" class="report-section" style="display:none">
+      <h2>Clubs</h2>
+      <button class="export-csv-btn" onclick="exportClubsTableToCSV('clubs.csv')">Export to CSV</button>
+      <p></p>
+      <div class="report-table">
+        <table class="clubs-table">
+          <thead>
+            <tr>
+              <th>Club ID</th>
+              <th>Club Name</th>
+              <th>Province</th>
+              <th>Registeree</th>
+              <th>Address</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="clubs-body">
+            {{#each clubs}}
+            <tr>
+              <td>CLUB{{id}}</td>
+              <td>{{clubname}}</td>
+              <td>{{province}}</td>
+              <td>{{registeree}}</td>
+              <td>{{clubaddress}}</td>
+              <td><button onclick="location.href='/clubs-details/{{id}}'" class="gotoclubbtn">Go to Club</button></td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+      <script>
+        function exportClubsTableToCSV(filename) {
+          var csv = [];
+          var rows = document.querySelectorAll(".clubs-table tr");
+
+          for (var i = 0; i < rows.length; i++) {
+            if (rows[i].style.display !== 'none') { // Only include visible rows
+              var row = [], cols = rows[i].querySelectorAll("td, th");
+
+              for (var j = 0; j < cols.length; j++) {
+                row.push(cols[j].innerText);
+              }
+
+              csv.push(row.join(","));
+            }
+          }
+
+          // Download CSV
+          var csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+          var downloadLink = document.createElement("a");
+          downloadLink.download = filename;
+          downloadLink.href = window.URL.createObjectURL(csvFile);
+          downloadLink.style.display = "none";
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+          document.body.removeChild(downloadLink);
+        }
+      </script>
     </div>
 
     <div id="insights" class="report-section" style="display:none">
@@ -332,32 +394,32 @@
       var i, reportSection, tablinks;
       reportSection = document.getElementsByClassName("report-section");
       for (i = 0; i < reportSection.length; i++) {
-        reportSection[i].style.display = "none";
+      reportSection[i].style.display = "none";
       }
       tablinks = document.getElementsByClassName("tablink");
       for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
       }
       document.getElementById(reportName).style.display = "block";
       evt.currentTarget.className += " active";
 
       // Show or hide date filter based on selected report
       var dateFilter = document.querySelector('.date-filter');
-      if (reportName === 'insights' || reportName === 'events') {
-        dateFilter.style.display = 'none';
+      if (reportName === 'insights' || reportName === 'events' || reportName === 'clubs') {
+      dateFilter.style.display = 'none';
       } else {
-        dateFilter.style.display = 'block';
+      dateFilter.style.display = 'block';
       }
 
       // Show or hide regtypefilter and regstatusfilter based on selected report
       var regTypeFilter = document.getElementById('regtypefilter');
       var regStatusFilter = document.getElementById('regstatusfilter');
       if (reportName === 'membership') {
-        regTypeFilter.style.display = 'inline-block';
-        regStatusFilter.style.display = 'inline-block';
+      regTypeFilter.style.display = 'inline-block';
+      regStatusFilter.style.display = 'inline-block';
       } else {
-        regTypeFilter.style.display = 'none';
-        regStatusFilter.style.display = 'none';
+      regTypeFilter.style.display = 'none';
+      regStatusFilter.style.display = 'none';
       }
     }
 

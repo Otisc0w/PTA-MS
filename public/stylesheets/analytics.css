@@ -105,7 +105,7 @@ th {
   align-self: center;
 }
 
-.date-filter button, .export-csv-btn{
+.date-filter button, .export-csv-btn, .gotoclubbtn{
   background-color: #2c2c2c;
   color: #e0e0e0;
   border: 1px solid #444;
@@ -116,7 +116,7 @@ th {
   margin-left: 10px;
 }
 
-.date-filter button:hover, .export-csv-btn {
+.date-filter button:hover, .export-csv-btn, .gotoclubbtn {
   background-color: #444;
 }
 .events-list {
