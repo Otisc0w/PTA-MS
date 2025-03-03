@@ -1,49 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PTA | Home</title>
   <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
   <link rel="stylesheet" type="text/css" href="../stylesheets/home.css" />
   <link rel="stylesheet" type="text/css" href="../stylesheets/navbar.css" />
+  <link rel="stylesheet" type="text/css" href="../stylesheets/footer.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 
 <body class="container">
   <div class="header">
-    <div class="navbar">
-      <a href="home"><img src="/images/logo.png" class="logo" alt="Logo"></a>
-      <ul class="tabs">
-        <li class="home"><a href="home">Home</a></li>
-        <li class="athletes"><a href="athletes">Athletes</a></li>
-        <li class="clubs"><a href="clubs">Clubs</a></li>
-        <li class="events"><a href="events">Events</a></li>
-        <li class="membership"><a href="membership">Membership</a></li>
-        <li class="forum"><a href="forum">Forum</a></li>
-        <li class="notifications">
-          <a href="notifications">Notifications
-            {{#if notifications}}
-            <span class="badge">{{notifications.length}}</span>
-            {{/if}}
-          </a>
-        </li>
-        <li class="analytics"><a href="analytics">Reports</a></li>
-        <li class="profile-pic">
-          {{#if user.profilepic}}
-          <a href="#" onclick="toggleDropdown()"><img src="{{user.profilepic}}" alt="Profile Picture"
-              class="profile-picture"></a>
-          {{else}}
-          <a href="#" onclick="toggleDropdown()" class="profile-picture"><img src="/images/none.jpg"
-              alt="Profile Picture" class="profile-picture"></a>
-          {{/if}}
-          <div id="dropdown" class="dropdown-content">
-            <a href="profile">Profile</a>
-            <a href="settings">Settings</a>
-           
-            <a href="/">Logout</a>
-          </div>
-        </li>
-      </ul>
-    </div>
+    {{> navbar}}
   </div>
 
   <div class="home-container">
@@ -76,7 +47,7 @@
           <!-- First Screen: Welcome Message -->
           <div class="onboarding-screen" id="welcome-screen">
             <h1>Welcome to Taekwondo World!</h1>
-            <p class="user-text">You’re now part of our incredible and dynamic community. Let's get started!</p>
+            <p class="user-text">You're now part of our incredible and dynamic community. Let's get started!</p>
             <button class="next-btn" onclick="nextScreen('user-type-screen')">Next</button>
           </div>
 
@@ -129,7 +100,7 @@
           <h3>{{name}}</h3>
           <p>{{description}}</p>
           <p>{{datetime}}</p><br>
-          <a href="/events-details/{{id}}">Go to Event</a>
+          <a href="/events-details/{{id}}" class="event-link">Go to Event <i class="fas fa-arrow-right"></i></a>
         </div>
         {{/each}}
       </div>
@@ -141,7 +112,7 @@
           <img src="{{clubpic}}" alt="{{userclub.clubname}} Logo" class="club-logo">
           <h3>{{userclub.clubname}}</h3>
           <p>{{userclub.clubdescription}}</p>
-          <a href="/clubs-details/{{userclub.id}}">View Club</a>
+          <a href="/clubs-details/{{userclub.id}}" class="club-link">View Club <i class="fas fa-arrow-right"></i></a>
         </div><br>
       {{/if}}
 
@@ -152,7 +123,7 @@
           <img src="{{clubpic}}" alt="{{this.clubname}} Logo" class="club-logo">
           <h3>{{this.clubname}}</h3>
           <p>{{this.clubdescription}}</p>
-          <a href="/clubs-details/{{this.id}}">View Club</a>
+          <a href="/clubs-details/{{this.id}}" class="club-link">View Club <i class="fas fa-arrow-right"></i></a>
         </div>
         {{/each}}
       {{/if}}
@@ -166,52 +137,21 @@
             <img src="{{eventpicture}}" alt="Event {{id}}">
             <h3>{{name}} - {{datetime}}</h3>
             <p>{{description}}</p>
-            <a href="events-details/{{this.id}}">Read More</a>
+            <a href="events-details/{{this.id}}" class="event-link">Read More <i class="fas fa-arrow-right"></i></a>
           </div>
           {{/each}}
         </div>
       </div>
-  
-
-  <footer>
-    <div class="footer-content">
-      <div class="pta-logo">
-        <img src="/images/logo.png" alt="PTA Logo">
-      </div>
-      <div class="contact-info">
-        <p>Philippine Taekwondo Central Headquarters</p>
-        <p>Rizal Memorial Coliseum, Manila, Philippines</p>
-        <p>0977 384 5879</p>
-        <p>pthtkd@gmail.com</p>
-      </div>
-      <div class="social-media">
-        <p>Follow us</p>
-        <div class="icons">
-          <a href="https://www.facebook.com"><img src="/images/homepage/fb.png" alt="Facebook"></a>
-          <a href="https://www.instagram.com"><img src="/images/homepage/ig.png" alt="Instagram"></a>
-          <a href="https://www.twitch.com"><img src="/images/homepage/twitch.webp" alt="Twitch"></a>
-        </div>
-      </div>
     </div>
-  </footer>
-</div>
-  <script>
-    function toggleDropdown() {
-      document.getElementById("dropdown").classList.toggle("show");
-    }
+  </div>
 
-    window.onclick = function (event) {
-      if (!event.target.matches('.profile-pic img')) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        for (var i = 0; i < dropdowns.length; i++) {
-          var openDropdown = dropdowns[i];
-          if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
-          }
-        }
-      }
-    }
-    // Function to navigate between screens
+  {{> footer}}
+
+  <!-- Scripts -->
+  <script src="/scripts/navbar.js"></script>
+  <script src="/scripts/footer.js"></script>
+  <script>
+    // Onboarding functionality
     function nextScreen(screenId) {
       document.querySelectorAll('.onboarding-screen').forEach(screen => {
         screen.style.display = 'none';
@@ -219,16 +159,13 @@
       document.getElementById(screenId).style.display = 'block';
     }
 
-    // Function to select user type and show relevant options
     function selectUserType(userType) {
       nextScreen(userType + '-options');
     }
 
-    // Function to reset onboarding to the first screen
     function resetOnboarding() {
-      nextScreen('welcome-screen'); // Show the welcome message screen
+      nextScreen('welcome-screen');
     }
-
   </script>
 </body>
 

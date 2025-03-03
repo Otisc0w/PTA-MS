@@ -8,33 +8,14 @@
   <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
   <link rel="stylesheet" type="text/css" href="../stylesheets/membership-review.css">
   <link rel="stylesheet" type="text/css" href="../stylesheets/navbar.css">
+  <link rel="stylesheet" type="text/css" href="../stylesheets/footer.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body class="container">
-  <header class="membership-header">
-    <nav class="membership-navbar">
-      <a href="home">
-        <img src="/images/logo.png" class="membership-logo" alt="PTA Logo">
-      </a>
-      <div class="profile-menu">
-        {{#if user.profilepic}}
-        <a href="#" onclick="toggleDropdown()" class="memprofile-pic">
-          <img src="{{user.profilepic}}" alt="Profile Picture" class="profile-picture">
-        </a>
-        {{else}}
-        <a href="#" onclick="toggleDropdown()" class="memprofile-pic">
-          <p>:(</p>
-        </a>
-        {{/if}}
-        <div id="dropdown" class="dropdown-content">
-          <a href="profile">Profile</a>
-          <a href="settings">Settings</a>
-
-          <a href="/">Logout</a>
-        </div>
-      </div>
-    </nav>
-  </header>
+  <div class="header">
+    {{> navbar}}
+  </div>
 
   <main class="membership-container">
     <section class="review-header">
@@ -359,6 +340,10 @@
     </form>
   </main>
 
+  {{> footer}}
+
+  <script src="/scripts/navbar.js"></script>
+  <script src="/scripts/footer.js"></script>
   <script>
     const confirmscreen = document.getElementById("confirmscreen");
     const confirmrejectscreen = document.getElementById("confirmrejectscreen");

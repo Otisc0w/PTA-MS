@@ -369,7 +369,7 @@ body {
 /* Dropdown Content */
 .dropdown-content {
     display: none;
-    position: relative;
+    position: absolute;
     background-color: #333;
     width: 100%;
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
@@ -415,11 +415,6 @@ body {
     background-color: #218838;
 }
 
-/* Show Dropdown on Hover */
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
 /* Search Group */
 .search-group {
     display: flex;
@@ -451,8 +446,10 @@ body {
     border-radius: 5px;
     transition: background-color 0.3s, box-shadow 0.3s;
     margin-left: auto;
-    position: absolute;
-    right: 0;
+    position: relative;
+    right: auto;
+    align-self: flex-end;
+    margin-top: 25px;
 }
 
 .apply-btn:hover {
@@ -463,13 +460,11 @@ body {
 /* Filter Panel */
 .filter-panel {
     display: flex;
-    align-items: center;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    padding: 10px;
+    flex-direction: column;
+    padding: 20px;
     background-color: #333;
     border-radius: 10px;
-    gap: 0;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
 }
 
 /* General Label Style */
@@ -505,18 +500,24 @@ body {
 /* Filters Row */
 .filters-row {
     display: flex;
-    align-items: center;
-    justify-content: left;
-    gap: 280px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
     width: 100%;
     position: relative;
+    margin-top: 15px;
 }
 
 /* Filter Group */
 .filter-group {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    min-width: 200px;
+    flex: 1;
+}
+
+.filter-group.search-group {
+    min-width: 250px;
 }
 
 .details-box p {
@@ -532,4 +533,9 @@ body {
     border: none;
     background: none;
     box-shadow: none;
+}
+
+/* Show class for dropdowns */
+.show {
+    display: block !important;
 }

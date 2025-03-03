@@ -2,45 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Athlete Details</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PTA | Athlete Profile</title>
   <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
   <link rel="stylesheet" href="/stylesheets/navbar.css">
   <link rel="stylesheet" href="/stylesheets/athletes-profile.css">
+  <link rel="stylesheet" href="/stylesheets/footer.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
   <div class="header">
-    <div class="navbar">
-      <a href="/home"><img src="/images/logo.png" class="logo" alt="Logo"></a>
-      <ul class="tabs">
-        <li class="home"><a href="/home">Home</a></li>
-        <li class="athletes"><a href="/athletes">Athletes</a></li>
-        <li class="clubs"><a href="/clubs">Clubs</a></li>
-        <li class="events"><a href="/events">Events</a></li>
-        <li class="membership"><a href="/membership">Membership</a></li>
-        <li class="forum"><a href="/forum">Forum</a></li>
-        <li class="notifications">
-        <a href="/notifications">Notifications
-          {{#if notifications}}
-          <span class="badge">{{notifications.length}}</span>
-          {{/if}}
-        </a>
-      </li>
-        <li class="analytics"><a href="analytics">Reports</a></li>
-        <li class="profile-pic">
-          {{#if user.profilepic}}
-            <a href="#" onclick="toggleDropdown()"><img src="{{user.profilepic}}" alt="Profile Picture" class="profile-picture"></a>
-          {{else}}
-            <a href="#" onclick="toggleDropdown()" class="profile-picture"><img src="/images/none.jpg" alt="Profile Picture" class="profile-picture"></a>
-          {{/if}}
-          <div id="dropdown" class="dropdown-content">
-            <a href="/profile">Profile</a>
-            <a href="/settings">Settings</a>
-            
-            <a href="/">Logout</a>
-          </div>
-        </li>
-      </ul>
-    </div>
+    {{> navbar}}
   </div>
   <main>
     <div class="athlete-header">
@@ -101,6 +73,12 @@
       </div>
     </div>
   </main>
+
+  {{> footer}}
+
+  <!-- Scripts -->
+  <script src="/scripts/navbar.js"></script>
+  <script src="/scripts/footer.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       if (document.querySelectorAll('.notification').length > 0) {
@@ -116,7 +94,7 @@
     }
 
     window.onclick = function (event) {
-      if (!event.target.matches('.profile-pic img')) {
+      if (!event.target.matches('.profile-pic img') && !event.target.matches('.profile-picture')) {
         var dropdowns = document.getElementsByClassName("dropdown-content");
         for (var i = 0; i < dropdowns.length; i++) {
           var openDropdown = dropdowns[i];

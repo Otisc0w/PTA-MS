@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -5,26 +6,13 @@
   <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
   <link rel="stylesheet" type="text/css" href="../stylesheets/clubreg-review.css" />
   <link rel="stylesheet" type="text/css" href="../stylesheets/navbar.css" />
+  <link rel="stylesheet" type="text/css" href="../stylesheets/footer.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 
 <body style="margin:0;" class="container">
-  <div class="membership-header">
-    <div class="membership-navbar">
-      <img src="/images/logo.png" class="membership-logo" href="home"></img>
-      {{#if user.profilepic}}
-      <a href="#" onclick="toggleDropdown()" class="memprofile-pic"><img src="{{user.profilepic}}" alt="Profile Picture"
-          class="profile-picture"></a>
-      {{else}}
-      <a href="#" onclick="toggleDropdown()" class="memprofile-pic">
-        <p>:(</p>
-      </a>
-      {{/if}}
-      <div id="dropdown" class="dropdown-content">
-        <a href="profile">Profile</a>
-        <a href="settings">Settings</a>
-        <a href="/">Logout</a>
-      </div>
-    </div>
+  <div class="header">
+    {{> navbar}}
   </div>
   <div class="membership-container">
     <div class="review-header">
@@ -310,6 +298,11 @@
     </script>
   </div>
   </div>
+
+  {{> footer}}
+
+  <script src="/scripts/navbar.js"></script>
+  <script src="/scripts/footer.js"></script>
 </body>
 
 </html>

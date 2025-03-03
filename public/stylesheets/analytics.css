@@ -1,12 +1,19 @@
 html, body {
   height: 100%;
   margin: 0;
+  padding: 0;
+  font-family: 'SF Pro Display', sans-serif;
+  background-color: #2e2e2e;
+  color: #ffffff;
 }
 
 .container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .content {
@@ -40,10 +47,10 @@ html, body {
 
 .reports-container {
   padding: 20px;
-  background-color: #1f1f1f;
-  margin: 100px 20px 20px 20px;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  background-color: #2e2e2e;
+  margin-top: 60px;
+  margin-bottom: 20px;
+  overflow: auto;
 }
 
 .report-section {
@@ -189,55 +196,41 @@ th {
   height: 30px;
 }
 
-
-/* Footer */
-
+/* Remove duplicate footer styles */
 #membership .footer-content {
-  background-color: #333;
-  color: #fff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-  height: 100px;
-  margin-top: auto; 
+    display: none;
 }
 
 #membership .footer-content .pta-logo img {
-  height: 100%; 
+    display: none;
 }
 
 #membership .footer-content .contact-info {
-  flex: 1;
-  text-align: center;
-  padding: 0 20px;
+    display: none;
 }
 
 #membership .footer-content .contact-info p {
-  margin: 5px 0;
+    display: none;
 }
 
 #membership .footer-content .social-media {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+    display: none;
 }
 
 #membership .footer-content .social-media p {
-  margin-bottom: 5px;
+    display: none;
 }
 
 #membership .footer-content .social-media .icons {
-  display: flex;
-  align-items: center;
+    display: none;
 }
 
 #membership .footer-content .social-media a {
-  margin-left: 10px;
+    display: none;
 }
 
 #membership .footer-content .social-media img {
-  height: 30px;
+    display: none;
 }
 
 .report-table{

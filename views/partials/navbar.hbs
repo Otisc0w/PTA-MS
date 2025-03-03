@@ -1,0 +1,40 @@
+<div class="navbar">
+  <a href="/home"><img src="/images/logo.png" class="logo" alt="PTA Logo"></a>
+  
+  <!-- Mobile menu button -->
+  <button class="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false">
+    <i class="fas fa-bars"></i>
+  </button>
+  
+  <ul class="tabs">
+    <li class="home"><a href="/home"><i class="fas fa-home"></i> Home</a></li>
+    <li class="athletes"><a href="/athletes"><i class="fas fa-user-ninja"></i> Athletes</a></li>
+    <li class="clubs"><a href="/clubs"><i class="fas fa-users"></i> Clubs</a></li>
+    <li class="events"><a href="/events"><i class="fas fa-calendar-alt"></i> Events</a></li>
+    <li class="membership"><a href="/membership"><i class="fas fa-id-card"></i> Membership</a></li>
+    <li class="forum"><a href="/forum"><i class="fas fa-comments"></i> Forum</a></li>
+    <li class="notifications">
+      <a href="/notifications">
+        <i class="fas fa-bell"></i> Notifications
+        {{#if notifications}}
+        <span class="badge" aria-label="{{notifications.length}} unread notifications">{{notifications.length}}</span>
+        {{/if}}
+      </a>
+    </li>
+    <li class="analytics"><a href="/analytics"><i class="fas fa-chart-bar"></i> Reports</a></li>
+    <li class="profile-pic">
+      {{#if user.profilepic}}
+      <a href="#" aria-label="Profile menu" onclick="toggleDropdown()"><img src="{{user.profilepic}}" alt="Profile Picture"
+          class="profile-picture"></a>
+      {{else}}
+      <a href="#" aria-label="Profile menu" onclick="toggleDropdown()" class="profile-picture"><img src="/images/none.jpg"
+          alt="Profile Picture" class="profile-picture"></a>
+      {{/if}}
+      <div id="dropdown" class="dropdown-content">
+        <a href="/profile"><i class="fas fa-user"></i> Profile</a>
+        <a href="/settings"><i class="fas fa-cog"></i> Settings</a>
+        <a href="/"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </div>
+    </li>
+  </ul>
+</div> 
