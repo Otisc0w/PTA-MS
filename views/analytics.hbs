@@ -273,30 +273,7 @@
           }
         });
       });
-
-      document.addEventListener("DOMContentLoaded", function () {
-        var ctx = document.getElementById('applicationschart').getContext('2d');
-        var applicationsChart = new Chart(ctx, {
-          type: 'doughnut',
-          data: {
-            labels: ['Athlete Applications', 'Instructor Applications', 'Club Applications'],
-            datasets: [{
-              data: [{{nccRegistrationsCount}}, {{instructorRegistrationsCount}}, {{clubRegistrationsCount}}],
-              backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
-              hoverBackgroundColor: ['#36A2EB', '#FF6384', '#FFCE56']
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                position: 'bottom',
-              }
-            }
-          }
-        });
-      });
+        
     </script>
 
   </div>
