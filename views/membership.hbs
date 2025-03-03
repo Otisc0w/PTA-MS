@@ -1,49 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PTA | Membership</title>
   <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
   <link rel="stylesheet" type="text/css" href="../stylesheets/membership.css" />
   <link rel="stylesheet" type="text/css" href="../stylesheets/navbar.css" />
+  <link rel="stylesheet" type="text/css" href="../stylesheets/footer.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 
 <body class="container">
   <div class="header">
-    <div class="navbar">
-      <a href="home"><img src="/images/logo.png" class="logo" alt="Logo"></a>
-      <ul class="tabs">
-        <li class="home"><a href="/home">Home</a></li>
-        <li class="athletes"><a href="/athletes">Athletes</a></li>
-        <li class="clubs"><a href="/clubs">Clubs</a></li>
-        <li class="events"><a href="/events">Events</a></li>
-        <li class="membership"><a href="/membership">Membership</a></li>
-        <li class="forum"><a href="/forum">Forum</a></li>
-        <li class="notifications">
-          <a href="/notifications">Notifications
-            {{#if notifications}}
-            <span class="badge">{{notifications.length}}</span>
-            {{/if}}
-          </a>
-        </li>
-        <li class="analytics"><a href="/analytics">Reports</a></li>
-        <li class="profile-pic">
-          {{#if user.profilepic}}
-          <a href="#" onclick="toggleDropdown()"><img src="{{user.profilepic}}" alt="Profile Picture"
-              class="profile-picture"></a>
-          {{else}}
-          <a href="#" onclick="toggleDropdown()" class="profile-picture"><img src="/images/none.jpg"
-              alt="Profile Picture" class="profile-picture"></a>
-          {{/if}}
-          <div id="dropdown" class="dropdown-content">
-            <a href="profile">Profile</a>
-            <a href="settings">Settings</a>
-           
-            <a href="/">Logout</a>
-          </div>
-        </li>
-      </ul>
-    </div>
+    {{> navbar}}
   </div>
 
   <div class="content-container">
@@ -57,42 +28,20 @@
     <div class="rightside">
       <div class="registration">
         <ul>
-          <li class="available"><a href="membership-status">Registration Status &rarr;</a></li>
-          {{#if user.club}}
-          <li class="available"><a href="membership-ncc">Apply for NCC ID &rarr;</a></li>
-          {{else}}
-          <li class="grayedout"><a>Apply for NCC ID &rarr;</a></li>
-          {{/if}}
-          <li class="available"><a href="membership-instructor">Apply for Instructor's License &rarr;</a></li>
-          {{#if user.instructorverified}}
-          <li class="available"><a href="membership-club">Register Club &rarr;</a></li>
-          {{else}}
-          <li class="grayedout"><a>Register Club</a></li>
-          {{/if}}
+          <li class="available"><a href="membership-status"><i class="fas fa-tasks"></i> Registration Status <i class="fas fa-arrow-right"></i></a></li>
+          <li><a href="membership-ncc"><i class="fas fa-id-card"></i> Apply for National Correspondence Card (NCC) <i class="fas fa-arrow-right"></i></a></li>
+          <li><a href="membership-instructor"><i class="fas fa-chalkboard-teacher"></i> Apply for Instructor ID <i class="fas fa-arrow-right"></i></a></li>
+          <li><a href="membership-club"><i class="fas fa-users"></i> Register a Club <i class="fas fa-arrow-right"></i></a></li>
         </ul>
       </div>
     </div>
   </div>
-  <div class="footer">
-    <p>&copy; 2024 Philippine Taekwondo Association. All rights reserved.</p>
-  </div>
-  <script>
-    function toggleDropdown() {
-      document.getElementById("dropdown").classList.toggle("show");
-    }
+  
+  {{> footer}}
 
-    window.onclick = function (event) {
-      if (!event.target.matches('.profile-pic img')) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        for (var i = 0; i < dropdowns.length; i++) {
-          var openDropdown = dropdowns[i];
-          if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
-          }
-        }
-      }
-    }
-  </script>
+  <!-- Scripts -->
+  <script src="/scripts/navbar.js"></script>
+  <script src="/scripts/footer.js"></script>
 </body>
 
 </html>

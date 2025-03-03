@@ -19,6 +19,9 @@ const supabaseKey = process.env.SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 exports.supabase = supabase;
 
+// Register handlebars partials directory
+hbs.registerPartials(path.join(__dirname, 'views/partials'));
+
 hbs.registerHelper('json', function (context) {
   return JSON.stringify(context, null, 2);
 });
@@ -31,6 +34,9 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
 }));
+
+// Serve static files
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(asyncfuncs.fetchNotifications);
 app.use(asyncfuncs.fetchUserData);

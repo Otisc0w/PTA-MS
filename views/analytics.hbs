@@ -1,58 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-  <title>PTA | Report</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PTA | Reports</title>
   <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
   <link rel="stylesheet" type="text/css" href="../stylesheets/analytics.css" />
   <link rel="stylesheet" type="text/css" href="../stylesheets/navbar.css" />
+  <link rel="stylesheet" type="text/css" href="../stylesheets/footer.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 
 {{#if user.ptaverified}}
-
 <body class="container">
   <div class="header">
-    <div class="navbar">
-      <a href="home"><img src="/images/logo.png" class="logo" alt="Logo"></a>
-      <ul class="tabs">
-        <li class="home"><a href="home">Home</a></li>
-        <li class="athletes"><a href="athletes">Athletes</a></li>
-        <li class="clubs"><a href="clubs">Clubs</a></li>
-        <li class="events"><a href="events">Events</a></li>
-        <li class="membership"><a href="membership">Membership</a></li>
-        <li class="forum"><a href="forum">Forum</a></li>
-        <li class="notifications">
-          <a href="notifications">Notifications
-            {{#if notifications}}
-            <span class="badge">{{notifications.length}}</span>
-            {{/if}}
-          </a>
-        </li>
-        <li class="analytics"><a href="analytics">Reports</a></li>
-        <li class="profile-pic">
-          {{#if user.profilepic}}
-          <a href="#" onclick="toggleDropdown()"><img src="{{user.profilepic}}" alt="Profile Picture"
-              class="profile-picture"></a>
-          {{else}}
-          <a href="#" onclick="toggleDropdown()" class="profile-picture"><img src="/images/none.jpg"
-              alt="Profile Picture" class="profile-picture"></a>
-          {{/if}}
-          <div id="dropdown" class="dropdown-content">
-            <a href="profile">Profile</a>
-            <a href="settings">Settings</a>
-
-            <a href="/">Logout</a>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="analytics-title">
-    <div class="analytics-subtitle">
-      <h1>PTA Reports</h1>
-      <p>Gain Insights into the Overall Performance, Financial Health, and Membership Trends of the Philippine Taekwondo Association.</p>
-    </div>
+    {{> navbar}}
   </div>
 
   <div class="reports-container">
@@ -74,7 +37,7 @@
       <button onclick="filterByDate()">Apply</button>
 
       <button onclick="cancelFilter()">Remove Filter</button>
-
+      
       <label class="end-date" for="search-user">Search User:</label>
       <input type="text" id="search-user" name="search-user" onkeyup="searchUser()">
 
@@ -128,7 +91,7 @@
           <h2>{{transactionsCount}}</h2>
         </div>
       </div>
-
+      
       <button class="export-csv-btn" onclick="exportTransactionsTableToCSV('payments.csv')">Export to CSV</button>
       <p></p>
       <div class="report-table">
@@ -234,8 +197,7 @@
           <p>Registered Athletes: {{athleteVerifiedCount}}</p>
           <p>Registered Instructors: {{instructorVerifiedCount}}</p>
 
-          {{!-- athletes and instructors have extra 1 each cuz of admin yohan being instructorverified and
-          athleteverified --}}
+          {{!-- athletes and instructors have extra 1 each cuz of admin yohan being instructorverified and athleteverified --}}
         </div>
       </div>
 
@@ -293,14 +255,14 @@
         var clubsChart = new Chart(ctx, {
           type: 'doughnut',
           data: {
-            labels: ["Pampanga", "Nueva Ecija", "Tarlac", "Bulacan", "Bataan", "Zambales", "Aurora"],
-            datasets: [{
-              data: [{{ provinceClubCounts.[0].count }}, {{ provinceClubCounts.[1].count }},{{ provinceClubCounts.[2].count }}, {{ provinceClubCounts.[3].count }}, {{ provinceClubCounts.[4].count }}, {{ provinceClubCounts.[5].count }}, {{ provinceClubCounts.[6].count }}, {{ provinceClubCounts.[7].count }}], // Example data, replace with actual values
-        backgroundColor: ['#FFCE56', '#FF6384', '#36A2EB', '#FF9F40', '#4BC0C0', '#9966FF', '#C9CBCF'],
-        hoverBackgroundColor: ['#FFCE56', '#FF6384', '#36A2EB', '#FF9F40', '#4BC0C0', '#9966FF', '#C9CBCF']
+        labels: ["Pampanga", "Nueva Ecija", "Tarlac", "Bulacan", "Bataan", "Zambales", "Aurora"],
+        datasets: [{
+            data: [{{provinceClubCounts.[0].count}},{{provinceClubCounts.[1].count}},{{provinceClubCounts.[2].count}},{{provinceClubCounts.[3].count}},{{provinceClubCounts.[4].count}}, {{provinceClubCounts.[5].count}}, {{provinceClubCounts.[6].count}},{{provinceClubCounts.[7].count}}], // Example data, replace with actual values
+          backgroundColor: ['#FFCE56', '#FF6384', '#36A2EB', '#FF9F40', '#4BC0C0', '#9966FF', '#C9CBCF'],
+          hoverBackgroundColor: ['#FFCE56', '#FF6384', '#36A2EB', '#FF9F40', '#4BC0C0', '#9966FF', '#C9CBCF']
         }]
           },
-        options: {
+          options: {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
@@ -308,58 +270,14 @@
             position: 'bottom',
           }
         }
-      }
-        });
-      });
-
-      document.addEventListener("DOMContentLoaded", function () {
-        var ctx = document.getElementById('applicationschart').getContext('2d');
-        var applicationsChart = new Chart(ctx, {
-          type: 'doughnut',
-          data: {
-            labels: ['Athlete Applications', 'Instructor Applications', 'Club Applications'],
-            datasets: [{
-              data: [{{ nccRegistrationsCount }}, {{ instructorRegistrationsCount }}, {{ clubRegistrationsCount }}],
-        backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
-        hoverBackgroundColor: ['#36A2EB', '#FF6384', '#FFCE56']
-            }]
-          },
-        options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: 'bottom',
           }
-        }
-      }
         });
       });
+        
     </script>
 
   </div>
 
-  <footer>
-    <div class="footer-content">
-      <div class="pta-logo">
-        <img src="/images/logo.png" alt="PTA Logo">
-      </div>
-      <div class="contact-info">
-        <p>Philippine Taekwondo Central Headquarters</p>
-        <p>Rizal Memorial Coliseum, Manila, Philippines</p>
-        <p>0977 384 5879</p>
-        <p>pthtkd@gmail.com</p>
-      </div>
-      <div class="social-media">
-        <p>Follow us</p>
-        <div class="icons">
-          <a href="https://www.facebook.com"><img src="/images/homepage/fb.png" alt="Facebook"></a>
-          <a href="https://www.instagram.com"><img src="/images/homepage/ig.png" alt="Instagram"></a>
-          <a href="https://www.twitch.com"><img src="/images/homepage/twitch.webp" alt="Twitch"></a>
-        </div>
-      </div>
-    </div>
-  </footer>
   </div>
   <script>
     function toggleDropdown() {
@@ -382,11 +300,11 @@
       var i, reportSection, tablinks;
       reportSection = document.getElementsByClassName("report-section");
       for (i = 0; i < reportSection.length; i++) {
-        reportSection[i].style.display = "none";
+      reportSection[i].style.display = "none";
       }
       tablinks = document.getElementsByClassName("tablink");
       for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
       }
       document.getElementById(reportName).style.display = "block";
       evt.currentTarget.className += " active";
@@ -394,20 +312,20 @@
       // Show or hide date filter based on selected report
       var dateFilter = document.querySelector('.date-filter');
       if (reportName === 'insights' || reportName === 'events') {
-        dateFilter.style.display = 'none';
+      dateFilter.style.display = 'none';
       } else {
-        dateFilter.style.display = 'block';
+      dateFilter.style.display = 'block';
       }
 
       // Show or hide regtypefilter and regstatusfilter based on selected report
       var regTypeFilter = document.getElementById('regtypefilter');
       var regStatusFilter = document.getElementById('regstatusfilter');
       if (reportName === 'membership') {
-        regTypeFilter.style.display = 'inline-block';
-        regStatusFilter.style.display = 'inline-block';
+      regTypeFilter.style.display = 'inline-block';
+      regStatusFilter.style.display = 'inline-block';
       } else {
-        regTypeFilter.style.display = 'none';
-        regStatusFilter.style.display = 'none';
+      regTypeFilter.style.display = 'none';
+      regStatusFilter.style.display = 'none';
       }
     }
 
@@ -483,31 +401,31 @@
 
     const categoryFilter = document.querySelector('.statusfilter select:nth-child(1)');
     const statusFilter = document.querySelector('.statusfilter select:nth-child(2)');
-
+    
     function toggleSection(selectedCategory) {
       const rows = document.querySelectorAll('#membership-body tr');
       rows.forEach(row => row.style.display = 'none'); // Hide all rows
 
       if (selectedCategory === 'nccregs') {
-        rows.forEach(row => {
-          if (row.cells[0].innerText.startsWith('NCCAPP')) {
-            row.style.display = '';
-          }
-        });
+      rows.forEach(row => {
+        if (row.cells[0].innerText.startsWith('NCCAPP')) {
+        row.style.display = '';
+        }
+      });
       } else if (selectedCategory === 'instructorregs') {
-        rows.forEach(row => {
-          if (row.cells[0].innerText.startsWith('INSAPP')) {
-            row.style.display = '';
-          }
-        });
+      rows.forEach(row => {
+        if (row.cells[0].innerText.startsWith('INSAPP')) {
+        row.style.display = '';
+        }
+      });
       } else if (selectedCategory === 'clubregs') {
-        rows.forEach(row => {
-          if (row.cells[0].innerText.startsWith('CLUBAPP')) {
-            row.style.display = '';
-          }
-        });
+      rows.forEach(row => {
+        if (row.cells[0].innerText.startsWith('CLUBAPP')) {
+        row.style.display = '';
+        }
+      });
       } else if (selectedCategory === 'all') {
-        rows.forEach(row => row.style.display = '');
+      rows.forEach(row => row.style.display = '');
       }
 
       // Reset status filter when switching category
@@ -516,7 +434,7 @@
     }
 
 
-    statusFilter.addEventListener('change', function () {
+    statusFilter.addEventListener('change', function() {
       filterStatus(this.value, categoryFilter.value);
     });
 
@@ -525,15 +443,15 @@
       var rows = document.querySelectorAll(".transactions-table tr");
 
       for (var i = 0; i < rows.length; i++) {
-        if (rows[i].style.display !== 'none') { // Only include visible rows
-          var row = [], cols = rows[i].querySelectorAll("td, th");
+      if (rows[i].style.display !== 'none') { // Only include visible rows
+      var row = [], cols = rows[i].querySelectorAll("td, th");
 
-          for (var j = 0; j < cols.length; j++) {
-            row.push(cols[j].innerText);
-          }
+      for (var j = 0; j < cols.length; j++) {
+      row.push(cols[j].innerText);
+      }
 
-          csv.push(row.join(","));
-        }
+      csv.push(row.join(","));
+      }
       }
 
       // Download CSV
@@ -552,15 +470,15 @@
       var rows = document.querySelectorAll("#membership-body tr");
 
       for (var i = 0; i < rows.length; i++) {
-        if (rows[i].style.display !== 'none') { // Only include visible rows
-          var row = [], cols = rows[i].querySelectorAll("td, th");
+      if (rows[i].style.display !== 'none') { // Only include visible rows
+      var row = [], cols = rows[i].querySelectorAll("td, th");
 
-          for (var j = 0; j < cols.length; j++) {
-            row.push(cols[j].innerText);
-          }
+      for (var j = 0; j < cols.length; j++) {
+      row.push(cols[j].innerText);
+      }
 
-          csv.push(row.join(","));
-        }
+      csv.push(row.join(","));
+      }
       }
 
       // Download CSV
@@ -578,8 +496,13 @@
   </script>
 </body>
 {{else}}
-
-Not for your eyes
+<html>
+<body>
+  <p>You are not authorized to view this page.</p>
+</body>
+</html>
 {{/if}}
 
-</html>
+<script src="/scripts/navbar.js"></script>
+<script src="/scripts/footer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

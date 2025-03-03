@@ -1,46 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PTA | Profile</title>
   <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
   <link rel="stylesheet" type="text/css" href="../stylesheets/profile.css" />
   <link rel="stylesheet" type="text/css" href="../stylesheets/navbar.css" />
 	<link rel="stylesheet" type="text/css" href="../stylesheets/faqs.css" />
+  <link rel="stylesheet" type="text/css" href="../stylesheets/footer.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body class="container">
   <div class="header">
-    <div class="navbar">
-      <a href="home"><img src="/images/logo.png" class="logo" alt="Logo"></a>
-      <ul class="tabs">
-        <li class="home"><a href="/home">Home</a></li>
-        <li class="athletes"><a href="/athletes">Athletes</a></li>
-        <li class="clubs"><a href="/clubs">Clubs</a></li>
-        <li class="events"><a href="/events">Events</a></li>
-        <li class="membership"><a href="/membership">Membership</a></li>
-        <li class="forum"><a href="/forum">Forum</a></li>
-         <li class="notifications">
-          <a href="/notifications">Notifications
-            {{#if notifications}}
-            <span class="badge">{{notifications.length}}</span>
-            {{/if}}
-          </a>
-        </li>
-        <li class="analytics"><a href="/analytics">Reports</a></li>
-        <li class="profile-pic">
-          {{#if user.profilepic}}
-            <a href="#" onclick="toggleDropdown()"><img src="{{user.profilepic}}" alt="Profile Picture" class="profile-picture"></a>
-          {{else}}
-            <a href="#" onclick="toggleDropdown()" class="profile-picture"><img src="/images/none.jpg" alt="Profile Picture" class="profile-picture"></a>
-          {{/if}}
-          <div id="dropdown" class="dropdown-content">
-            <a href="profile?tab=viewProfile">Profile</a>
-            <a href="settings">Settings</a>
-            
-            <a href="/">Logout</a>
-          </div>
-        </li>
-      </ul>
-    </div>
+    {{> navbar}}
   </div>
 
   <div class="profile-container">
@@ -350,25 +323,15 @@
             <p>Yes, but it requires coordination between your current club and the new club. Inform your current instructor and complete any necessary transfer forms.</p>
           </div> 
         </div>
-
-        
-
-      {{!-- <div class="chatbot-window" id="chatbotWindow" style="hidden">
-        <div class="chatbot-header">
-            <h2>Chatbot</h2>
-            <span class="close-chatbot" onclick="toggleChatbot()">x</span>
-        </div>
-        <div class="chatbot-body">
-            <p>Hi! How can I help you today?</p>
-        </div>
-        <div class="chatbot-footer">
-            <input type="text" placeholder="Type your message here..." disabled>
-            <button disabled>Send</button>
-        </div>
-      </div> --}}
-
+      </div>
     </div>
   </div>
+
+  {{> footer}}
+
+  <!-- Scripts -->
+  <script src="/scripts/navbar.js"></script>
+  <script src="/scripts/footer.js"></script>
   <script>
     function toggleDropdown() {
       document.getElementById("dropdown").classList.toggle("show");
@@ -502,9 +465,8 @@
             toggle.textContent = "x";
         }
     }
-
-  
   </script>
+  
   <script src="https://cdn.botpress.cloud/webchat/v1/inject.js"></script>
   <script src="https://mediafiles.botpress.cloud/28a4809e-d421-4549-b02c-8dd82392211b/webchat/config.js" defer></script>
 </body>
