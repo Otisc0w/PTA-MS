@@ -1960,7 +1960,7 @@ app.post("/update-instructorstatus", async (req, res) => {
           {
             name: applicantuser.firstname + " " + applicantuser.lastname,
             userid: registration.submittedby,
-            type: "instructor",
+            type: "Instructor",
             amount: 500, // Adjust the amount as needed
           },
         ]);
@@ -7141,10 +7141,41 @@ app.get("/analytics", async (req, res) => {
     if (transactionsCountError) {
       throw transactionsCountError;
     }
-
     const membershiptotalrevenue = transactionsCount * 500; // Assuming each transaction is worth 500
-
     console.log("Total number of transactions:", transactionsCount);
+
+    // Fetch transactions with type 'NCC'
+    const { count: nccTransactionsCount, error: nccTransactionsCountError } = await supabase
+      .from("transactions")
+      .select("id", { count: "exact" })
+      .eq("type", "NCC");
+
+    if (nccTransactionsCountError) {
+      throw nccTransactionsCountError;
+    }
+    console.log("Fetched NCC transactions count:", nccTransactionsCount);
+
+    // Fetch transactions with type 'Instructor'
+    const { count: instructorTransactionsCount, error: instructorTransactionsCountError } = await supabase
+      .from("transactions")
+      .select("id", { count: "exact" })
+      .eq("type", "Instructor");
+
+    if (instructorTransactionsCountError) {
+      throw instructorTransactionsCountError;
+    }
+    console.log("Fetched Instructor transactions count:", instructorTransactionsCount);
+
+    // Fetch transactions with type 'Club'
+    const { count: clubTransactionsCount, error: clubTransactionsCountError } = await supabase
+      .from("transactions")
+      .select("id", { count: "exact" })
+      .eq("type", "Club");
+
+    if (clubTransactionsCountError) {
+      throw clubTransactionsCountError;
+    }
+    console.log("Fetched Club transactions count:", clubTransactionsCount);
 
     // Fetch NCC registrations data
     const { data: nccRegistrations, error: nccRegistrationsError } = await supabase
@@ -7276,6 +7307,7 @@ app.get("/analytics", async (req, res) => {
       transactions,
       events,
       eventsByMonth,
+      eventsCount,
       nccRegistrations,
       instructorRegistrations,
       clubRegistrations,
@@ -7291,6 +7323,9 @@ app.get("/analytics", async (req, res) => {
       athleteVerifiedCount,
       instructorVerifiedCount,
       transactionsCount,
+      nccTransactionsCount,
+      instructorTransactionsCount,
+      clubTransactionsCount,
       membershiptotalrevenue,
     });
   } catch (error) {

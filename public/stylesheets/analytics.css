@@ -105,7 +105,7 @@ th {
   align-self: center;
 }
 
-.date-filter button, .export-csv-btn, .gotoclubbtn{
+.date-filter button, .export-csv-btn, .gotoclubbtn, .gotoeventbtn{
   background-color: #2c2c2c;
   color: #e0e0e0;
   border: 1px solid #444;
@@ -116,9 +116,15 @@ th {
   margin-left: 10px;
 }
 
-.date-filter button:hover, .export-csv-btn, .gotoclubbtn {
+.date-filter button:hover, .export-csv-btn, .gotoclubbtn:hover, .gotoeventbtn:hover {
   background-color: #444;
 }
+
+.gotoeventbtn{
+  margin-top:10px;
+  float:right;
+}
+
 .events-list {
   display: flex;
   flex-wrap: wrap;
@@ -315,4 +321,20 @@ th {
   margin-top: 80px;
     height: 800px;
     padding: 10px;
+}
+
+.totaleventcount-box {
+  background-color: #3a3a3a;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 200px;
+  height: 100px;
+}
+
+.totaleventcount-box h3{
+  font-size: 24px;
+  color: yellow;
 }

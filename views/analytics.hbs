@@ -32,7 +32,7 @@
     <div class="report-tabs">
       <button class="tablink" onclick="openReport(event, 'payments')">Payments/Transactions</button>
       <button class="tablink" onclick="openReport(event, 'membership')">Membership Applications</button>
-      <button class="tablink" onclick="openReport(event, 'events')">Upcoming Events</button>
+      <button class="tablink" onclick="openReport(event, 'events')">Events</button>
       <button class="tablink" onclick="openReport(event, 'clubs')">Clubs</button>
       <button class="tablink" onclick="openReport(event, 'insights')">Other Insights</button>
     </div>
@@ -99,6 +99,11 @@
           <h3>Total Fee Payments:</h3>
           <h2>{{transactionsCount}}</h2>
         </div>
+        <div class="total-revenue">
+          <p>NCC: <strong>{{nccTransactionsCount}}</strong></p>
+          <p>Instructor: <strong>{{instructorTransactionsCount}}</strong></p>
+          <p>Club: <strong>{{clubTransactionsCount}}</strong></p>
+        </div>
       </div>
 
       <button class="export-csv-btn" onclick="exportTransactionsTableToCSV('payments.csv')">Export to CSV</button>
@@ -107,21 +112,98 @@
         <table class="transactions-table">
           <thead>
             <tr>
-              <th>Transaction ID</th>
-              <th>User</th>
-              <th>Amount</th>
-              <th>Type</th>
-              <th>Date</th>
+              <th style="position: sticky; top: 0; z-index: 1;">Transaction ID</th>
+              <th style="position: sticky; top: 0; z-index: 1;">User</th>
+              <th style="position: sticky; top: 0; z-index: 1;">Amount</th>
+              <th style="position: sticky; top: 0; z-index: 1;">Type</th>
+              <th style="position: sticky; top: 0; z-index: 1; cursor: pointer;" onclick="toggleSort('date')">Date</th>
+              <script>
+                let sortOrder = 'asc';
+
+                function toggleSort(column) {
+                  const rows = Array.from(document.querySelectorAll('#transactions-body tr'));
+                  const headers = document.querySelectorAll('.transactions-table th');
+                  const dateHeader = Array.from(headers).find(header => header.innerText.toLowerCase().includes('date'));
+                  let columnIndex = -1;
+
+                  headers.forEach((header, index) => {
+                  if (header.innerText.toLowerCase().includes(column.toLowerCase())) {
+                    columnIndex = index;
+                  }
+                  });
+
+                  if (columnIndex === -1) return;
+
+                  rows.sort((a, b) => {
+                  const cellA = a.cells[columnIndex].innerText;
+                  const cellB = b.cells[columnIndex].innerText;
+
+                  if (sortOrder === 'asc') {
+                    return cellA.localeCompare(cellB);
+                  } else {
+                    return cellB.localeCompare(cellA);
+                  }
+                  });
+
+                  sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+                  if (dateHeader) {
+                  dateHeader.innerText = `Date ${sortOrder === 'asc' ? '↑' : '↓'}`;
+                  }
+
+                  const tbody = document.querySelector('#transactions-body');
+                  tbody.innerHTML = '';
+                  rows.forEach(row => tbody.appendChild(row));
+                }
+              </script>
+              
             </tr>
           </thead>
           <tbody id="transactions-body">
             {{#each transactions}}
             <tr>
-              <td>TXN{{id}}</td>
-              <td>{{name}}</td>
-              <td>{{amount}}</td>
-              <td>{{type}}</td>
-              <td>{{formatDate created_at "MM/DD/YYYY"}}</td>
+              <td style="position: sticky; top: 0; z-index: 1;">TXN{{id}}</td>
+              <td style="position: sticky; top: 0; z-index: 1;">{{name}}</td>
+              <td style="position: sticky; top: 0; z-index: 1;">{{amount}}</td>
+              <td style="position: sticky; top: 0; z-index: 1;">{{type}}</td>
+              <td style="position: sticky; top: 0; z-index: 1;" onclick="toggleApplicationDateSort('date')">{{formatDate created_at "MM/DD/YYYY"}}</td>
+              <script>
+                let applicationSortOrder = 'asc';
+
+                function toggleApplicationDateSort() {
+                  const rows = Array.from(document.querySelectorAll('#membership-body tr'));
+                  const headers = document.querySelectorAll('.membership-table th');
+                  const dateHeader = Array.from(headers).find(header => header.innerText.toLowerCase().includes('date'));
+                  let columnIndex = -1;
+
+                  headers.forEach((header, index) => {
+                    if (header.innerText.toLowerCase().includes('date')) {
+                      columnIndex = index;
+                    }
+                  });
+
+                  if (columnIndex === -1) return;
+
+                  rows.sort((a, b) => {
+                    const cellA = a.cells[columnIndex].innerText;
+                    const cellB = b.cells[columnIndex].innerText;
+
+                    if (applicationSortOrder === 'asc') {
+                      return new Date(cellA) - new Date(cellB);
+                    } else {
+                      return new Date(cellB) - new Date(cellA);
+                    }
+                  });
+
+                  applicationSortOrder = applicationSortOrder === 'asc' ? 'desc' : 'asc';
+                  if (dateHeader) {
+                    dateHeader.innerText = `Date ${applicationSortOrder === 'asc' ? '↑' : '↓'}`;
+                  }
+
+                  const tbody = document.querySelector('#membership-body');
+                  tbody.innerHTML = '';
+                  rows.forEach(row => tbody.appendChild(row));
+                }
+              </script>
             </tr>
             {{/each}}
           </tbody>
@@ -175,6 +257,9 @@
 
     <div id="events" class="report-section" style="display:none">
       <h2>Upcoming Events</h2>
+      <div class="totaleventcount-box">
+        Total Event Count:<h3> {{eventsCount}}</h3>
+      </div>
       <div class="report-table">
         {{#each eventsByMonth}}
         <h3>{{@key}}</h3>
@@ -187,6 +272,7 @@
             <p>Description: {{description}}</p>
             <p>Registration Cap: {{registrationcap}}</p>
             <p>Status: {{status}}</p>
+            <button onclick="location.href='/events-details/{{id}}'" class="gotoeventbtn">Go to Event</button>
           </div>
           {{/each}}
         </div>
@@ -207,6 +293,7 @@
               <th>Province</th>
               <th>Registeree</th>
               <th>Address</th>
+              <th>Date Joined</th>
               <th></th>
             </tr>
           </thead>
@@ -217,7 +304,8 @@
               <td>{{clubname}}</td>
               <td>{{province}}</td>
               <td>{{registeree}}</td>
-              <td>{{clubaddress}}</td>
+                <td>{{clubaddress}}</td>
+                <td>{{formatDate created_at "MM/DD/YYYY"}}</td>
               <td><button onclick="location.href='/clubs-details/{{id}}'" class="gotoclubbtn">Go to Club</button></td>
             </tr>
             {{/each}}
