@@ -9,6 +9,7 @@
 </head>
 
 {{#if user.ptaverified}}
+
 <body class="container">
   <div class="header">
     <div class="navbar">
@@ -47,6 +48,13 @@
     </div>
   </div>
 
+  <div class="analytics-title">
+    <div class="analytics-subtitle">
+      <h1>PTA Reports</h1>
+      <p>Gain Insights into the Overall Performance, Financial Health, and Membership Trends of the Philippine Taekwondo Association.</p>
+    </div>
+  </div>
+
   <div class="reports-container">
     <h1>Admin Reports</h1>
 
@@ -66,7 +74,7 @@
       <button onclick="filterByDate()">Apply</button>
 
       <button onclick="cancelFilter()">Remove Filter</button>
-      
+
       <label class="end-date" for="search-user">Search User:</label>
       <input type="text" id="search-user" name="search-user" onkeyup="searchUser()">
 
@@ -120,7 +128,7 @@
           <h2>{{transactionsCount}}</h2>
         </div>
       </div>
-      
+
       <button class="export-csv-btn" onclick="exportTransactionsTableToCSV('payments.csv')">Export to CSV</button>
       <p></p>
       <div class="report-table">
@@ -226,7 +234,8 @@
           <p>Registered Athletes: {{athleteVerifiedCount}}</p>
           <p>Registered Instructors: {{instructorVerifiedCount}}</p>
 
-          {{!-- athletes and instructors have extra 1 each cuz of admin yohan being instructorverified and athleteverified --}}
+          {{!-- athletes and instructors have extra 1 each cuz of admin yohan being instructorverified and
+          athleteverified --}}
         </div>
       </div>
 
@@ -284,14 +293,14 @@
         var clubsChart = new Chart(ctx, {
           type: 'doughnut',
           data: {
-        labels: ["Pampanga", "Nueva Ecija", "Tarlac", "Bulacan", "Bataan", "Zambales", "Aurora"],
-        datasets: [{
-            data: [{{provinceClubCounts.[0].count}},{{provinceClubCounts.[1].count}},{{provinceClubCounts.[2].count}},{{provinceClubCounts.[3].count}},{{provinceClubCounts.[4].count}}, {{provinceClubCounts.[5].count}}, {{provinceClubCounts.[6].count}},{{provinceClubCounts.[7].count}}], // Example data, replace with actual values
-          backgroundColor: ['#FFCE56', '#FF6384', '#36A2EB', '#FF9F40', '#4BC0C0', '#9966FF', '#C9CBCF'],
-          hoverBackgroundColor: ['#FFCE56', '#FF6384', '#36A2EB', '#FF9F40', '#4BC0C0', '#9966FF', '#C9CBCF']
+            labels: ["Pampanga", "Nueva Ecija", "Tarlac", "Bulacan", "Bataan", "Zambales", "Aurora"],
+            datasets: [{
+              data: [{{ provinceClubCounts.[0].count }}, {{ provinceClubCounts.[1].count }},{{ provinceClubCounts.[2].count }}, {{ provinceClubCounts.[3].count }}, {{ provinceClubCounts.[4].count }}, {{ provinceClubCounts.[5].count }}, {{ provinceClubCounts.[6].count }}, {{ provinceClubCounts.[7].count }}], // Example data, replace with actual values
+        backgroundColor: ['#FFCE56', '#FF6384', '#36A2EB', '#FF9F40', '#4BC0C0', '#9966FF', '#C9CBCF'],
+        hoverBackgroundColor: ['#FFCE56', '#FF6384', '#36A2EB', '#FF9F40', '#4BC0C0', '#9966FF', '#C9CBCF']
         }]
           },
-          options: {
+        options: {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
@@ -299,7 +308,7 @@
             position: 'bottom',
           }
         }
-          }
+      }
         });
       });
 
@@ -310,20 +319,20 @@
           data: {
             labels: ['Athlete Applications', 'Instructor Applications', 'Club Applications'],
             datasets: [{
-              data: [{{nccRegistrationsCount}}, {{instructorRegistrationsCount}}, {{clubRegistrationsCount}}],
-              backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
-              hoverBackgroundColor: ['#36A2EB', '#FF6384', '#FFCE56']
+              data: [{{ nccRegistrationsCount }}, {{ instructorRegistrationsCount }}, {{ clubRegistrationsCount }}],
+        backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
+        hoverBackgroundColor: ['#36A2EB', '#FF6384', '#FFCE56']
             }]
           },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                position: 'bottom',
-              }
-            }
+        options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
           }
+        }
+      }
         });
       });
     </script>
@@ -373,11 +382,11 @@
       var i, reportSection, tablinks;
       reportSection = document.getElementsByClassName("report-section");
       for (i = 0; i < reportSection.length; i++) {
-      reportSection[i].style.display = "none";
+        reportSection[i].style.display = "none";
       }
       tablinks = document.getElementsByClassName("tablink");
       for (i = 0; i < tablinks.length; i++) {
-      tablinks[i].className = tablinks[i].className.replace(" active", "");
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
       }
       document.getElementById(reportName).style.display = "block";
       evt.currentTarget.className += " active";
@@ -385,20 +394,20 @@
       // Show or hide date filter based on selected report
       var dateFilter = document.querySelector('.date-filter');
       if (reportName === 'insights' || reportName === 'events') {
-      dateFilter.style.display = 'none';
+        dateFilter.style.display = 'none';
       } else {
-      dateFilter.style.display = 'block';
+        dateFilter.style.display = 'block';
       }
 
       // Show or hide regtypefilter and regstatusfilter based on selected report
       var regTypeFilter = document.getElementById('regtypefilter');
       var regStatusFilter = document.getElementById('regstatusfilter');
       if (reportName === 'membership') {
-      regTypeFilter.style.display = 'inline-block';
-      regStatusFilter.style.display = 'inline-block';
+        regTypeFilter.style.display = 'inline-block';
+        regStatusFilter.style.display = 'inline-block';
       } else {
-      regTypeFilter.style.display = 'none';
-      regStatusFilter.style.display = 'none';
+        regTypeFilter.style.display = 'none';
+        regStatusFilter.style.display = 'none';
       }
     }
 
@@ -474,31 +483,31 @@
 
     const categoryFilter = document.querySelector('.statusfilter select:nth-child(1)');
     const statusFilter = document.querySelector('.statusfilter select:nth-child(2)');
-    
+
     function toggleSection(selectedCategory) {
       const rows = document.querySelectorAll('#membership-body tr');
       rows.forEach(row => row.style.display = 'none'); // Hide all rows
 
       if (selectedCategory === 'nccregs') {
-      rows.forEach(row => {
-        if (row.cells[0].innerText.startsWith('NCCAPP')) {
-        row.style.display = '';
-        }
-      });
+        rows.forEach(row => {
+          if (row.cells[0].innerText.startsWith('NCCAPP')) {
+            row.style.display = '';
+          }
+        });
       } else if (selectedCategory === 'instructorregs') {
-      rows.forEach(row => {
-        if (row.cells[0].innerText.startsWith('INSAPP')) {
-        row.style.display = '';
-        }
-      });
+        rows.forEach(row => {
+          if (row.cells[0].innerText.startsWith('INSAPP')) {
+            row.style.display = '';
+          }
+        });
       } else if (selectedCategory === 'clubregs') {
-      rows.forEach(row => {
-        if (row.cells[0].innerText.startsWith('CLUBAPP')) {
-        row.style.display = '';
-        }
-      });
+        rows.forEach(row => {
+          if (row.cells[0].innerText.startsWith('CLUBAPP')) {
+            row.style.display = '';
+          }
+        });
       } else if (selectedCategory === 'all') {
-      rows.forEach(row => row.style.display = '');
+        rows.forEach(row => row.style.display = '');
       }
 
       // Reset status filter when switching category
@@ -507,7 +516,7 @@
     }
 
 
-    statusFilter.addEventListener('change', function() {
+    statusFilter.addEventListener('change', function () {
       filterStatus(this.value, categoryFilter.value);
     });
 
@@ -516,15 +525,15 @@
       var rows = document.querySelectorAll(".transactions-table tr");
 
       for (var i = 0; i < rows.length; i++) {
-      if (rows[i].style.display !== 'none') { // Only include visible rows
-      var row = [], cols = rows[i].querySelectorAll("td, th");
+        if (rows[i].style.display !== 'none') { // Only include visible rows
+          var row = [], cols = rows[i].querySelectorAll("td, th");
 
-      for (var j = 0; j < cols.length; j++) {
-      row.push(cols[j].innerText);
-      }
+          for (var j = 0; j < cols.length; j++) {
+            row.push(cols[j].innerText);
+          }
 
-      csv.push(row.join(","));
-      }
+          csv.push(row.join(","));
+        }
       }
 
       // Download CSV
@@ -543,15 +552,15 @@
       var rows = document.querySelectorAll("#membership-body tr");
 
       for (var i = 0; i < rows.length; i++) {
-      if (rows[i].style.display !== 'none') { // Only include visible rows
-      var row = [], cols = rows[i].querySelectorAll("td, th");
+        if (rows[i].style.display !== 'none') { // Only include visible rows
+          var row = [], cols = rows[i].querySelectorAll("td, th");
 
-      for (var j = 0; j < cols.length; j++) {
-      row.push(cols[j].innerText);
-      }
+          for (var j = 0; j < cols.length; j++) {
+            row.push(cols[j].innerText);
+          }
 
-      csv.push(row.join(","));
-      }
+          csv.push(row.join(","));
+        }
       }
 
       // Download CSV
