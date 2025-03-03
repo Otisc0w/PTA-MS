@@ -233,11 +233,11 @@
       <h3>Membership application type breakdown:</h3>
       <div class="chart-table">
         <div class="chart-container" style="width: 500px; height: 500px;">
-          <canvas id=""></canvas>
+          <canvas id="applicationschart"></canvas>
         </div>
         <div class="insights-summary">
           <p>Total Registrations: {{totalRegistrations}}</p>
-          <p>Athlete Applications: {{athleteRegistrationsCount}}</p>
+          <p>Athlete Applications: {{nccRegistrationsCount}}</p>
           <p>Instructor Applications: {{instructorRegistrationsCount}}</p>
           <p>Club Applications: {{clubRegistrationsCount}}</p>
         </div>
@@ -299,6 +299,30 @@
             position: 'bottom',
           }
         }
+          }
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        var ctx = document.getElementById('applicationschart').getContext('2d');
+        var applicationsChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Athlete Applications', 'Instructor Applications', 'Club Applications'],
+            datasets: [{
+              data: [{{nccRegistrationsCount}}, {{instructorRegistrationsCount}}, {{clubRegistrationsCount}}],
+              backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
+              hoverBackgroundColor: ['#36A2EB', '#FF6384', '#FFCE56']
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+              }
+            }
           }
         });
       });
