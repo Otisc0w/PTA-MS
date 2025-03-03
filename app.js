@@ -536,6 +536,33 @@ app.post("/submit-ncc", upload.fields([
         return res.status(500).send("Error creating notification");
       }
 
+      // Add a notification for PTA verified users about the new NCC registration submission
+      const { data: ptaUsers, error: ptaUsersError } = await supabase
+        .from("users")
+        .select("id")
+        .eq("ptaverified", true);
+
+      if (ptaUsersError) {
+        console.error("Error fetching PTA verified users:", ptaUsersError.message);
+        return res.status(500).send("Error fetching PTA verified users");
+      }
+
+      const notifications = ptaUsers.map(user => ({
+        userid: user.id,
+        type: "Registration",
+        message: "A new NCC registration has been submitted.",
+        desc: "A new NCC registration has been submitted and is now awaiting review.",
+      }));
+
+      const { error: ptaNotificationError } = await supabase
+        .from("notifications")
+        .insert(notifications);
+
+      if (ptaNotificationError) {
+        console.error("Error creating notifications for PTA verified users:", ptaNotificationError.message);
+        return res.status(500).send("Error creating notifications for PTA verified users");
+      }
+
       res.redirect("/membership-status");
     } catch (error) {
       console.error("Server error:", error.message);
@@ -832,6 +859,33 @@ app.post("/submit-instructor", upload.fields([
     if (notificationError) {
       console.error("Error creating notification:", notificationError.message);
       return res.status(500).send("Error creating notification");
+    }
+
+    // Add a notification for PTA verified users about the new Instructor registration submission
+    const { data: ptaUsers, error: ptaUsersError } = await supabase
+      .from("users")
+      .select("id")
+      .eq("ptaverified", true);
+
+    if (ptaUsersError) {
+      console.error("Error fetching PTA verified users:", ptaUsersError.message);
+      return res.status(500).send("Error fetching PTA verified users");
+    }
+
+    const notifications = ptaUsers.map(user => ({
+      userid: user.id,
+      type: "Registration",
+      message: "A new Instructor registration has been submitted.",
+      desc: "A new Instructor registration has been submitted and is now awaiting review.",
+    }));
+
+    const { error: ptaNotificationError } = await supabase
+      .from("notifications")
+      .insert(notifications);
+
+    if (ptaNotificationError) {
+      console.error("Error creating notifications for PTA verified users:", ptaNotificationError.message);
+      return res.status(500).send("Error creating notifications for PTA verified users");
     }
 
     res.redirect("/membership-status");
@@ -2338,6 +2392,33 @@ app.post("/submit-club",
         desc: "Your club registration has been successfully submitted and is now awaiting review. You will receive notifications for the status of your application.",
         },
       ]);
+
+      // Add a notification for PTA verified users about the new club registration submission
+      const { data: ptaUsers, error: ptaUsersError } = await supabase
+        .from("users")
+        .select("id")
+        .eq("ptaverified", true);
+
+      if (ptaUsersError) {
+        console.error("Error fetching PTA verified users:", ptaUsersError.message);
+        return res.status(500).send("Error fetching PTA verified users");
+      }
+
+      const notifications = ptaUsers.map(user => ({
+        userid: user.id,
+        type: "Registration",
+        message: "A new club registration has been submitted.",
+        desc: "A new club registration has been submitted and is now awaiting review.",
+      }));
+
+      const { error: ptaNotificationError } = await supabase
+        .from("notifications")
+        .insert(notifications);
+
+      if (ptaNotificationError) {
+        console.error("Error creating notifications for PTA verified users:", ptaNotificationError.message);
+        return res.status(500).send("Error creating notifications for PTA verified users");
+      }
 
       if (notificationError) {
       console.error("Error creating notification:", notificationError.message);
