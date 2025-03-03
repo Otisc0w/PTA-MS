@@ -43,33 +43,37 @@
     <div class="club-name">
       {{#if ownedclub}}
       <div class="ownedclubcards">
-        <h3>Your Registered Clubs</h3><br>
-        {{#each ownedclub}}
-        <div class="ownedclubcard">
-          <img src="{{clubpic}}" alt="{{clubname}}" class="club-card-image">
-          <div class="club-card-content">
-            <h3>{{clubname}}</h3>
-            <a href="/clubs-details/{{id}}" class="club-card-link">Go to club</a>
+        <h2 class="left-align-title">Your Registered Clubs</h2>
+        <div class="club-cards-container">
+          {{#each ownedclub}}
+          <div class="ownedclubcard">
+            <img src="{{clubpic}}" alt="{{clubname}}" class="club-card-image">
+            <div class="club-card-content">
+              <h3>{{clubname}}</h3>
+              <a href="/clubs-details/{{id}}" class="club-card-link">Go to club</a>
+            </div>
           </div>
+          {{/each}}
         </div>
-        {{/each}}
       </div>
       {{/if}}
 
       {{#if userClub}}
       <div class="ownedclubcards">
-        <h2 class="left-align-title">Your Joined Club</h2><br>
-        <div class="ownedclubcard">
-          <img src="{{userClub.clubpic}}" alt="{{userClub.clubname}}" class="club-card-image">
-          <div class="club-card-content">
-            <h3>{{userClub.clubname}}</h3>
-            <a href="/clubs-details/{{userClub.id}}" class="club-card-link">Go to club</a>
+        <h2 class="left-align-title">Your Joined Club</h2>
+        <div class="club-cards-container">
+          <div class="ownedclubcard">
+            <img src="{{userClub.clubpic}}" alt="{{userClub.clubname}}" class="club-card-image">
+            <div class="club-card-content">
+              <h3>{{userClub.clubname}}</h3>
+              <a href="/clubs-details/{{userClub.id}}" class="club-card-link">Go to club</a>
+            </div>
           </div>
         </div>
       </div>
       {{/if}}
 
-      <h2 class="left-align-title">Other Clubs</h2><br>
+      <h2 class="left-align-title">Other Clubs</h2>
       <div id="events" class="horizontal-container">
         {{#each clubs}}
         <div class="event" data-location="{{clubaddress}}">
