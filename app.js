@@ -7196,9 +7196,7 @@ app.get("/analytics", async (req, res) => {
     console.log("Total number of instructor registrations:", instructorRegistrationsCount);
 
     // Calculate the total number of registrations
-    const totalMembers =  nccRegistrationsCount + instructorRegistrationsCount;
-
-    console.log("Total number of registrations:", totalMembers);
+    const totalRegistrations =  nccRegistrationsCount + instructorRegistrationsCount + clubRegistrationsCount;
 
     // Fetch the total number of users with athleteverified as true
     const { count: athleteVerifiedCount, error: athleteVerifiedCountError } = await supabase
@@ -7219,6 +7217,8 @@ app.get("/analytics", async (req, res) => {
     if (instructorVerifiedCountError) {
       throw instructorVerifiedCountError;
     }
+
+    const totalMembers = athleteVerifiedCount + instructorVerifiedCount;
 
     console.log("Total number of users with instructorverified as true:", instructorVerifiedCount);
 
@@ -7265,6 +7265,10 @@ app.get("/analytics", async (req, res) => {
       user: req.session.user, // Render user session
       provinceClubCounts,
       clubsCount,
+      nccRegistrationsCount,
+      instructorRegistrationsCount,
+      clubRegistrationsCount,
+      totalRegistrations,
       totalMembers,
       athleteVerifiedCount,
       instructorVerifiedCount,
