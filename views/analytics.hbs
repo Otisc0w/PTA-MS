@@ -42,7 +42,7 @@
       <input type="date" id="start-date" name="start-date">
       <label class="end-date" for="end-date">End Date:</label>
       <input type="date" id="end-date" name="end-date">
-
+    
       <button onclick="filterByDate()">Apply</button>
 
       <button onclick="cancelFilter()">Remove Filter</button>
@@ -65,6 +65,31 @@
         <option value="under review">Under Review</option>
         <option value="id shipped">ID Shipped</option>
       </select>
+
+      <select id="province-filter" onchange="filterByProvince(this.value)">
+        <option value="all">All</option>
+        <option value="Pampanga">Pampanga</option>
+        <option value="Nueva Ecija">Nueva Ecija</option>
+        <option value="Tarlac">Tarlac</option>
+        <option value="Bulacan">Bulacan</option>
+        <option value="Bataan">Bataan</option>
+        <option value="Zambales">Zambales</option>
+        <option value="Aurora">Aurora</option>
+      </select>
+
+      <script>
+        function filterByProvince(selectedProvince) {
+          const rows = document.querySelectorAll('#clubs-body tr');
+          rows.forEach(row => {
+            const province = row.cells[2].innerText.toLowerCase();
+            if (selectedProvince === 'all' || province.includes(selectedProvince.toLowerCase())) {
+              row.style.display = '';
+            } else {
+              row.style.display = 'none';
+            }
+          });
+        }
+      </script>
 
       <script>
         function filterStatus(selectedStatus) {
@@ -493,7 +518,7 @@
 
       // Show or hide date filter based on selected report
       var dateFilter = document.querySelector('.date-filter');
-      if (reportName === 'insights' || reportName === 'events' || reportName === 'clubs') {
+      if (reportName === 'insights' || reportName === 'events') {
       dateFilter.style.display = 'none';
       } else {
       dateFilter.style.display = 'block';
@@ -508,6 +533,20 @@
       } else {
       regTypeFilter.style.display = 'none';
       regStatusFilter.style.display = 'none';
+      }
+
+      // Show or hide province filter based on selected report
+      var provinceFilter = document.getElementById('province-filter');
+      if (reportName === 'clubs') {
+        provinceFilter.style.display = 'inline-block';
+      } else {
+        provinceFilter.style.display = 'none';
+      }
+
+      // Hide other filters when 'clubs' report is selected
+      if (reportName === 'clubs') {
+        regTypeFilter.style.display = 'none';
+        regStatusFilter.style.display = 'none';
       }
     }
 
