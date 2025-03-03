@@ -19,7 +19,7 @@
 }
 
 .forum-container {
-    margin-top: 20px;
+    margin-top: 10px;
     margin-bottom: 60px;
     display: flex;
     justify-content: center; /* Center the content */
@@ -628,7 +628,7 @@
 }
 
 .forum-container1 {
-    margin-top: 100px; 
+    margin-top: 20px; 
     height: auto; 
 }
 
