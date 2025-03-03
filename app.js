@@ -3301,6 +3301,33 @@ app.post("/submit-player", upload.fields([{ name: 'heightpicture' }, { name: 'we
       return res.status(500).send("Error creating notification");
     }
 
+    // Notify admins about the new player registration
+    const { data: admins, error: adminsError } = await supabase
+      .from("users")
+      .select("id")
+      .eq("ptaverified", true);
+
+    if (adminsError) {
+      console.error("Error fetching admins:", adminsError.message);
+      return res.status(500).send("Error fetching admins");
+    }
+
+    const adminNotifications = admins.map(admin => ({
+      userid: admin.id,
+      type: "Event",
+      message: `A new player has registered for the event ${thisevent.name}.`,
+      desc: `A new player has registered for the event ${thisevent.name}. Please review the registration.`,
+    }));
+
+    const { error: adminNotificationError } = await supabase
+      .from("notifications")
+      .insert(adminNotifications);
+
+    if (adminNotificationError) {
+      console.error("Error creating admin notifications:", adminNotificationError.message);
+      return res.status(500).send("Error creating admin notifications");
+    }
+
     res.redirect(`/events-details/${eventid}`);
   } catch (error) {
     console.error("Server error:", error.message);
