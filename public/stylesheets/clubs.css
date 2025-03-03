@@ -41,18 +41,27 @@ body {
 }
 
 .club-name {
-    padding: 20px;
+    padding: 5px;
 }
 
 .left-align-title {
     color: white;
-    margin: 0 0 30px 30px;
     font-size: 24px;
     font-weight: bold;
 }
 
+.others  {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    margin-left: 0; /* Reset any inherited left margin */
+    margin-bottom: 0px; /* Reduce space below */
+    text-align: left; /* Align with other sections */
+    padding-left: 30px
+}
+
 .ownedclubcards .left-align-title {
-    margin: 0 0 30px 0;
+    margin: 0 0 10px 0;
 }
 
 .horizontal-container {
@@ -87,8 +96,8 @@ body {
 }
 
 .ownedclubcards {
-    padding: 20px 30px;
-    margin-bottom: 30px;
+    padding: 10px 30px;
+    margin-bottom: 1px;
     display: flex;
     flex-direction: column;
 }
@@ -96,8 +105,9 @@ body {
 .club-cards-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 10px;
     padding-left: 0;
+    margin-top: 0;
 }
 
 .ownedclubcard {
@@ -114,7 +124,6 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    transition: box-shadow 0.3s ease-in-out;
 }
 
 .ownedclubcard img {
@@ -513,7 +522,7 @@ body {
     background-color: #333;
     border-radius: 10px;
     gap: 0;
-    margin-bottom: 50px;
+    margin-bottom: 5px;
 }
 /* General Label Style */
 .filter-panel label {
@@ -558,15 +567,6 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-.ownedclubcards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: left;
-    margin: 20px 0;
-    border-block-color: white;
 }
 
 .ownedclubcard {
@@ -628,4 +628,12 @@ body {
 
 .ownedclubcard .club-card-link:hover {
     background-color: #1A1A1A;
+}
+
+#events {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Reduce gap between club cards */
+    padding-left: 25px;
+    margin-top: 0; /* Reduce space above club cards */
 }
