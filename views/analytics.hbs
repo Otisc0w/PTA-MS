@@ -223,8 +223,8 @@
         </div>
         <div class="insights-summary">
           <p>Total Members: {{totalMembers}}</p>
-          <p>Athletes: {{athleteVerifiedCount}}</p>
-          <p>Instructors: {{instructorVerifiedCount}}</p>
+          <p>Registered Athletes: {{athleteVerifiedCount}}</p>
+          <p>Registered Instructors: {{instructorVerifiedCount}}</p>
 
           {{!-- athletes and instructors have extra 1 each cuz of admin yohan being instructorverified and athleteverified --}}
         </div>
@@ -233,10 +233,13 @@
       <h3>Membership application type breakdown:</h3>
       <div class="chart-table">
         <div class="chart-container" style="width: 500px; height: 500px;">
-          <canvas id="clubsChart"></canvas>
+          <canvas id=""></canvas>
         </div>
         <div class="insights-summary">
-          <p>Total Clubs: {{clubsCount}}</p>
+          <p>Total Registrations: {{totalRegistrations}}</p>
+          <p>Athlete Applications: {{athleteRegistrationsCount}}</p>
+          <p>Instructor Applications: {{instructorRegistrationsCount}}</p>
+          <p>Club Applications: {{clubRegistrationsCount}}</p>
         </div>
       </div>
 
