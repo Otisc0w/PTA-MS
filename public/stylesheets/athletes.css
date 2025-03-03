@@ -26,7 +26,7 @@ body {
 
 /* Athletes Container */
 .athletes-container {
-    margin-top: 60px;
+    margin-top: 20px;
     height: 1500px;
     padding: 20px;
 }
@@ -306,7 +306,7 @@ body {
 }
 
 .athlete-rankings-container {
-    margin-top: 100px;
+    margin-top: 20px;
     height: auto;
     /* Adjusts height based on content */
 }
