@@ -542,7 +542,7 @@
           <div class="buttondiv">
             {{#unless champion}}
               {{#if (orray user.athleteverified clubMembers)}}
-                {{#if (orray (3ands (eq currentUserAthlete.agedivision event.agedivision) (eq currentUserAthlete.gender event.gender) (eq currentUserAthlete.beltlevel event.beltlevel)) clubMembers)}}
+                {{#if (orray (and (eq currentUserAthlete.gender event.gender) (eq currentUserAthlete.beltlevel event.beltlevel)) clubMembers)}}
                   {{#unless (or currentregistrant (me registrationcount event.registrationcap))}}
                     {{#if (eq event.status 'Active')}}
                       {{#isBefore (now) event.backoutdl}}

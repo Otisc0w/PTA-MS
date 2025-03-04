@@ -70,7 +70,7 @@
                 <option value="" disabled selected>Please select</option>
                 {{#each clubMembersWithAthleteData}}
                   {{#if this.athleteData.id}}
-                        {{#if (3ands (eq this.athleteData.beltlevel ../event.beltlevel) (eq this.athleteData.gender ../event.gender) (eq this.athleteData.agedivision ../event.agedivision))}}
+                        {{#if (and (eq this.athleteData.gender ../event.gender) (eq this.athleteData.agedivision ../event.agedivision))}}
                           <option class="{{this.id}}" value="{{this.athleteData.name}}">
                           {{this.athleteData.name}} - {{this.athleteData.beltlevel}}
                           {{#if (eq this.athleteData.userid ../user.id)}}(you){{/if}}

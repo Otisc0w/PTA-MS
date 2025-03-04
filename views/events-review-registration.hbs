@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PTA | Player Registration Review</title>
   <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
-  <link rel="stylesheet" type="text/css" href="../stylesheets/membership-review.css">
+  <link rel="stylesheet" type="text/css" href="../stylesheets/events-registration.css">
   <link rel="stylesheet" type="text/css" href="../stylesheets/navbar.css">
 </head>
 
@@ -51,24 +51,24 @@
             </td>
           </tr>
           <tr>
+            <td><strong>Beltlevel</strong></td>
+            <td>{{athlete.beltlevel}} since {{formatDate athlete.lastpromo "MM/DD/YYYY"}}</td>
+          </tr>
+          <tr>
             <td><strong>ID:</strong></td>
             <td>{{eventregistration.id}}</td>
           </tr>
           <tr>
-            <td><strong>First Name:</strong></td>
+            <td><strong>Name:</strong></td>
             <td>{{eventregistration.playername}}</td>
           </tr>
           <tr>
-            <td><strong>Middle Initial:</strong></td>
-            <td>{{eventregistration.mi}}</td>
-          </tr>
-          <tr>
-            <td><strong>Last Name:</strong></td>
+            <td><strong>Club:</strong></td>
             <td>{{eventregistration.club}}</td>
           </tr>
           <tr>
             <td><strong>Gender:</strong></td>
-            <td>{{eventregistration.age}}</td>
+            <td>{{athlete.gender}}</td>
           </tr>
           <tr>
             <td><strong>Birthday:</strong></td>

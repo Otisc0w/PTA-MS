@@ -5866,9 +5866,9 @@ app.get("/events-registration/:id", async function (req, res) {
 
 
 app.get("/events-review-registration/:id", async function (req, res) {
-  // if (!req.session.user) {
-  //   return res.redirect("/");
-  // }
+  if (!req.session.user) {
+    return res.redirect("/");
+  }
 
   const { id } = req.params; // Get the event registration ID from the URL
   const userId = req.session.user.id; // Get the user ID from the session
