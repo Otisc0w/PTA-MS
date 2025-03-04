@@ -1463,6 +1463,7 @@ app.post("/update-nccstatus", async (req, res) => {
         instructorfirstname,
         instructorlastname,
         age,
+        lastpromo
       } = registration;
 
       console.log("Updating user with ID:", submittedby);
@@ -1540,6 +1541,7 @@ app.post("/update-nccstatus", async (req, res) => {
             weight,
             instructor,
             age,
+            lastpromo
           })
           .eq("userid", userid);
 
@@ -1567,6 +1569,7 @@ app.post("/update-nccstatus", async (req, res) => {
               instructor,
               userid,
               age,
+              lastpromo
             },
           ]);
 
@@ -3501,7 +3504,10 @@ app.post("/conclude-promotion-event/:id", async (req, res) => {
 
       const { error: updateError } = await supabase
         .from("athletes")
-        .update({ beltlevel: newBeltLevel })
+        .update({ 
+          beltlevel: newBeltLevel,
+          lastpromotion: new Date()
+        })
         .eq("id", athleteid);
 
       if (updateError) {
