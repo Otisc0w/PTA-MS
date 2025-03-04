@@ -94,7 +94,7 @@
       <script>
         function filterStatus(selectedStatus) {
           const rows = document.querySelectorAll('#membership-body tr');
-          const selectedCategory = document.querySelector('.statusfilter select:nth-child(1)').value;
+          const selectedCategory = document.querySelector('#regtypefilter').value;
 
           rows.forEach(row => {
             const status = row.cells[2].innerText.toLowerCase();
@@ -244,10 +244,11 @@
         <table class="membership-table">
           <thead>
             <tr>
-              <th>Application ID</th>
-              <th>User</th>
-              <th>Status</th>
-              <th>Date</th>
+              <th style="position: sticky; top: 0; z-index: 1;">Application ID</th>
+              <th style="position: sticky; top: 0; z-index: 1;">Submitted By</th>
+              <th style="position: sticky; top: 0; z-index: 1;">Status</th>
+              <th style="position: sticky; top: 0; z-index: 1;">Created On</th>
+              <th style="position: sticky; top: 0; z-index: 1;">Expires On</th>
             </tr>
           </thead>
           <tbody id="membership-body">
@@ -256,7 +257,8 @@
               <td>NCCAPP{{id}}</td>
               <td>{{firstname}} {{lastname}}</td>
               <td>{{{formatStatus status}}}</td>
-              <td>{{formatDate date "MM/DD/YYYY"}}</td>
+              <td>{{formatDate created_at "MM/DD/YYYY"}}</td>
+              <td>{{formatDate expireson "MM/DD/YYYY"}} <button onclick="location.href='/membership-review/{{id}}'" class="gotoeventbtn">&rarr;</button></td>
             </tr>
             {{/each}}
             {{#each instructorRegistrations}}
@@ -264,7 +266,8 @@
               <td>INSAPP{{id}}</td>
               <td>{{firstname}} {{lastname}}</td>
               <td>{{{formatStatus status}}}</td>
-              <td>{{formatDate date "MM/DD/YYYY"}}</td>
+              <td>{{formatDate created_at "MM/DD/YYYY"}}</td>
+              <td>{{formatDate expireson "MM/DD/YYYY"}} <button onclick="location.href='/instructor-review/{{id}}'" class="gotoeventbtn">&rarr;</button></td>
             </tr>
             {{/each}}
             {{#each clubRegistrations}}
@@ -272,7 +275,8 @@
               <td>CLUBAPP{{id}}</td>
               <td>{{firstname}} {{lastname}}</td>
               <td>{{{formatStatus status}}}</td>
-              <td>{{formatDate date "MM/DD/YYYY"}}</td>
+              <td>{{formatDate created_at "MM/DD/YYYY"}}</td>
+              <td>{{formatDate expireson "MM/DD/YYYY"}} <button onclick="location.href='/clubreg-review/{{id}}'" class="gotoeventbtn">&rarr;</button></td>
             </tr>
             {{/each}}
           </tbody>
