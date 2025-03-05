@@ -599,10 +599,21 @@
         {{#each event.judges}}
           <strong style="color: #ff3030">{{this}}</strong>
         {{/each}}
+        
         <h3 class="playername"></h3>
+        <button onclick="disqualifyPlayer()">Disqualify Player</button>
+        <script>
+            function disqualifyPlayer() {
+            const disqualify = confirm('Are you sure you want to disqualify this player? Disqualifying this player means a loss by default.');
+            if (disqualify) {
+                document.querySelector('.playername').innerHTML = 'DISQUALIFIED';
+                document.querySelector('input[name="totalscore"]').value = -1;
+            }
+          }
+        </script>
         <div class="score-table">
           <form action="/submit-poomsae-scores" method="post">
-            <input type="" name="id" value="">
+            <input type="hidden" name="id" value="">
             <input type="hidden" name="eventid" value="{{event.id}}">
             <table>
               <thead>

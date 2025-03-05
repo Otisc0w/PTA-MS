@@ -4885,6 +4885,18 @@ app.post("/submit-poomsae-scores", async (req, res) => {
       }
     }
 
+    if (parseFloat(totalscore) === -1) {
+      // Update the poomsae_players table if the score is -1
+      const { error: updatePoomsaePlayerError } = await supabase
+      .from("poomsae_players")
+      .update({ totalscore: -1 })
+      .eq("id", id);
+
+      if (updatePoomsaePlayerError) {
+      return res.status(400).json({ error: updatePoomsaePlayerError.message });
+      }
+    }
+
     // Calculate the average total score for the poomsae player
     const { data: judgescores, error: judgescoresError } = await supabase
       .from("poomsae_judge_scores")
