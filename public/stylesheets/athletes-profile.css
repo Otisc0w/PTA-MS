@@ -160,7 +160,7 @@ body {
 
 .invite-button a{
   padding: 10px 20px;
-  background-color: #007BFF;
+  background-color: #007BFF;  
   color: white;
   text-decoration: none;
   border-radius: 10px;
@@ -168,4 +168,8 @@ body {
 
 .invite-button a:hover{
   background-color: #0056b3;
+}
+
+.career-stats th, .career-stats td {
+  width: 150px;
 }
