@@ -152,6 +152,11 @@ hbs.registerHelper('map', function (array, options) {
 hbs.registerHelper('formatMoney', function (amount) {
   return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount);
 });
+hbs.registerHelper('yearsSince', function (date) {
+  const now = moment();
+  const pastDate = moment(date);
+  return now.diff(pastDate, 'years');
+});
 
 
 app.use( session({

@@ -19,7 +19,7 @@
       <img src="{{athlete.portrait}}" alt="Athlete Picture" class="athlete-pic">
       <div class="athlete-info">
         <h1>{{athlete.name}}</h1>
-        <p class="team">{{athlete.beltlevel}} since {{formatDate athlete.lastpromo "MM-DD-YYYY"}}</p>
+        <p class="team">{{athlete.beltlevel}} since {{formatDate athlete.lastpromo "MM-DD-YYYY"}} ({{yearsSince athlete.lastpromo}} years)</p>
         <p>{{athlete.agedivision}}</p>
         <p>{{athlete.clubregion}}</p>
         <div class="invite-button">
