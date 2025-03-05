@@ -4781,7 +4781,7 @@ app.post("/create-event-announcement", async (req, res) => {
 });
 
 app.post("/submit-kyorugi-scores", async (req, res) => {
-  const { matchid, player1_total, player2_total, eventid, player1, player2 } =
+  const { matchid, player1_total, player2_total, eventid, player1, player2, dqreason } =
     req.body;
 
   const player1score = player1_total;
@@ -4806,7 +4806,8 @@ app.post("/submit-kyorugi-scores", async (req, res) => {
         player1score,
         player2score, 
         winner, 
-        loser
+        loser,
+        dqreason
       })
       .eq("id", matchid);
 
