@@ -4073,22 +4073,23 @@ app.post("/next-poomsae-round/:eventid", async (req, res) => {
     // Insert advancing players into the next round, carrying over their total scores
     for (const player of advancingPlayers) {
       const { error: insertError } = await supabase
-        .from("poomsae_players")
-        .insert([
-          {
-            eventid,
-            userid: player.userid,
-            athleteid: player.athleteid,
-            round: nextRound,
-            name: player.name,
-            totalscore: player.totalscore, // Carry over the total score
-            ranking: player.ranking,
-          },
-        ]);
+      .from("poomsae_players")
+      .insert([
+        {
+        eventid,
+        userid: player.userid,
+        athleteid: player.athleteid,
+        round: nextRound,
+        name: player.name,
+        totalscore: player.totalscore, // Carry over the total score
+        ranking: player.ranking,
+        dqreason: player.dqreason, // Carry over the dqreason
+        },
+      ]);
 
       if (insertError) {
-        console.error("Error advancing player:", insertError.message);
-        return res.status(500).send("Error advancing player");
+      console.error("Error advancing player:", insertError.message);
+      return res.status(500).send("Error advancing player");
       }
     }
 
@@ -4195,6 +4196,7 @@ app.post("/decide-poomsae-winners/:eventid", async (req, res) => {
         eventname: events.name,
         eventlocation: events.location,
         poomsaefinalscore: player.totalscore,
+        dqreason: player.dqreason,
         },
       ]);
 
@@ -4831,99 +4833,102 @@ app.post("/submit-poomsae-scores", async (req, res) => {
     id,
     eventid,
     totalscore,
+    dqreason,
   } = req.body;
 
-  
-  const technicalscore = 4-parseFloat(basicmovement) -parseFloat(indivmovement) - parseFloat(balance);
+  const technicalscore = 4 - parseFloat(basicmovement) - parseFloat(indivmovement) - parseFloat(balance);
   const performancescore = 6 - parseFloat(powerspeed) - parseFloat(coord) - parseFloat(energy);
 
   try {
-
-    // Insert scores into judge_scores table
-    // Check if the judge has already scored the player
-    const { data: existingScore, error: existingScoreError } = await supabase
-      .from("poomsae_judge_scores")
-      .select("*")
-      .eq("judgeid", req.session.user.id)
-      .eq("poomsaeplayerid", id)
-      .single();
-
-    if (existingScoreError && existingScoreError.code !== 'PGRST116') {
-      return res.status(400).json({ error: existingScoreError.message });
-    }
-
-    if (existingScore) {
-      // Update the existing score
-      const { error: updateScoreError } = await supabase
-      .from("poomsae_judge_scores")
-      .update({
-        techscore: technicalscore,
-        performancescore: performancescore,
-        totalscore: parseFloat(totalscore),
-      })
-      .eq("id", existingScore.id);
-
-      if (updateScoreError) {
-      return res.status(400).json({ error: updateScoreError.message });
-      }
-    } else {
-      // Insert a new score
-      const { error: judgeScoresError } = await supabase
-      .from("poomsae_judge_scores")
-      .insert([
-        {
-        judgeid: req.session.user.id, // Assuming the judge ID is the current user's ID
-        poomsaeplayerid: id,
-        techscore: technicalscore,
-        performancescore: performancescore,
-        totalscore: parseFloat(totalscore),
-        },
-      ]);
-
-      if (judgeScoresError) {
-      return res.status(400).json({ error: judgeScoresError.message });
-      }
-    }
-
     if (parseFloat(totalscore) === -1) {
       // Update the poomsae_players table if the score is -1
       const { error: updatePoomsaePlayerError } = await supabase
-      .from("poomsae_players")
-      .update({ totalscore: -1 })
-      .eq("id", id);
+        .from("poomsae_players")
+        .update({ 
+          totalscore: -1,
+          dqreason: dqreason,
+         })
+        .eq("id", id);
 
       if (updatePoomsaePlayerError) {
-      return res.status(400).json({ error: updatePoomsaePlayerError.message });
+        return res.status(400).json({ error: updatePoomsaePlayerError.message });
+      }
+
+    } else {
+      // Insert scores into judge_scores table
+      // Check if the judge has already scored the player
+      const { data: existingScore, error: existingScoreError } = await supabase
+        .from("poomsae_judge_scores")
+        .select("*")
+        .eq("judgeid", req.session.user.id)
+        .eq("poomsaeplayerid", id)
+        .single();
+
+      if (existingScoreError && existingScoreError.code !== 'PGRST116') {
+        return res.status(400).json({ error: existingScoreError.message });
+      }
+
+      if (existingScore) {
+        // Update the existing score
+        const { error: updateScoreError } = await supabase
+          .from("poomsae_judge_scores")
+          .update({
+            techscore: technicalscore,
+            performancescore: performancescore,
+            totalscore: parseFloat(totalscore),
+          })
+          .eq("id", existingScore.id);
+
+        if (updateScoreError) {
+          return res.status(400).json({ error: updateScoreError.message });
+        }
+      } else {
+        // Insert a new score
+        const { error: judgeScoresError } = await supabase
+          .from("poomsae_judge_scores")
+          .insert([
+            {
+              judgeid: req.session.user.id, // Assuming the judge ID is the current user's ID
+              poomsaeplayerid: id,
+              techscore: technicalscore,
+              performancescore: performancescore,
+              totalscore: parseFloat(totalscore),
+            },
+          ]);
+
+        if (judgeScoresError) {
+          return res.status(400).json({ error: judgeScoresError.message });
+        }
+      }
+
+      // Calculate the average total score for the poomsae player
+      const { data: judgescores, error: judgescoresError } = await supabase
+        .from("poomsae_judge_scores")
+        .select("totalscore")
+        .eq("poomsaeplayerid", id);
+
+      if (judgescoresError) {
+        return res.status(400).json({ error: judgescoresError.message });
+      }
+
+      const totalScores = judgescores.map(score => score.totalscore);
+      const averageTotalScore = totalScores.reduce((acc, score) => acc + score, 0) / totalScores.length;
+
+      // Update the poomsae_players table with the average total score
+      const { error: updatePoomsaePlayerError } = await supabase
+        .from("poomsae_players")
+        .update({ totalscore: averageTotalScore, dqreason: dqreason })
+        .eq("id", id);
+
+      if (updatePoomsaePlayerError) {
+        return res.status(400).json({ error: updatePoomsaePlayerError.message });
       }
     }
 
-    // Calculate the average total score for the poomsae player
-    const { data: judgescores, error: judgescoresError } = await supabase
-      .from("poomsae_judge_scores")
-      .select("totalscore")
-      .eq("poomsaeplayerid", id);
-
-    if (judgescoresError) {
-      return res.status(400).json({ error: judgescoresError.message });
-    }
-
-    const totalScores = judgescores.map(score => score.totalscore);
-    const averageTotalScore = totalScores.reduce((acc, score) => acc + score, 0) / totalScores.length;
-
-    // Update the poomsae_players table with the average total score
-    const { error: updatePoomsaePlayerError } = await supabase
-      .from("poomsae_players")
-      .update({ totalscore: averageTotalScore })
-      .eq("id", id);
-
-    if (updatePoomsaePlayerError) {
-      return res.status(400).json({ error: updatePoomsaePlayerError.message });
-    }
     res.redirect(`/events-details/${eventid}`);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-
 });
 
 app.post("/submit-grade-sheet", async (req, res) => {

@@ -362,13 +362,21 @@
                     {{/if}}
                   </td>
                   <td class="totalscore">
-                      <div class="judge-score">
-                        {{#if totalscore}}
-                          {{totalscore}}
+                    <div class="judge-score">
+                      {{#if totalscore}}
+                        {{#if (eq totalscore -1)}}
+                          <h3 style="color:#ff3030">DQ</h3>
+                          <button class="dqreasonbtn" id="dqreasonbtn-{{id}}">? {{id}}</button>
+                          <div>
+                            <p class="dqreason" id="dqreason-{{id}}" style="display:none">Reason for disqualification: <strong>{{dqreason}}</strong></p>
+                          </div>
                         {{else}}
-                          TBD
+                        {{totalscore}}
                         {{/if}}
-                      </div>
+                      {{else}}
+                        TBD
+                      {{/if}}
+                    </div>
                   </td>
                   <td>
                     {{#unless (eq ranking 0)}}
@@ -599,20 +607,24 @@
         {{#each event.judges}}
           <strong style="color: #ff3030">{{this}}</strong>
         {{/each}}
-        
-        <h3 class="playername"></h3>
-        <button onclick="disqualifyPlayer()">Disqualify Player</button>
-        <script>
-            function disqualifyPlayer() {
-            const disqualify = confirm('Are you sure you want to disqualify this player? Disqualifying this player means a loss by default.');
-            if (disqualify) {
-                document.querySelector('.playername').innerHTML = 'DISQUALIFIED';
-                document.querySelector('input[name="totalscore"]').value = -1;
-            }
-          }
-        </script>
-        <div class="score-table">
           <form action="/submit-poomsae-scores" method="post">
+            <h3 class="playername"></h3>
+            <button onclick="disqualifyPlayer()">Disqualify Player</button>
+            <div id="disqualifyReasonContainer" style="display:none;">
+              <label for="disqualifyReason">Reason for Disqualification:</label>
+              <input type="text" id="disqualifyReason" name="dqreason" required>
+            </div>
+            <script>
+              function disqualifyPlayer() {
+                const disqualify = confirm('Are you sure you want to disqualify this player? Disqualifying this player means a loss by default.');
+                if (disqualify) {
+                    document.querySelector('input[name="totalscore"]').value = -1;
+                    document.getElementById('disqualifyReasonContainer').style.display = 'block';
+                }
+              }
+            </script>
+            <div class="score-table">
+          
             <input type="hidden" name="id" value="">
             <input type="hidden" name="eventid" value="{{event.id}}">
             <table>
@@ -1180,3 +1192,13 @@
 </body>
 
 </html>
+<script>
+  document.querySelectorAll('.dqreasonbtn').forEach(button => {
+    button.addEventListener('click', function() {
+      const id = this.id.split('-')[1];
+      const dqReasonDiv = document.getElementById(`dqreason-${id}`);
+      dqReasonDiv.style.display = dqReasonDiv.style.display === 'none' ? 'block' : 'none';
+    });
+  });
+</script>
+</body>

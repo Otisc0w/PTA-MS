@@ -65,7 +65,19 @@
               <td>{{eventLocation}}</td>
               <td>{{ageDivision}}</td>
               <td>{{#unless (eq ranking 0)}}{{ordinal ranking}}{{else}}P{{/unless}}</td>
-              <td>{{poomsaefinalscore}}</td>
+              <td>{{#if (eq poomsaefinalscore -1)}} DQ  <button class="dqreasonbtn" id="dqreasonbtn">?</button> 
+              <div>
+                <p class="dqreason" id="dqreason" style="display:none">Reason for disqualification: <strong>{{dqreason}}</strong></p>
+              </div>
+              <script>
+                document.querySelectorAll('.dqreasonbtn').forEach(button => {
+                  button.addEventListener('click', function() {
+                    const dqReasonDiv = this.nextElementSibling.querySelector('.dqreason');
+                    dqReasonDiv.style.display = dqReasonDiv.style.display === 'none' ? 'block' : 'none';
+                  });
+                });
+              </script>
+              {{else}} {{poomsaefinalscore}} {{/if}}</td>
             </tr>
             {{/each}}
           </tbody>
