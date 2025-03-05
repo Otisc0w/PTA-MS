@@ -436,7 +436,7 @@
                         </form>
                       {{/if}}
                   </td>
-                    <td>{{player1_name}}:<p class="playerscore">{{#if (eq player1score -1)}}DQ{{else}}{{player1score}}{{/if}}</p>
+                    <td>{{player1_name}}:<p class="playerscore">{{#if (eq player1score -1)}}<h3 style="color:rgb(255, 0, 0); ">DQ</h3>{{else}}{{player1score}}{{/if}}</p>
                     </td>
                     <td>{{player2_name}}:<p class="playerscore">{{#if (eq player2score -1)}}<h3 style="color:rgb(255, 0, 0); ">DQ</h3>{{else}}{{player2score}}{{/if}}</p>
                   </td>
@@ -744,9 +744,11 @@
                     function disqualifyKyorugiPlayer(player) {
                       const disqualify = confirm(`Are you sure you want to disqualify ${player}? Disqualifying this player means a loss by default.`);
                       if (disqualify) {
-                        const inputName = player === 'player1' ? 'player1_total' : 'player2_total';
-                        document.querySelector(`input[name="${inputName}"]`).value = -1;
-                        document.getElementById('kyorugiDqReason').style.display = 'block';
+                      const inputName = player === 'player1' ? 'player1_total' : 'player2_total';
+                      const enemyInputName = player === 'player1' ? 'player2_total' : 'player1_total';
+                      document.querySelector(`input[name="${inputName}"]`).value = -1;
+                      document.querySelector(`input[name="${enemyInputName}"]`).value = 1;
+                      document.getElementById('kyorugiDqReason').style.display = 'block';
                       }
                     }
                   </script>
