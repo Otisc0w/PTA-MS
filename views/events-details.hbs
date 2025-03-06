@@ -626,7 +626,7 @@
             <button onclick="disqualifyPlayer()">Disqualify Player</button>
             <div id="disqualifyReasonContainer" style="display:none;">
               <label for="disqualifyReason">Reason for Disqualification:</label>
-              <input type="text" id="disqualifyReason" name="dqreason" required>
+              <input type="text" id="disqualifyReason" name="dqreason">
             </div>
             <script>
               function disqualifyPlayer() {
@@ -738,7 +738,7 @@
                     <td></td>
                     <td><button type="button" onclick="disqualifyKyorugiPlayer('player1')">Disqualify</button></td>
                     <td><button type="button" onclick="disqualifyKyorugiPlayer('player2')">Disqualify</button></td>
-                    <input type="text" id="kyorugiDqReason" name="dqreason" style="display:none;" placeholder="Give the reason for DQ" required>
+                    <input type="text" id="kyorugiDqReason" name="dqreason" style="display:none;" placeholder="Give the reason for DQ">
                   <script>
                     function disqualifyKyorugiPlayer(player) {
                       const disqualify = confirm(`Are you sure you want to disqualify ${player}? Disqualifying this player means a loss by default.`);
