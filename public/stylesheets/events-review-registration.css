@@ -1,0 +1,278 @@
+@import url('https://fonts.cdnfonts.com/css/sf-pro-display');
+
+:root {
+    font-family: 'SF Pro Display', sans-serif;
+    --dark-bg: #252525;
+    --light-bg: #3A3A3A;
+    --accent-bg: #444;
+    --text-color: #ffffff;
+    --background-color: #121212;
+    --primary-color: #004085;
+    --secondary-color: #0056b3;
+    --hover-color: #0056b3;
+    --border-radius: 8px;
+    --box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: var(--font-family);
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.flex {
+    display: flex;
+    align-items: center;
+}
+
+.column {
+    flex-direction: column;
+}
+
+.center {
+    align-items: center;
+    justify-content: center;
+}
+
+.space-around {
+    justify-content: space-around;
+}
+
+.rounded {
+    min-height: 150px;
+    min-width: 150px;
+    border-radius: var(--border-radius);
+}
+
+.information {
+    font-size: 20px;
+    color: #aab1a4e2;
+}
+
+.membership-header {
+    background-color: var(--light-bg);
+    padding: 10px 0;
+}
+
+.membership-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    background-color: var(--dark-bg);
+}
+
+.membership-logo {
+    height: 50px;
+}
+
+.profile-menu {
+    position: relative;
+}
+
+.profile-picture {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+}
+
+.athlete-picture {
+    height: 400px;
+    width: 300px;
+    border-radius: 3%;
+    object-fit: cover;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: var(--accent-bg);
+    box-shadow: var(--box-shadow);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: var(--text-color);
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: var(--light-bg);
+}
+
+.show {
+    display: block;
+}
+
+form {
+  background-color: #555;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 800px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+
+form h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: white;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="date"],
+.form-group input[type="number"],
+.form-group input[type="file"],
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="date"]:focus,
+.form-group input[type="number"]:focus,
+.form-group input[type="file"]:focus,
+.form-group select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.button-padding {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.button-padding:hover {
+  background-color: #0056b3;
+}
+
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.small-margin {
+  flex: 1;
+}
+
+.margin {
+  margin-top: 80px;
+}
+
+
+.action-buttons button,
+.confirmscreen button {
+  padding: 10px 20px;
+  margin: 10px;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.action-buttons button {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+}
+
+.action-buttons button:hover {
+  background-color: var(--hover-color);
+}
+
+.confirmscreen button.cancel {
+  background-color: #dc3545;
+  color: var(--text-color);
+}
+
+.confirmscreen button.cancel:hover {
+  background-color: #c82333;
+}
+
+.confirmscreen button#confirm {
+  background-color: #28a745;
+  color: var(--text-color);
+}
+
+.confirmscreen button#confirm:hover {
+  background-color: #218838;
+}
+
+.backtolist a {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  margin-top: 20px;
+}
+
+.backtolist a:hover {
+  background-color: var(--hover-color);
+}
+
+.lightbox {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+.lightbox img {
+  margin: auto;
+  display: block;
+  max-width: 80%;
+  max-height: 80%;
+}
+
+.lightbox .close {
+  position: absolute;
+  top: 20px;
+  right: 35px;
+  color: #fff;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.lightbox .close:hover,
+.lightbox .close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}

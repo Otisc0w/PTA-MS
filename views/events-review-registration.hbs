@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PTA | Player Registration Review</title>
   <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
-  <link rel="stylesheet" type="text/css" href="../stylesheets/events-registration.css">
+  <link rel="stylesheet" type="text/css" href="../stylesheets/events-review-registration.css">
   <link rel="stylesheet" type="text/css" href="../stylesheets/navbar.css">
 </head>
 
@@ -120,14 +120,7 @@
         </div>
       </section>
 
-      <div class="printwindow" id="printableArea">
-        <p><strong>ID:</strong> {{registration.id}}</p>
-        <p><strong>First Name:</strong> {{registration.firstname}}</p>
-        <p><strong>Middle Initial:</strong> {{registration.mi}}</p>
-        <p><strong>Last Name:</strong> {{registration.lastname}}</p>
-        <a href="{{registration.birthcert}}" target="_blank" download>Birth Certificate</a>
-        <p>submitted by: {{registration.submittedby}}</p>
-      </div>
+      
 
       <div id="heightPictureFull" class="lightbox" onclick="closeLightbox()">
         <span class="close" onclick="closeLightbox()">&times;</span>
