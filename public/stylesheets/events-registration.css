@@ -1,499 +1,79 @@
-@import url('https://fonts.cdnfonts.com/css/sf-pro-display');
-
-:root {
-  --font-family: 'SF Pro Display', sans-serif;
-  --dark-bg: #252525;
-  --light-bg: #3A3A3A;
-  --accent-bg: #444;
-  --text-color: #ffffff;
-  --background-color: #121212;
-  --primary-color: #004085;
-  --secondary-color: #0056b3;
-  --hover-color: #0056b3;
-  --border-radius: 8px;
-  --box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+form {
+  background-color: #555;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 800px;
+  margin: 0 auto;
+  margin-bottom: 20px;
 }
 
-body {
-  font-family: var(--font-family);
-  margin: 0;
-  padding: 0;
-  background-color: var(--background-color);
-  color: var(--text-color);
+form h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: white;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="date"],
+.form-group input[type="number"],
+.form-group input[type="file"],
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="date"]:focus,
+.form-group input[type="number"]:focus,
+.form-group input[type="file"]:focus,
+.form-group select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.button-padding {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.button-padding:hover {
+  background-color: #0056b3;
 }
 
 .flex {
   display: flex;
-  align-items: center;
-}
-
-.column {
-  flex-direction: column;
-}
-
-.center {
-  align-items: center;
-  justify-content: center;
-}
-
-.space-around {
-  justify-content: space-around;
-}
-
-.rounded {
-  min-height: 150px;
-  min-width: 150px;
-  border-radius: var(--border-radius);
-}
-
-.information {
-  font-size: 20px;
-  color: #aab1a4e2;
-}
-
-.membership-header {
-  background-color: var(--light-bg);
-  padding: 10px 0;
-}
-
-.membership-navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-  background-color: var(--dark-bg);
-}
-
-.membership-logo {
-  height: 50px;
-}
-
-.profile-menu {
-  position: relative;
-}
-
-.profile-picture {
-  height: 40px;
-  width: 40px;
-  border-radius: 50%;
-  margin-left: 20px;
-}
-
-.athlete-picture {
-  height: 400px;
-  width: 300px;
-  border-radius: 3%;
-  object-fit: cover;
-  margin-right: 0;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  right: 0;
-  background-color: var(--accent-bg);
-  box-shadow: var(--box-shadow);
-  z-index: 1;
-}
-
-.dropdown-content a {
-  color: var(--text-color);
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-.dropdown-content a:hover {
-  background-color: var(--light-bg);
-}
-
-.show {
-  display: block;
-}
-
-.membership-container {
-  padding: 20px 300px;
-}
-
-.review-header h1 {
-  font-size: 24px;
-  color: var(--text-color);
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.review-details {
-  background: var(--dark-bg);
-  padding: 20px;
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  margin-bottom: 20px;
-  color: var(--text-color);
-  display: flex;
-  align-items: flex-start;
+  flex-wrap: wrap;
   gap: 20px;
-  width: 125%;
 }
 
-.review-details div {
-  display: inline-block;
+.small-margin {
+  flex: 1;
 }
 
-.review-details p {
-  margin: 5px 0;
-}
-
-.review-details a {
-  color: var(--primary-color);
-  text-decoration: none;
-}
-
-.review-details a:hover {
-  text-decoration: underline;
-}
-
-.application-actions {
-  background: var(--dark-bg);
-  padding: 20px;
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  color: var(--text-color);
-  width: 125%;
-}
-
-.action-buttons button {
-  margin-right: 10px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: var(--border-radius);
-  background-color: var(--primary-color);
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.action-buttons button:hover {
-  background-color: var(--hover-color);
-}
-
-.confirmscreen h3 {
-  margin-bottom: 20px;
-  color: var(--text-color);
-}
-
-.confirmscreen button {
-  margin: 10px auto;
-  display: block;
-}
-
-.backtolist a {
-  color: var(--primary-color);
-  text-decoration: none;
-}
-
-.backtolist a:hover {
-  text-decoration: underline;
-}
-
-.printwindow {
-  display: none;
-}
-
-.printwindow.visible {
-  display: block;
-}
-
-.status-under-review {
-  color: orange;
-}
-
-.status-printed {
-  color: yellow;
-}
-
-.status-en-route {
-  color: #0099ff;
-}
-
-.status-shipped {
-  color: #78ff47;
-}
-
-.status-rejected,
-.status-expired {
-  color: red;
-}
-
-.status-unknown {
-  color: grey;
-}
-
-.profile-section {
-  width: 500px;
-  margin-top: 20px;
-  border-spacing: 0;
-}
-
-.profile-section th,
-.profile-section td {
-  padding: 8px;
-  border-bottom: 1px solid #ddd;
-  text-align: left;
-  color: white;
-}
-
-.profile-section th {
-  background-color: #007bff;
-  color: white;
-  border-bottom: 2px solid #0056b3;
-}
-
-.profile-section tr:nth-child(even) {
-  background-color: #444;
-}
-
-.profile-section tr:hover {
-  background-color: #666;
-}
-
-.review-form {
-  width: 1000px;
-}
-
-.review-details input[type="text"],
-.review-details input[type="date"],
-.review-details input[type="file"] {
-  flex-grow: 1;
-  width: 100%;
-  padding: 6px 10px;
-  border: 1px solid var(--accent-bg);
-  border-radius: var(--border-radius);
-  background-color: var(--accent-bg);
-  color: var(--text-color);
-  font-size: 14px;
-  box-shadow: inset var(--box-shadow);
-  margin: 0;
-}
-
-.review-details input[readonly] {
-  background-color: #444;
-  color: var(--secondary-text);
-  border: 1px solid #555;
-  cursor: not-allowed;
-}
-
-.review-details table {
-  width: 100%;
-  border-spacing: 10px 5px;
-  table-layout: fixed;
-}
-
-.review-details th {
-  text-align: left;
-  padding: 5px 10px;
-  vertical-align: top;
-}
-
-.review-details td {
-  padding: 5px 10px;
-  vertical-align: top;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.rejectbtn1 {
-  display: block;
-  margin: 10px auto 0;
-  padding: 10px 20px;
-  border: none;
-  border-radius: var(--border-radius);
-  background-color: red;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  text-align: center;
-  font-weight: bold;
-}
-
-.rejectbtn1:hover {
-  background-color: darkred;
-}
-
-button.clear-input {
-  background-color: red;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: var(--box-shadow);
-  transition: background-color 0.3s, transform 0.2s;
-  margin-left: 10px;
-}
-
-button.clear-input:hover {
-  background-color: #e53935;
-  transform: scale(1.1);
-}
-
-#confirmrejectscreen,
-#confirmsuspendscreen {
-  background-color: var(--dark-bg);
-  border: 1px solid var(--accent-bg);
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  padding: 20px;
-  max-width: 600px;
-  margin: 30px auto;
-  color: var(--primary-color);
-  text-align: center;
-}
-
-#confirmrejectscreen h3,
-#confirmsuspendscreen h3 {
-  font-size: 20px;
-  margin-bottom: 15px;
-  color: var(--primary-color);
-  text-align: center;
-}
-
-#confirmrejectscreen select,
-#confirmrejectscreen textarea,
-#confirmsuspendscreen select,
-#confirmsuspendscreen textarea {
-  width: 100%;
-  padding: 0;
-  border: 1px solid var(--accent-bg);
-  border-radius: var(--border-radius);
-  background-color: var(--light-bg);
-  color: var(--text-color);
-  margin-bottom: 20px;
-  font-size: 16px;
-  box-shadow: inset var(--box-shadow);
-}
-
-#confirmrejectscreen button,
-#confirmsuspendscreen button,
-#cancel,
-#confirm,
-#cancelsuspend,
-.helpbtn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: var(--border-radius);
-  background-color: var(--primary-color);
-  color: white;
-  cursor: pointer;
-  font-size: 16px;
-  margin: 5px;
-  transition: background-color 0.3s;
-}
-
-#confirmrejectscreen button:hover,
-#confirmsuspendscreen button:hover,
-#cancel:hover,
-#confirm:hover,
-#cancelsuspend:hover,
-.helpbtn:hover {
-  background-color: var(--hover-color);
-}
-
-#confirmrejectscreen .cancelreject,
-#confirmsuspendscreen .cancelreject {
-  background-color: red;
-}
-
-#confirmrejectscreen .cancelreject:hover,
-#confirmsuspendscreen .cancelreject:hover {
-  background-color: darkred;
-}
-
-.helpbtn {
-  border: 1px solid black;
-  border-radius: 30px;
-  background-color: white;
-  color: black;
-  font-weight: 500;
-}
-
-.helpbtn:hover {
-  transform: scale(1.05);
-}
-
-@media print {
-  #printableArea {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 2.125in;
-    height: 3.375in;
-    padding: 0;
-    margin: 0 auto;
-  }
-
-  body * {
-    visibility: hidden;
-  }
-
-  #printableArea,
-  #printableArea * {
-    visibility: visible;
-  }
-
-  #printableArea .id-card {
-    width: 100%;
-    height: 100%;
-    border: 1px solid black;
-    box-sizing: border-box;
-  }
-
-  #printableArea img {
-    width: 100%;
-    height: auto;
-  }
-}
-
-.lightbox {
-  display: none;
-  position: fixed;
-  z-index: 999;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-}
-
-.lightbox img {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  max-width: 90%;
-  max-height: 90%;
-}
-
-.lightbox .close {
-  position: absolute;
-  top: 20px;
-  right: 30px;
-  color: #fff;
-  font-size: 30px;
-  cursor: pointer;
-}
-
-.rejectmsg {
-  font-size: 14px;
-  color: red;
-  font-weight: lighter;
+.margin {
+  margin-top: 80px;
 }
