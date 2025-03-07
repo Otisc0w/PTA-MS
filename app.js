@@ -1846,24 +1846,28 @@ app.post("/update-instructorstatus", async (req, res) => {
 
     switch (statusInt) {
       case 1:
-        statusMessage = "Your Instructor registration is under review.";
-        statusDesc = "Your Instructor registration is under review. You will receive a notification once your registration has been processed.";
-        break;
-            case 2:
-        statusMessage = "Your Instructor's License is en route to your regional office.";
-        statusDesc = "Your Instructor's License is on its way to your regional office. You will be notified once it arrives.";
-        break;
-            case 3:
-        statusMessage = "Your Instructor's License is now ready for pickup at your regional office.";
-        statusDesc = "Your Instructor's License is ready for pickup at your regional office. Please visit the office to collect it.";
-        break;
-            case 4:
-        statusMessage = "Your Instructor registration has been rejected.";
-        statusDesc = "Sorry, your Instructor registration has been rejected. Please contact support for more information.";
-        break;
-            default:
-        statusMessage = "Unknown status.";
-        statusDesc = "The status of your Instructor registration is unknown. Please contact support for more information.";
+      statusMessage = "Your Instructor registration is under review.";
+      statusDesc = "Your Instructor registration is under review. You will receive a notification once your registration has been processed.";
+      break;
+          case 2:
+      statusMessage = "Your Instructor's License is en route to your regional office.";
+      statusDesc = "Your Instructor's License is on its way to your regional office. You will be notified once it arrives.";
+      break;
+          case 3:
+      statusMessage = "Your Instructor's License is now ready for pickup at your regional office.";
+      statusDesc = "Your Instructor's License is ready for pickup at your regional office. Please visit the office to collect it.";
+      break;
+          case 4:
+      statusMessage = "Your Instructor registration has been rejected.";
+      statusDesc = "Sorry, your Instructor registration has been rejected. Please contact support for more information.";
+      break;
+          case 6:
+      statusMessage = "Your Instructor registration has been suspended.";
+      statusDesc = "Sorry, your Instructor registration has been suspended. Please check the reason for your suspension in your membership status.";
+      break;
+          default:
+      statusMessage = "Unknown status.";
+      statusDesc = "The status of your Instructor registration is unknown. Please contact support for more information.";
     }
 
     const { error: notificationError } = await supabase
@@ -5921,34 +5925,30 @@ app.get("/events-review-registration/:id", async function (req, res) {
       .eq("id", id)
       .single();
 
-    if (eventregError) {
+    if (eventregError && eventregError.code !== 'PGRST116') {
       return res.status(400).json({ error: eventregError.message });
     }
 
     const { data: registeredathlete, error: registeredathleteError } = await supabase
       .from("athletes")
       .select("*")
-      .eq("id", eventregistration.athleteid)
+      .eq("id", eventregistration?.athleteid)
       .single();
 
-    if (registeredathleteError) {
+    if (registeredathleteError && registeredathleteError.code !== 'PGRST116') {
       return res.status(400).json({ error: registeredathleteError.message });
     }
 
-    if (!registeredathlete) {
-      return res.status(404).json({ error: "Athlete not found" });
-    }
-
-    console.log("Fetched athlete portrait:", eventregistration.athleteid);
+    console.log("Fetched athlete portrait:", eventregistration?.athleteid);
 
     // Fetch the event details using the eventid from the event registration
     const { data: event, error: eventError } = await supabase
       .from("events")
       .select("*")
-      .eq("id", eventregistration.eventid)
+      .eq("id", eventregistration?.eventid)
       .single();
 
-    if (eventError) {
+    if (eventError && eventError.code !== 'PGRST116') {
       return res.status(400).json({ error: eventError.message });
     }
 
@@ -5959,7 +5959,7 @@ app.get("/events-review-registration/:id", async function (req, res) {
       .eq("userid", userId)
       .single();
 
-    if (athleteError) {
+    if (athleteError && athleteError.code !== 'PGRST116') {
       return res.status(400).json({ error: athleteError.message });
     }
 
