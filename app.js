@@ -159,6 +159,7 @@ hbs.registerHelper('yearsSince', function (date) {
 });
 
 
+
 app.use( session({
     secret: "your_secret_key", // Replace with a secure secret key
     resave: false,
@@ -3877,8 +3878,7 @@ app.post("/decide-kyorugi-winners/:eventid", async (req, res) => {
         ranking = 2;
       } else if (thirdPlaceIds.includes(participant.userid)) {
         ranking = 3;
-      } else if (disqualifiedPlayers.includes(participant.userid)) {
-        ranking = -1; // Assign a special ranking for disqualified players
+      
       } else {
         ranking = 0; // Ensure ranking is reset for each participant
       }
@@ -7226,6 +7226,10 @@ app.get("/analytics", async (req, res) => {
     }
     console.log("Fetched Club transactions count:", clubTransactionsCount);
 
+    const totalNccRevenue = nccTransactionsCount * 500; // Assuming each NCC transaction is worth 500
+    const totalInstructorRevenue = instructorTransactionsCount * 500; // Assuming each Instructor transaction is worth 500
+    const totalClubRevenue = clubTransactionsCount * 500; // Assuming each Club transaction is worth 500
+
     // Fetch NCC registrations data
     const { data: nccRegistrations, error: nccRegistrationsError } = await supabase
       .from("ncc_registrations")
@@ -7376,6 +7380,9 @@ app.get("/analytics", async (req, res) => {
       instructorTransactionsCount,
       clubTransactionsCount,
       membershiptotalrevenue,
+      totalClubRevenue,
+      totalInstructorRevenue,
+      totalNccRevenue
     });
   } catch (error) {
     console.error("Error fetching analytics data:", error.message);

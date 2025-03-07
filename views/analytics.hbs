@@ -57,6 +57,42 @@
         <option value="clubregs">Club Registrations</option>
       </select>
 
+      <select id="regtypefiltertxn" onchange="toggleTxnSection(this.value)">
+        <option value="all">All</option>
+        <option value="nccregs">NCC Registrations</option>
+        <option value="instructorregs">Instructor Registrations</option>
+        <option value="clubregs">Club Registrations</option>
+      </select>
+
+      <script>
+        function toggleTxnSection(selectedCategory) {
+          const rows = document.querySelectorAll('#transactions-body tr');
+          rows.forEach(row => row.style.display = 'none'); // Hide all rows
+
+          if (selectedCategory === 'nccregs') {
+            rows.forEach(row => {
+              if (row.cells[3].innerText.toLowerCase().includes('ncc')) {
+                row.style.display = '';
+              }
+            });
+          } else if (selectedCategory === 'instructorregs') {
+            rows.forEach(row => {
+              if (row.cells[3].innerText.toLowerCase().includes('instructor')) {
+                row.style.display = '';
+              }
+            });
+          } else if (selectedCategory === 'clubregs') {
+            rows.forEach(row => {
+              if (row.cells[3].innerText.toLowerCase().includes('club')) {
+                row.style.display = '';
+              }
+            });
+          } else if (selectedCategory === 'all') {
+            rows.forEach(row => row.style.display = '');
+          }
+        }
+      </script>
+
       <select id="regstatusfilter" onchange="filterStatus(this.value)">
         <option value="all">All</option>
         <option value="Expired">Expired</option>
@@ -115,7 +151,8 @@
 
     <div id="payments" class="report-section" style="display:block">
       <h2>Payments/Transactions</h2>
-      <div class="report-summary">
+
+      <div class="report-summary" id="all-summary">
         <div class="total-revenue">
           <h3>Total Revenue from Registration Fees:</h3>
           <h2>PHP {{formatMoney membershiptotalrevenue}}</h2>
@@ -130,6 +167,49 @@
           <p>Club: <strong>{{clubTransactionsCount}}</strong></p>
         </div>
       </div>
+
+      <div class="report-summary" id="ncc-summary" style="display:none;">
+        <div class="total-revenue">
+          <h3>Total Revenue from NCC Registration Fees:</h3>
+          <h2>PHP {{formatMoney totalNccRevenue}}</h2>
+        </div>
+        <div class="total-revenue">
+          <h3>Total NCC Fee Payments:</h3>
+          <h2>{{nccTransactionsCount}}</h2>
+        </div>
+      </div>
+
+      <div class="report-summary" id="instructor-summary" style="display:none;">
+        <div class="total-revenue">
+          <h3>Total Revenue from Instructor Registration Fees:</h3>
+          <h2>PHP {{formatMoney totalInstructorRevenue}}</h2>
+        </div>
+        <div class="total-revenue">
+          <h3>Total Instructor Fee Payments:</h3>
+          <h2>{{instructorTransactionsCount}}</h2>
+        </div>
+      </div>
+
+      <div class="report-summary" id="club-summary" style="display:none;">
+        <div class="total-revenue">
+          <h3>Total Revenue from Club Registration Fees:</h3>
+          <h2>PHP {{formatMoney totalClubRevenue}}</h2>
+        </div>
+        <div class="total-revenue">
+          <h3>Total Club Fee Payments:</h3>
+          <h2>{{clubTransactionsCount}}</h2>
+        </div>
+      </div>
+
+      <script>
+        document.getElementById('regtypefiltertxn').addEventListener('change', function() {
+          const selectedCategory = this.value;
+          document.getElementById('all-summary').style.display = selectedCategory === 'all' ? 'block' : 'none';
+          document.getElementById('ncc-summary').style.display = selectedCategory === 'nccregs' ? 'block' : 'none';
+          document.getElementById('instructor-summary').style.display = selectedCategory === 'instructorregs' ? 'block' : 'none';
+          document.getElementById('club-summary').style.display = selectedCategory === 'clubregs' ? 'block' : 'none';
+        });
+      </script>
 
       <button class="export-csv-btn" onclick="exportTransactionsTableToCSV('payments.csv')">Export to CSV</button>
       <p></p>
@@ -539,18 +619,26 @@
       regStatusFilter.style.display = 'none';
       }
 
+      // Show or hide regtypefiltertxn based on selected report
+      var regTypeFilterTxn = document.getElementById('regtypefiltertxn');
+      if (reportName === 'payments') {
+      regTypeFilterTxn.style.display = 'inline-block';
+      } else {
+      regTypeFilterTxn.style.display = 'none';
+      }
+
       // Show or hide province filter based on selected report
       var provinceFilter = document.getElementById('province-filter');
       if (reportName === 'clubs') {
-        provinceFilter.style.display = 'inline-block';
+      provinceFilter.style.display = 'inline-block';
       } else {
-        provinceFilter.style.display = 'none';
+      provinceFilter.style.display = 'none';
       }
 
       // Hide other filters when 'clubs' report is selected
       if (reportName === 'clubs') {
-        regTypeFilter.style.display = 'none';
-        regStatusFilter.style.display = 'none';
+      regTypeFilter.style.display = 'none';
+      regStatusFilter.style.display = 'none';
       }
     }
 
