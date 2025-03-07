@@ -3799,6 +3799,19 @@ app.post("/decide-kyorugi-winners/:eventid", async (req, res) => {
     const championId = finalMatch.winner;
     const secondPlaceId = finalMatch.loser;
 
+    const { data: disqualifiedMatches, error: disqualifiedMatchesError } = await supabase
+      .from("kyorugi_matches")
+      .select("*")
+      .eq("eventid", eventid)
+      .or("player1score.eq.-1,player2score.eq.-1");
+
+    if (disqualifiedMatchesError) {
+      console.error("Error fetching disqualified matches:", disqualifiedMatchesError.message);
+      return res.status(500).send("Error fetching disqualified matches");
+    }
+
+    const disqualifiedPlayers = disqualifiedMatches.map(match => match.loser);
+
     // Fetch the highest round number for the event
     const { data: highestRound, error: highestRoundError } = await supabase
       .from("kyorugi_matches")
@@ -3841,6 +3854,8 @@ app.post("/decide-kyorugi-winners/:eventid", async (req, res) => {
       return res.status(500).send("Error fetching participants");
     }
 
+
+
     // Fetch the event details
     const { data: event, error: eventError } = await supabase
       .from("events")
@@ -3862,6 +3877,8 @@ app.post("/decide-kyorugi-winners/:eventid", async (req, res) => {
         ranking = 2;
       } else if (thirdPlaceIds.includes(participant.userid)) {
         ranking = 3;
+      } else if (disqualifiedPlayers.includes(participant.userid)) {
+        ranking = -1; // Assign a special ranking for disqualified players
       } else {
         ranking = 0; // Ensure ranking is reset for each participant
       }

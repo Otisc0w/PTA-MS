@@ -64,7 +64,7 @@
               <td>{{eventType}}</td>
               <td>{{eventLocation}}</td>
               <td>{{ageDivision}}</td>
-              <td>{{#unless (eq ranking 0)}}{{ordinal ranking}}{{else}}P{{/unless}}</td>
+                <td>{{#if (eq ranking -1)}}DQ{{else}}{{#unless (eq ranking 0)}}{{ordinal ranking}}{{else}}P{{/unless}}{{/if}}</td>
               <td>{{#if (eq poomsaefinalscore -1)}} DQ  <button class="dqreasonbtn" id="dqreasonbtn">?</button> 
               <div>
                 <p class="dqreason" id="dqreason" style="display:none">Reason for disqualification: <strong>{{dqreason}}</strong></p>
