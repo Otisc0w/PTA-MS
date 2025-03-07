@@ -5921,34 +5921,30 @@ app.get("/events-review-registration/:id", async function (req, res) {
       .eq("id", id)
       .single();
 
-    if (eventregError) {
+    if (eventregError && eventregError.code !== 'PGRST116') {
       return res.status(400).json({ error: eventregError.message });
     }
 
     const { data: registeredathlete, error: registeredathleteError } = await supabase
       .from("athletes")
       .select("*")
-      .eq("id", eventregistration.athleteid)
+      .eq("id", eventregistration?.athleteid)
       .single();
 
-    if (registeredathleteError) {
+    if (registeredathleteError && registeredathleteError.code !== 'PGRST116') {
       return res.status(400).json({ error: registeredathleteError.message });
     }
 
-    if (!registeredathlete) {
-      return res.status(404).json({ error: "Athlete not found" });
-    }
-
-    console.log("Fetched athlete portrait:", eventregistration.athleteid);
+    console.log("Fetched athlete portrait:", eventregistration?.athleteid);
 
     // Fetch the event details using the eventid from the event registration
     const { data: event, error: eventError } = await supabase
       .from("events")
       .select("*")
-      .eq("id", eventregistration.eventid)
+      .eq("id", eventregistration?.eventid)
       .single();
 
-    if (eventError) {
+    if (eventError && eventError.code !== 'PGRST116') {
       return res.status(400).json({ error: eventError.message });
     }
 
@@ -5959,7 +5955,7 @@ app.get("/events-review-registration/:id", async function (req, res) {
       .eq("userid", userId)
       .single();
 
-    if (athleteError) {
+    if (athleteError && athleteError.code !== 'PGRST116') {
       return res.status(400).json({ error: athleteError.message });
     }
 
