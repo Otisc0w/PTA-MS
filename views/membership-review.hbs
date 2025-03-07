@@ -422,10 +422,15 @@
     function printIdCard(divName) {
       var printContents = document.getElementById(divName).innerHTML;
       var originalContents = document.body.innerHTML;
+      var originalStyles = document.head.innerHTML; // Save the original styles
+
       document.body.innerHTML = printContents;
+      document.head.innerHTML = originalStyles; // Restore the original styles
+
       window.print();
-      // Remove the reload to avoid errors after canceling
+
       document.body.innerHTML = originalContents; // Restore the original content after print
+      document.head.innerHTML = originalStyles; // Restore the original styles after print
     }
 
     function toggleDropdown() {
