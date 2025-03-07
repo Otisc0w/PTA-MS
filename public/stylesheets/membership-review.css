@@ -330,21 +330,97 @@ strong {
 }
 
 .id-card {
-    width: 300px;
-    padding: 10px;
-    border: 1px solid black;
-    text-align: center;
+    width: 2.5in;
+    height: 4in;
+    background: linear-gradient(150deg, #003366 70%, #cc0000 70%);
+    border-radius: 10px;
+    position: relative;
+    color: white;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    padding: 0;
 }
 
-.id-card img {
-    width: 100px;
-    height: auto;
-    margin-bottom: 10px;
+.id-front {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
 }
 
-.id-card p {
+.card-header {
     font-size: 14px;
-    margin: 5px 0;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 5px;
+    position: absolute;
+    top: 10px;
+    width: 100%;
+    left: 0;
+    text-transform: uppercase;
+}
+
+.pta-header {
+    position: absolute;
+    top: 35px;
+    left: 0;
+    z-index: 2;
+    text-align: center;
+    width: 100%;
+}
+
+.pta-text {
+    font-size: 24px;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.8);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    letter-spacing: 1px;
+}
+
+.photo-area {
+    position: absolute;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1.8in;
+    height: 1.8in;
+    background: white;
+    border: 2px solid white;
+}
+
+.athlete-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+.card-details {
+    position: absolute;
+    bottom: 20px;
+    left: 15px;
+    width: calc(100% - 30px);
+    z-index: 2;
+}
+
+.athlete-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.athlete-id,
+.division,
+.chapter,
+.birthdate {
+    font-size: 14px;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+}
+
+.athlete-id {
+    margin-bottom: 10px;
 }
 
 #printableArea {
@@ -352,38 +428,40 @@ strong {
 }
 
 @media print {
-    #printableArea {
-        display: block;
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        width: 2.125in; /* Set the width of the ID */
-        height: 3.375in; /* Set the height of the ID */
-        padding: 0;
-        margin: 0 auto; /* Center the ID on the page */
+    @page {
+        size: 2.5in 4in;
+        margin: 0;
     }
 
     body * {
-        visibility: hidden; /* Hide everything else */
+        visibility: hidden;
     }
 
     #printableArea,
     #printableArea * {
-        visibility: visible; /* Show only the printable area */
+        visibility: visible;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
     }
 
-    #printableArea .id-card {
-        width: 100%;
-        height: 100%;
-        border: 1px solid black; /* Optional: Add a border */
-        box-sizing: border-box; /* Ensure padding doesn't affect the size */
+    #printableArea {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 2.5in;
+        height: 4in;
     }
 
-    #printableArea img {
-        width: 100%; /* Make sure the image fits the width */
-        height: auto; /* Maintain aspect ratio */
+    .id-card {
+        background: linear-gradient(150deg, #003366 70%, #cc0000 70%) !important;
+        margin: 0;
+        padding: 0;
+    }
+
+    .photo-area {
+        margin: 0;
+        border: none;
     }
 }
 

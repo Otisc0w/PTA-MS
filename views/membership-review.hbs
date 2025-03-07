@@ -270,7 +270,7 @@
         </h1>
         {{#if user.ptaverified}}
         <div class="action-buttons">
-          <button onclick="printIdCard('printableArea')" class="printbtn">Print ID</button>
+          <button type="button" class="printbtn" onclick="printIdCard('printableArea', event)">Print ID</button>
           <button type="submit" name="status" value="1">Under Review</button>
           <button type="submit" name="status" value="2">Accepted and En-route to Regional Office</button>
           {{#unless (eq registration.status 3)}}
@@ -326,15 +326,25 @@
           </button>
         </div>
       </section>
-      <div id="printableArea">
+      <!-- Printable ID card area - separate from the form -->
+      <div id="printableArea" style="display: none;">
         <div class="id-card">
-          <img src="/images/logo.png" alt="PTA logo">
-          <img src="{{registration.portrait}}" alt="Athlete Picture">
-          <p><strong>ID:</strong> {{registration.id}}</p>
-          <p><strong>Name:</strong> {{registration.firstname}} {{registration.middlename}} {{registration.lastname}}</p>
-          <p><strong>Division:</strong> {{registration.division}}</p>
-          <p><strong>Chapter:</strong> {{registration.chapter}}</p>
-          <p><strong>Birthdate:</strong> {{formatDate registration.birthday "MMMM D, YYYY"}}</p>
+          <div class="id-front">
+            <div class="card-header">NATIONAL COMPETITORS CARD</div>
+            <div class="pta-header">
+              <div class="pta-text">PTA 2024</div>
+            </div>
+            <div class="photo-area">
+              <img src="{{registration.portrait}}" alt="Athlete Photo" class="athlete-photo">
+            </div>
+            <div class="card-details">
+              <div class="athlete-name">{{registration.firstname}} {{registration.middlename}} {{registration.lastname}}</div>
+              <div class="athlete-id">{{registration.id}}</div>
+              <div class="division">DIVISION: {{registration.division}}</div>
+              <div class="chapter">CHAPTER: {{registration.chapter}}</div>
+              <div class="birthdate">BIRTHDATE: {{formatDate registration.bday "MMMM D, YYYY"}}</div>
+            </div>
+          </div>
         </div>
       </div>
     </form>
@@ -420,17 +430,43 @@
     }
 
     function printIdCard(divName) {
-      var printContents = document.getElementById(divName).innerHTML;
-      var originalContents = document.body.innerHTML;
-      var originalStyles = document.head.innerHTML; // Save the original styles
-
-      document.body.innerHTML = printContents;
-      document.head.innerHTML = originalStyles; // Restore the original styles
-
+      // Prevent any form submission
+      event.preventDefault();
+      
+      const printContents = document.getElementById(divName);
+      const originalDisplay = printContents.style.display;
+      
+      // Add print-specific styles
+      const style = document.createElement('style');
+      style.innerHTML = `
+        @media print {
+          body * {
+            visibility: hidden;
+          }
+          #${divName}, #${divName} * {
+            visibility: visible;
+          }
+          #${divName} {
+            position: absolute;
+            left: 0;
+            top: 0;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      // Show the printable area
+      printContents.style.display = 'block';
+      
+      // Print with afterprint handler
+      window.onafterprint = () => {
+        // Cleanup after printing
+        printContents.style.display = originalDisplay;
+        document.head.removeChild(style);
+        window.onafterprint = null;
+      };
+      
       window.print();
-
-      document.body.innerHTML = originalContents; // Restore the original content after print
-      document.head.innerHTML = originalStyles; // Restore the original styles after print
     }
 
     function toggleDropdown() {
