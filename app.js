@@ -3857,32 +3857,30 @@ app.post("/decide-kyorugi-winners/:eventid", async (req, res) => {
     for (const participant of participants) {
       let ranking = 0;
       if (participant.userid === championId) {
-      ranking = 1;
+        ranking = 1;
       } else if (participant.userid === secondPlaceId) {
-      ranking = 2;
+        ranking = 2;
       } else if (thirdPlaceIds.includes(participant.userid)) {
-      ranking = 3;
-      } else if (participant.totalscore === -1) {
-      ranking = "DQ"; // Set ranking to "DQ" if the final score is -1
+        ranking = 3;
       } else {
-      ranking = 0; // Ensure ranking is reset for each participant
+        ranking = 0; // Ensure ranking is reset for each participant
       }
 
       const { error: matchHistoryError } = await supabase
-      .from("match_history")
-      .insert([
-        {
-        eventid,
-        athleteid: participant.athleteid,
-        ranking,
-        eventname: event.name,
-        eventlocation: event.location,
-        },
-      ]);
+        .from("match_history")
+        .insert([
+          {
+            eventid,
+            athleteid: participant.athleteid,
+            ranking,
+            eventname: event.name,
+            eventlocation: event.location,
+          },
+        ]);
 
       if (matchHistoryError) {
-      console.error("Error inserting match history:", matchHistoryError.message);
-      return res.status(500).send("Error inserting match history");
+        console.error("Error inserting match history:", matchHistoryError.message);
+        return res.status(500).send("Error inserting match history");
       }
     }
 
@@ -6228,17 +6226,20 @@ app.get("/events-details/:id", async function (req, res) {
       .from("athletes")
       .select("*")
       .in("userid", otherPlayers.map(player => player.loser).filter(loser => loser !== null));
+
     if (losersError) {
       return res.status(400).json({ error: losersError.message });
     }
 
     const otherPlayersWithDetails = otherPlayers.map(player => {
       const loserDetails = losers.find(user => user.userid === player.loser);
+      const isDisqualified = player.player1score === -1 || player.player2score === -1;
       return {
       ...player,
       loserDetails: loserDetails || null,
+      isDisqualified,
       };
-    });
+    }).filter(player => player.isDisqualified || player.loserDetails);
 
     console.log("Ffefefefetch data:", otherPlayersWithDetails); 
 
