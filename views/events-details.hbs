@@ -626,7 +626,13 @@
             <button type="button" onclick="disqualifyPlayer()">Disqualify Player</button>
             <div id="disqualifyReasonContainer" style="display:none;">
               <label for="disqualifyReason">Reason for Disqualification:</label>
-              <input type="text" id="disqualifyReason" name="dqreason">
+                <select id="disqualifyReason" name="dqreason">
+                  <option value="Illegal Move">Illegal Move</option>
+                  <option value="Unsportsmanlike Conduct">Unsportsmanlike Conduct</option>
+                  <option value="Injury">Injury</option>
+                  <option value="Overqualified">Overqualified</option>
+                  <option value="Other">Other</option>
+                </select>
             </div>
             <script>
               function disqualifyPlayer() {
@@ -738,7 +744,15 @@
                     <td></td>
                     <td><button type="button" onclick="disqualifyKyorugiPlayer('player1')">Disqualify</button></td>
                     <td><button type="button" onclick="disqualifyKyorugiPlayer('player2')">Disqualify</button></td>
-                    <input type="text" id="kyorugiDqReason" name="dqreason" style="display:none;" placeholder="Give the reason for DQ">
+                    {{!-- <input type="text" id="kyorugiDqReason" name="dqreason" style="display:none;" placeholder="Give the reason for DQ"> --}}
+                    <label id="kyorugiDqReason" for="disqualifyReason" style="display:none;">Reason for Disqualification:</label>
+                      <select  id="kyorugiDqReasonOptions" name="dqreason" style="display:none;">
+                        <option value="Illegal Move">Illegal Move</option>
+                        <option value="Unsportsmanlike Conduct">Unsportsmanlike Conduct</option>
+                        <option value="Injury">Injury</option>
+                        <option value="Overqualified">Overqualified</option>
+                        <option value="Other">Other</option>
+                      </select>
                   <script>
                     function disqualifyKyorugiPlayer(player) {
                       const disqualify = confirm(`Are you sure you want to disqualify ${player}? Disqualifying this player means a loss by default.`);
@@ -748,6 +762,7 @@
                       document.querySelector(`input[name="${inputName}"]`).value = -1;
                       document.querySelector(`input[name="${enemyInputName}"]`).value = 1;
                       document.getElementById('kyorugiDqReason').style.display = 'block';
+                      document.getElementById('kyorugiDqReasonOptions').style.display = 'block';
                       }
                     }
                   </script>
