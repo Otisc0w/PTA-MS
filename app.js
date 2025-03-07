@@ -7382,7 +7382,8 @@ app.get("/analytics", async (req, res) => {
       membershiptotalrevenue,
       totalClubRevenue,
       totalInstructorRevenue,
-      totalNccRevenue
+      totalNccRevenue,
+      
     });
   } catch (error) {
     console.error("Error fetching analytics data:", error.message);
