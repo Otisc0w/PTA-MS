@@ -318,18 +318,18 @@
 
     <div id="membership" class="report-section" style="display:block">
       <h2>Membership Applications</h2>
-      <div class="report-summary" id="all-summary">
+      <div class="report-summary" id="ncc-bd-summary">
         <div class="total-revenue">
           <h3>NCC Applications Breakdown:</h3>
-          <h2>PHP {{formatMoney membershiptotalrevenue}}</h2>
+          <p>Under Review: {{underReviewNccsCount}}</p>
+          <p>Accepted: {{acceptedNccsCount}}</p>
+          <p>ID Shipped: {{rejectedNccsCount}}</p>
+          <p>Rejected: {{idShippedNccsCount}}</p>
+          <p>Suspended: {{suspendedNccsCount}}</p>
+          <p>Expired: {{expiredNccsCount}}</p>
         </div>
-       <div class="chart-container" style="width: 300px; height: 300px;">
+        <div class="chart-container" style="width: 300px; height: 300px;">
           <canvas id="nccappsbreakdown"></canvas>
-        </div>
-        <div class="insights-summary">
-          <p>Under Review: {{totalMembers}}</p>
-          <p>Registered Athletes: {{athleteVerifiedCount}}</p>
-          <p>Registered Instructors: {{instructorVerifiedCount}}</p>
         </div>
       </div>
       
@@ -339,11 +339,11 @@
         var nccAppsBreakdownChart = new Chart(ctx, {
           type: 'doughnut',
           data: {
-            labels: ['Under Review', 'Registered Athletes', 'Registered Instructors'],
+            labels: ['Under Review', 'Accepted', 'ID Shipped', 'Rejected', 'Suspended', 'Expired'],
             datasets: [{
-              data: [{{totalMembers}}, {{athleteVerifiedCount}}, {{instructorVerifiedCount}}],
-              backgroundColor: ['#FFCE56', '#36A2EB', '#FF6384'],
-              hoverBackgroundColor: ['#FFCE56', '#36A2EB', '#FF6384']
+              data: [{{underReviewNccsCount}}, {{acceptedNccsCount}}, {{idShippedNccsCount}}, {{rejectedNccsCount}}, {{suspendedNccsCount}}, {{expiredNccsCount}}],
+              backgroundColor: ['#FFCE56', '#36A2EB', '#32a852', '#FF6384', '#ad6b00', '#C9CBCF', '#9000ad', ],
+              hoverBackgroundColor: ['#FFCE56', '#36A2EB', '#32a852', '#FF6384', '#ad6b00', '#C9CBCF', '#9000ad']
             }]
           },
           options: {
@@ -358,7 +358,85 @@
         });
       });
       </script>
-      
+
+      <div class="report-summary" id="instructor-bd-summary">
+        <div class="total-revenue">
+          <h3>Instructor Applications Breakdown:</h3>
+          <p>Under Review: {{underReviewInstructorsCount}}</p>
+          <p>Accepted: {{acceptedInstructorsCount}}</p>
+          <p>ID Shipped: {{idShippedInstructorsCount}}</p>
+          <p>Rejected: {{rejectedInstructorsCount}}</p>
+          <p>Suspended: {{suspendedInstructorsCount}}</p>
+          <p>Expired: {{expiredInstructorsCount}}</p>
+        </div>
+        <div class="chart-container" style="width: 300px; height: 300px;">
+          <canvas id="instructorAppsBreakdown"></canvas>
+        </div>
+      </div>
+
+      <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var ctx = document.getElementById('instructorAppsBreakdown').getContext('2d');
+        var instructorAppsBreakdownChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Under Review', 'Accepted', 'ID Shipped', 'Rejected', 'Suspended', 'Expired'],
+            datasets: [{
+              data: [{{underReviewInstructorsCount}}, {{acceptedInstructorsCount}}, {{idShippedInstructorsCount}}, {{rejectedInstructorsCount}}, {{suspendedInstructorsCount}}, {{expiredInstructorsCount}}],
+              backgroundColor: ['#FFCE56', '#36A2EB', '#32a852', '#FF6384', '#ad6b00', '#C9CBCF'],
+              hoverBackgroundColor: ['#FFCE56', '#36A2EB', '#32a852', '#FF6384', '#ad6b00', '#C9CBCF']
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+              }
+            }
+          }
+        });
+      });
+      </script>
+
+      <div class="report-summary" id="club-bd-summary">
+        <div class="total-revenue">
+          <h3>Club Applications Breakdown:</h3>
+          <p>Processing: {{underReviewClubsCount}}</p>
+          <p>Accepted and Registered: {{acceptedClubsCount}}</p>
+          <p>Rejected: {{rejectedClubsCount}}</p>
+        </div>
+        <div class="chart-container" style="width: 300px; height: 300px;">
+          <canvas id="clubAppsBreakdown"></canvas>
+        </div>
+      </div>
+
+      <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var ctx = document.getElementById('clubAppsBreakdown').getContext('2d');
+        var clubAppsBreakdownChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Under Review', 'Accepted', 'ID Shipped', 'Rejected', 'Suspended', 'Expired'],
+            datasets: [{
+              data: [{{underReviewClubsCount}}, {{acceptedClubsCount}}, {{idShippedClubsCount}}, {{rejectedClubsCount}}, {{suspendedClubsCount}}, {{expiredClubsCount}}],
+              backgroundColor: ['#FFCE56', '#36A2EB', '#32a852', '#FF6384', '#ad6b00', '#C9CBCF'],
+              hoverBackgroundColor: ['#FFCE56', '#36A2EB', '#32a852', '#FF6384', '#ad6b00', '#C9CBCF']
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+              }
+            }
+          }
+        });
+      });
+      </script>
       <button class="export-csv-btn" onclick="exportMembershipsTableToCSV('payments.csv')">Export to CSV</button>
       <p></p>
       <div class="report-table">
@@ -758,25 +836,37 @@
       rows.forEach(row => row.style.display = 'none'); // Hide all rows
 
       if (selectedCategory === 'nccregs') {
-        rows.forEach(row => {
-          if (row.cells[0].innerText.startsWith('NCCAPP')) {
-            row.style.display = '';
-          }
-        });
+      rows.forEach(row => {
+        if (row.cells[0].innerText.startsWith('NCCAPP')) {
+        row.style.display = '';
+        }
+      });
+      document.getElementById('ncc-bd-summary').style.display = 'block';
+      document.getElementById('instructor-bd-summary').style.display = 'none';
+      document.getElementById('club-bd-summary').style.display = 'none';
       } else if (selectedCategory === 'instructorregs') {
-        rows.forEach(row => {
-          if (row.cells[0].innerText.startsWith('INSAPP')) {
-            row.style.display = '';
-          }
-        });
+      rows.forEach(row => {
+        if (row.cells[0].innerText.startsWith('INSAPP')) {
+        row.style.display = '';
+        }
+      });
+      document.getElementById('ncc-bd-summary').style.display = 'none';
+      document.getElementById('instructor-bd-summary').style.display = 'block';
+      document.getElementById('club-bd-summary').style.display = 'none';
       } else if (selectedCategory === 'clubregs') {
-        rows.forEach(row => {
-          if (row.cells[0].innerText.startsWith('CLUBAPP')) {
-            row.style.display = '';
-          }
-        });
+      rows.forEach(row => {
+        if (row.cells[0].innerText.startsWith('CLUBAPP')) {
+        row.style.display = '';
+        }
+      });
+      document.getElementById('ncc-bd-summary').style.display = 'none';
+      document.getElementById('instructor-bd-summary').style.display = 'none';
+      document.getElementById('club-bd-summary').style.display = 'block';
       } else if (selectedCategory === 'all') {
-        rows.forEach(row => row.style.display = '');
+      rows.forEach(row => row.style.display = '');
+      document.getElementById('ncc-bd-summary').style.display = 'block';
+      document.getElementById('instructor-bd-summary').style.display = 'block';
+      document.getElementById('club-bd-summary').style.display = 'block';
       }
 
       // Reset status filter when switching category

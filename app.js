@@ -7253,33 +7253,167 @@ app.get("/analytics", async (req, res) => {
     if (clubRegistrationsError) {
       throw clubRegistrationsError;
     }
-
-    // Fetch the total number of rows in the 'club_registrations' table
-    const { count: clubRegistrationsCount, error: clubRegistrationsCountError } = await supabase
-      .from("club_registrations")
-      .select("id", { count: "exact" });
-
-    if (clubRegistrationsCountError) {
-      throw clubRegistrationsCountError;
-    }
-
+    
     // Fetch the total number of rows in the 'ncc_registrations' table
     const { count: nccRegistrationsCount, error: nccRegistrationsCountError } = await supabase
       .from("ncc_registrations")
       .select("id", { count: "exact" });
-
     if (nccRegistrationsCountError) {
       throw nccRegistrationsCountError;
     }
+
+        // Fetch NCC registrations with status 1 (under review)
+        const { count: underReviewNccsCount, error: underReviewNccsError } = await supabase
+          .from("ncc_registrations")
+          .select("id", { count: "exact" })
+          .eq("status", 1);
+        if (underReviewNccsError) {
+          throw underReviewNccsError;
+        }
+        console.log("Fetched NCC registrations under review count:", underReviewNccsCount);
+
+        const { count: acceptedNccsCount, error: acceptedNccsError } = await supabase
+          .from("ncc_registrations")
+          .select("id", { count: "exact" })
+          .eq("status", 2);
+        if (acceptedNccsError) {
+          throw acceptedNccsError;
+        }
+        console.log("Fetched NCC registrations accepted count:", acceptedNccsCount);
+
+        const { count: idShippedNccsCount, error: idShippedNccsError } = await supabase
+          .from("ncc_registrations")
+          .select("id", { count: "exact" })
+          .eq("status", 3);
+        if (idShippedNccsError) {
+          throw idShippedNccsError;
+        }
+        console.log("Fetched NCC registrations ID shipped count:", idShippedNccsCount);
+
+        const { count: rejectedNccsCount, error: rejectedNccsError } = await supabase
+          .from("ncc_registrations")
+          .select("id", { count: "exact" })
+          .eq("status", 4);
+        if (rejectedNccsError) {
+          throw rejectedNccsError;
+        }
+        console.log("Fetched NCC registrations rejected count:", rejectedNccsCount);
+
+        const { count: expiredNccsCount, error: expiredNccsError } = await supabase
+          .from("ncc_registrations")
+          .select("id", { count: "exact" })
+          .eq("status", 5);
+        if (expiredNccsError) {
+          throw expiredNccsError;
+        }
+        console.log("Fetched NCC registrations expired count:", expiredNccsCount);
+
+        const { count: suspendedNccsCount, error: suspendedNccsError } = await supabase
+          .from("ncc_registrations")
+          .select("id", { count: "exact" })
+          .eq("status", 6);
+        if (suspendedNccsError) {
+          throw suspendedNccsError;
+        }
+        console.log("Fetched NCC registrations suspended count:", suspendedNccsCount);
 
     // Fetch the total number of rows in the 'instructor_registrations' table
     const { count: instructorRegistrationsCount, error: instructorRegistrationsCountError } = await supabase
       .from("instructor_registrations")
       .select("id", { count: "exact" });
-
     if (instructorRegistrationsCountError) {
       throw instructorRegistrationsCountError;
     }
+
+        // Fetch instructor registrations with status 1 (under review)
+        const { count: underReviewInstructorsCount, error: underReviewInstructorsError } = await supabase
+          .from("instructor_registrations")
+          .select("id", { count: "exact" })
+          .eq("status", 1);
+        if (underReviewInstructorsError) {
+          throw underReviewInstructorsError;
+        }
+        console.log("Fetched Instructor registrations under review count:", underReviewInstructorsCount);
+
+        const { count: enrouteInstructorsCount, error: enrouteInstructorsError } = await supabase
+          .from("instructor_registrations")
+          .select("id", { count: "exact" })
+          .eq("status", 2);
+        if (enrouteInstructorsError) {
+          throw enrouteInstructorsError;
+        }
+        console.log("Fetched Instructor registrations accepted count:", enrouteInstructorsCount);
+
+        const { count: idShippedInstructorsCount, error: idShippedInstructorsError } = await supabase
+          .from("instructor_registrations")
+          .select("id", { count: "exact" })
+          .eq("status", 3);
+        if (idShippedInstructorsError) {
+          throw idShippedInstructorsError;
+        }
+        console.log("Fetched Instructor registrations ID shipped count:", idShippedInstructorsCount);
+
+        const { count: rejectedInstructorsCount, error: rejectedInstructorsError } = await supabase
+          .from("instructor_registrations")
+          .select("id", { count: "exact" })
+          .eq("status", 4);
+        if (rejectedInstructorsError) {
+          throw rejectedInstructorsError;
+        }
+        console.log("Fetched Instructor registrations rejected count:", rejectedInstructorsCount);
+
+        const { count: expiredInstructorsCount, error: expiredInstructorsError } = await supabase
+          .from("instructor_registrations")
+          .select("id", { count: "exact" })
+          .eq("status", 5);
+        if (expiredInstructorsError) {
+          throw expiredInstructorsError;
+        }
+        console.log("Fetched Instructor registrations expired count:", expiredInstructorsCount);
+
+        const { count: suspendedInstructorsCount, error: suspendedInstructorsError } = await supabase
+          .from("instructor_registrations")
+          .select("id", { count: "exact" })
+          .eq("status", 6);
+        if (suspendedInstructorsError) {
+          throw suspendedInstructorsError;
+        }
+        console.log("Fetched Instructor registrations suspended count:", suspendedInstructorsCount);
+
+    // Fetch the total number of rows in the 'club_registrations' table
+    const { count: clubRegistrationsCount, error: clubRegistrationsCountError } = await supabase
+      .from("club_registrations")
+      .select("id", { count: "exact" });
+    if (clubRegistrationsCountError) {
+      throw clubRegistrationsCountError;
+    }
+        // Fetch club registrations with status 1 (under review)
+        const { count: underReviewClubsCount, error: underReviewClubsError } = await supabase
+          .from("club_registrations")
+          .select("id", { count: "exact" })
+          .eq("status", 1);
+        if (underReviewClubsError) {
+          throw underReviewClubsError;
+        }
+        console.log("Fetched Club registrations under review count:", underReviewClubsCount);
+
+        const { count: acceptedClubsCount, error: acceptedClubsError } = await supabase
+          .from("club_registrations")
+          .select("id", { count: "exact" })
+          .eq("status", 3);
+        if (acceptedClubsError) {
+          throw acceptedClubsError;
+        }
+        console.log("Fetched Club registrations accepted count:", acceptedClubsCount);
+
+        const { count: rejectedClubsCount, error: rejectedClubsError } = await supabase
+          .from("club_registrations")
+          .select("id", { count: "exact" })
+          .eq("status", 4);
+        if (rejectedClubsError) {
+          throw rejectedClubsError;
+        }
+        console.log("Fetched Club registrations rejected count:", rejectedClubsCount);
 
     console.log("Total number of club registrations:", clubRegistrationsCount);
     console.log("Total number of NCC registrations:", nccRegistrationsCount);
@@ -7351,6 +7485,8 @@ app.get("/analytics", async (req, res) => {
       throw clubsCountError;
     }
 
+    
+
     console.log("Total number of clubs:", clubsCount);
 
     console.log("Number of clubs by province:", provinceClubCounts)
@@ -7383,7 +7519,26 @@ app.get("/analytics", async (req, res) => {
       totalClubRevenue,
       totalInstructorRevenue,
       totalNccRevenue,
-      
+      //NCC statuses
+      underReviewNccsCount,
+      acceptedNccsCount,
+      idShippedNccsCount,
+      rejectedNccsCount,
+      expiredNccsCount,
+      suspendedNccsCount,
+      //instructor statuses
+      underReviewInstructorsCount,
+      enrouteInstructorsCount,
+      idShippedInstructorsCount,
+      rejectedInstructorsCount,
+      expiredInstructorsCount,
+      suspendedInstructorsCount,
+      //club statuses
+      underReviewClubsCount,
+      acceptedClubsCount,
+      rejectedClubsCount
+
+
     });
   } catch (error) {
     console.error("Error fetching analytics data:", error.message);
