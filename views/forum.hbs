@@ -102,7 +102,7 @@
           <div class='post-container'>
             <div class='post-content'>
               <div class="dropdown-container">
-                <button onclick="toggleDropdown(this)" class="dropbtn">...</button>
+                <button onclick="togglePostDropdown(this)" class="dropbtn">...</button>
                 <div class="dropdown-content">
                   <a href="#">Pin</a>
                   {{#if (eq originalposter ../user.username)}}
@@ -199,46 +199,30 @@
   <script src="/scripts/navbar.js"></script>
   <script src="/scripts/footer.js"></script>
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      function toggleDropdown() {
-        document.getElementById("dropdown").classList.toggle("show");
-      }
-
-      window.onclick = function (event) {
-        if (!event.target.matches('.profile-pic img')) {
-          var dropdowns = document.getElementsByClassName("dropdown-content");
-          for (var i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('show')) {
-              openDropdown.classList.remove('show');
-            }
-          }
-        }
-      }
-
-      // Post link redirection
-      const postLinks = document.querySelectorAll('.post-link');
-      postLinks.forEach(link => {
-        link.addEventListener('click', function () {
-          window.location.href = this.getAttribute('data-href');
-        });
-      });
-
-      // Toggle dropdown for post actions
-      window.toggleDropdown = function (button) {
+    document.addEventListener("DOMContentLoaded", function() {
+      // Rename the post dropdown function to avoid conflicts with navbar dropdown
+      window.togglePostDropdown = function(button) {
         event.stopPropagation();
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        for (var i = 0; i < dropdowns.length; i++) {
-          var openDropdown = dropdowns[i];
-          if (openDropdown !== button.nextElementSibling) {
+        const dropdowns = document.getElementsByClassName("dropdown-content");
+        for (let i = 0; i < dropdowns.length; i++) {
+          const openDropdown = dropdowns[i];
+          if (openDropdown !== button.nextElementSibling && !openDropdown.id.includes('dropdown')) {
             openDropdown.classList.remove('show');
           }
         }
         button.nextElementSibling.classList.toggle("show");
-      }
+      };
+
+      // Post link redirection
+      const postLinks = document.querySelectorAll('.post-link');
+      postLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          window.location.href = this.getAttribute('data-href');
+        });
+      });
 
       // Create post button redirection
-      document.getElementById("createPostButton").addEventListener("click", function () {
+      document.getElementById("createPostButton").addEventListener("click", function() {
         window.location.href = "forum-create";
       });
 
@@ -264,25 +248,19 @@
       const createTopicButton = document.getElementById("createtopicButton");
       const closeTopicModal = document.getElementsByClassName("close")[0];
 
-      createTopicButton.onclick = function () {
+      createTopicButton.onclick = function() {
         topicModal.style.display = "block";
-      }
+      };
 
-      closeTopicModal.onclick = function () {
+      closeTopicModal.onclick = function() {
         topicModal.style.display = "none";
-      }
-
-      window.onclick = function (event) {
-        if (event.target == topicModal) {
-          topicModal.style.display = "none";
-        }
-      }
+      };
 
       // Edit post modal handling
       const editPostModal = document.getElementById("editPostModal");
       const closeEditModal = document.querySelector(".close-edit");
 
-      window.openEditModal = function (event, threadId, topic) {
+      window.openEditModal = function(event, threadId, topic) {
         event.preventDefault();
         event.stopPropagation();
 
@@ -297,18 +275,31 @@
         editPostModal.style.display = "flex";
       };
 
-      closeEditModal.onclick = function () {
+      closeEditModal.onclick = function() {
         editPostModal.style.display = "none";
       };
 
-      window.onclick = function (event) {
+      // Use addEventListener instead of window.onclick
+      document.addEventListener('click', function(event) {
+        // Close modals when clicking outside
+        if (event.target == topicModal) {
+          topicModal.style.display = "none";
+        }
+        
         if (event.target == editPostModal) {
           editPostModal.style.display = "none";
         }
-      }
+        
+        // Close post dropdowns when clicking outside
+        if (!event.target.matches('.dropbtn') && !event.target.closest('.dropdown-content')) {
+          document.querySelectorAll('.post-container .dropdown-content').forEach(dropdown => {
+            dropdown.classList.remove('show');
+          });
+        }
+      });
 
       // Delete post handling
-      document.getElementById("deleteButton").addEventListener("click", function () {
+      document.getElementById("deleteButton").addEventListener("click", function() {
         const threadId = document.querySelector('input[name="threadId"]').value;
 
         fetch(`/delete-post/${threadId}`, {
@@ -317,18 +308,18 @@
             'Content-Type': 'application/json'
           }
         })
-          .then(response => response.json())
-          .then(data => {
-            if (data.success) {
-              alert("Post deleted successfully!");
-              window.location.href = "/forum";
-            } else {
-              alert("Failed to delete the post.");
-            }
-          })
-          .catch(error => {
-            console.error('Error:', error);
-          });
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert("Post deleted successfully!");
+            window.location.href = "/forum";
+          } else {
+            alert("Failed to delete the post.");
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
       });
     });
   </script>

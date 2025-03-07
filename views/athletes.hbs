@@ -157,36 +157,38 @@
   <script src="/scripts/navbar.js"></script>
   <script src="/scripts/footer.js"></script>
   <script>
-    // Remove all the redundant window.onclick handlers and overlapping functions
-    
-    // Modal functionality
-    var modal = document.getElementById("inviteModal");
-    var span = document.getElementsByClassName("close")[0];
-
-    function openinvitemodal(id) {
-      modal.style.display = "block";
-      document.getElementById('modal-userid').value = id;
-    }
-
-    span.onclick = function () {
-      modal.style.display = "none";
-    }
-
-    // Athlete details toggle
-    function toggleAthleteDetails(id) {
-      const detailsRow = document.getElementById(`details-${id}`);
-      // Collapse all other details rows
-      document.querySelectorAll('.details-row').forEach(row => {
-        if (row !== detailsRow) {
-          row.style.display = 'none';
-        }
-      });
-      // Toggle the clicked details row
-      detailsRow.style.display = detailsRow.style.display === 'none' || detailsRow.style.display === '' ? 'table-row' : 'none';
-    }
-    
-    // Initialize all event handlers when the DOM is fully loaded
     document.addEventListener('DOMContentLoaded', function() {
+      // Modal functionality
+      var modal = document.getElementById("inviteModal");
+      var span = document.getElementsByClassName("close")[0];
+
+      function openinvitemodal(id) {
+        modal.style.display = "block";
+        document.getElementById('modal-userid').value = id;
+      }
+
+      span.onclick = function () {
+        modal.style.display = "none";
+      }
+
+      // Athlete details toggle
+      function toggleAthleteDetails(id) {
+        const detailsRow = document.getElementById(`details-${id}`);
+        // Collapse all other details rows
+        document.querySelectorAll('.details-row').forEach(row => {
+          if (row !== detailsRow) {
+            row.style.display = 'none';
+          }
+        });
+        // Toggle the clicked details row
+        detailsRow.style.display = detailsRow.style.display === 'none' || detailsRow.style.display === '' ? 'table-row' : 'none';
+      }
+      
+      // Make toggleAthleteDetails globally available
+      window.toggleAthleteDetails = toggleAthleteDetails;
+      window.openinvitemodal = openinvitemodal;
+      
+      // Initialize all event handlers when the DOM is fully loaded
       // Toggle dropdown content when the dropdown button is clicked
       document.querySelectorAll('.dropbtn').forEach(button => {
         button.addEventListener('click', function(event) {
@@ -252,21 +254,21 @@
           athleteRows.forEach(row => row.style.display = ''); // Show all rows
         }
       });
-    });
-    
-    // Global click event handler for closing dropdowns
-    window.addEventListener('click', function(event) {
-      // Close dropdowns when clicking outside
-      if (!event.target.matches('.dropbtn') && !event.target.closest('.dropdown-content')) {
-        document.querySelectorAll('.dropdown-content').forEach(dropdown => {
-          dropdown.classList.remove('show');
-        });
-      }
       
-      // Close modal when clicking outside
-      if (event.target == modal) {
-        modal.style.display = "none";
-      }
+      // Use addEventListener instead of window.onclick
+      document.addEventListener('click', function(event) {
+        // Close dropdowns when clicking outside
+        if (!event.target.matches('.dropbtn') && !event.target.closest('.dropdown-content')) {
+          document.querySelectorAll('.filter-group .dropdown-content').forEach(dropdown => {
+            dropdown.classList.remove('show');
+          });
+        }
+        
+        // Close modal when clicking outside
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      });
     });
   </script>
 </body>

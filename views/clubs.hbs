@@ -101,80 +101,76 @@
   <script src="/scripts/navbar.js"></script>
   <script src="/scripts/footer.js"></script>
   <script>
-    function toggleDropdown() {
-      document.getElementById("dropdown").classList.toggle("show");
-    }
-
-    window.onclick = function (event) {
-      if (!event.target.matches('.profile-pic img')) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        for (var i = 0; i < dropdowns.length; i++) {
-          var openDropdown = dropdowns[i];
-          if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
-          }
-        }
-      }
-    }
-
-    //FILTER
-    document.querySelector('.apply-btn').addEventListener('click', filterClubs);
-    document.getElementById('location-search').addEventListener('input', function () {
-      if (this.value.trim() === '') {
-        // Show all clubs if the search field is empty
+    document.addEventListener('DOMContentLoaded', function() {
+      // Make functions globally available
+      window.toggleDropdown = function() {
+        document.getElementById("dropdown").classList.toggle("show");
+      };
+      
+      // FILTER functionality
+      function filterClubs() {
+        const searchInput = document.getElementById('location-search').value.toLowerCase().trim();
         document.querySelectorAll('.event').forEach(event => {
-          event.style.display = '';
+          const location = event.getAttribute('data-location').toLowerCase();
+          if (location.includes(searchInput)) {
+            event.style.display = ''; // Show if it matches
+          } else {
+            event.style.display = 'none'; // Hide if it doesn't match
+          }
         });
-      } else {
-        // Call filterClubs function if there is text in the search field
-        filterClubs();
       }
-    });
-
-    function filterClubs() {
-      const searchInput = document.getElementById('location-search').value.toLowerCase().trim();
-      document.querySelectorAll('.event').forEach(event => {
-        const location = event.getAttribute('data-location').toLowerCase();
-        if (location.includes(searchInput)) {
-          event.style.display = ''; // Show if it matches
+      
+      // Make filterClubs globally available
+      window.filterClubs = filterClubs;
+      
+      // Add event listeners
+      document.querySelector('.apply-btn').addEventListener('click', filterClubs);
+      
+      document.getElementById('location-search').addEventListener('input', function () {
+        if (this.value.trim() === '') {
+          // Show all clubs if the search field is empty
+          document.querySelectorAll('.event').forEach(event => {
+            event.style.display = '';
+          });
         } else {
-          event.style.display = 'none'; // Hide if it doesn't match
+          // Call filterClubs function if there is text in the search field
+          filterClubs();
         }
       });
-    }
-
-    function toggleFilter() {
-      document.getElementById('filterDropdown').classList.toggle('show');
-    }
-
-    // Close the dropdown if the user clicks outside of it
-    window.onclick = function(event) {
-      if (!event.target.matches('.dropbtn')) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        for (var i = 0; i < dropdowns.length; i++) {
-          var openDropdown = dropdowns[i];
-          if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
+      
+      // Function to filter clubs by region
+      function filterByRegion(region) {
+        const clubCards = document.querySelectorAll('.club-card');
+        
+        clubCards.forEach(card => {
+          if (region === 'All' || card.getAttribute('data-region') === region) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+        
+        document.querySelector('.dropbtn').textContent = 'Filter by Region: ' + region;
+        document.getElementById('filterDropdown').classList.remove('show');
+      }
+      
+      // Make filterByRegion globally available
+      window.filterByRegion = filterByRegion;
+      
+      // Use addEventListener instead of window.onclick
+      document.addEventListener('click', function(event) {
+        // Handle filter dropdown
+        if (!event.target.matches('.dropbtn')) {
+          var dropdowns = document.getElementsByClassName("dropdown-content");
+          for (var i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show') && openDropdown.id === 'filterDropdown') {
+              openDropdown.classList.remove('show');
+            }
           }
         }
-      }
-    }
-
-    // Function to filter clubs by region
-    function filterByRegion(region) {
-      const clubCards = document.querySelectorAll('.club-card');
-      
-      clubCards.forEach(card => {
-        if (region === 'All' || card.getAttribute('data-region') === region) {
-          card.style.display = 'block';
-        } else {
-          card.style.display = 'none';
-        }
       });
-      
-      document.querySelector('.dropbtn').textContent = 'Filter by Region: ' + region;
-      document.getElementById('filterDropdown').classList.remove('show');
-    }
+    });
   </script>
 </body>
 

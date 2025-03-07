@@ -140,52 +140,60 @@
   <script src="/scripts/navbar.js"></script>
   <script src="/scripts/footer.js"></script>
   <script>
-    function openModal() {
-      document.getElementById('createmodal').style.display = 'block';
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+      // Make functions globally available
+      window.openModal = function() {
+        document.getElementById('createmodal').style.display = 'block';
+      };
 
-    function closeModal() {
-      document.getElementById('createmodal').style.display = 'none';
-    }
+      window.closeModal = function() {
+        document.getElementById('createmodal').style.display = 'none';
+      };
+      
+      // Search events functionality
+      window.searchEvents = function() {
+        const searchTerm = document.getElementById('search-input').value.toLowerCase();
+        const eventCards = document.querySelectorAll('.event-card');
 
-    window.onclick = function (event) {
-      const modal = document.getElementById('createmodal');
-      if (event.target == modal) {
-        modal.style.display = 'none';
-      }
-    }
-
-    function toggleFilter() {
-      document.getElementById('filterDropdown').classList.toggle('show');
-    }
-
-    // Close the dropdown if the user clicks outside of it
-    window.onclick = function (event) {
-      if (!event.target.matches('.dropbtn')) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        for (var i = 0; i < dropdowns.length; i++) {
-          var openDropdown = dropdowns[i];
-          if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
+        eventCards.forEach(card => {
+          const eventTitle = card.querySelector('.event-title').innerText.toLowerCase();
+          const eventDescription = card.querySelector('p').innerText.toLowerCase();
+          if (eventTitle.includes(searchTerm) || eventDescription.includes(searchTerm)) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      };
+      
+      // Use addEventListener instead of window.onclick
+      document.addEventListener('click', function(event) {
+        // Close modal when clicking outside
+        const modal = document.getElementById('createmodal');
+        if (event.target == modal) {
+          modal.style.display = 'none';
+        }
+        
+        // Handle filter dropdown if it exists
+        if (!event.target.matches('.dropbtn')) {
+          const dropdowns = document.getElementsByClassName("dropdown-content");
+          for (let i = 0; i < dropdowns.length; i++) {
+            const openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show') && openDropdown.id === 'filterDropdown') {
+              openDropdown.classList.remove('show');
+            }
           }
         }
-      }
-    }
-
-    function searchEvents() {
-      const searchTerm = document.getElementById('search-input').value.toLowerCase();
-      const eventCards = document.querySelectorAll('.event-card');
-
-      eventCards.forEach(card => {
-        const eventTitle = card.querySelector('.event-title').innerText.toLowerCase();
-        const eventDescription = card.querySelector('p').innerText.toLowerCase();
-        if (eventTitle.includes(searchTerm) || eventDescription.includes(searchTerm)) {
-          card.style.display = 'block';
-        } else {
-          card.style.display = 'none';
-        }
       });
-    }
+      
+      // Toggle filter dropdown if it exists
+      window.toggleFilter = function() {
+        const filterDropdown = document.getElementById('filterDropdown');
+        if (filterDropdown) {
+          filterDropdown.classList.toggle('show');
+        }
+      };
+    });
   </script>
 </body>
 
