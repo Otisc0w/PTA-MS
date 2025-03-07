@@ -366,7 +366,7 @@
                       {{#if totalscore}}
                         {{#if (eq totalscore -1)}}
                           <h3 style="color:#ff3030">DQ</h3>
-                          <button class="dqreasonbtn" id="dqreasonbtn-{{id}}">? {{id}}</button>
+                          <button class="dqreasonbtn" id="dqreasonbtn-{{id}}">? </button>
                           <div>
                             <p class="dqreason" id="dqreason-{{id}}" style="display:none">Reason for disqualification: <strong>{{dqreason}}</strong></p>
                           </div>
@@ -623,7 +623,7 @@
         {{/each}}
           <form action="/submit-poomsae-scores" method="post">
             <h3 class="playername"></h3>
-            <button onclick="disqualifyPlayer()">Disqualify Player</button>
+            <button type="button" onclick="disqualifyPlayer()">Disqualify Player</button>
             <div id="disqualifyReasonContainer" style="display:none;">
               <label for="disqualifyReason">Reason for Disqualification:</label>
               <input type="text" id="disqualifyReason" name="dqreason">

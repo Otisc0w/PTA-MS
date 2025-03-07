@@ -30,8 +30,8 @@
               {{#if registration.portrait}}
                 <img class="athlete-picture" src="{{registration.portrait}}" target="_blank">
                 <input type="text" name="portraittext" value="{{registration.portrait}}" hidden>
-                {{#if user.ptaverified}}<button type="button" class="clear-input"
-                  onclick="clearInput(this)">x</button>{{/if}}
+                <button type="button" class="clear-input"
+                  onclick="clearInput(this)">x</button>
               {{else}}
                 No Picture
                 {{#unless user.ptaverified}}
@@ -96,8 +96,8 @@
                   <td class="information">
                     <input type="text" name="phonenum" value="{{registration.phonenum}}" {{#if (or user.ptaverified
                       registration.phonenum)}}readonly{{else}}required{{/if}}>
-                    {{#if user.ptaverified}}<button type="button" class="clear-input"
-                      onclick="clearInput(this)">x</button>{{/if}}
+                    <button type="button" class="clear-input"
+                      onclick="clearInput(this)">x</button>
                   </td>
                 </tr>
                 <tr>
@@ -105,8 +105,8 @@
                   <td class="information">
                     <input type="text" name="email" value="{{registration.email}}" {{#if (or user.ptaverified
                       registration.email)}}readonly{{else}}required{{/if}}>
-                    {{#if user.ptaverified}}<button type="button" class="clear-input"
-                      onclick="clearInput(this)">x</button>{{/if}}
+                    <button type="button" class="clear-input"
+                      onclick="clearInput(this)">x</button>
                   </td>
                 </tr>
                 <tr>
@@ -215,8 +215,8 @@
           <td class="information">
             <input type="text" name="instructormobile" value="{{registration.instructormobile}}" {{#if (or
               user.ptaverified registration.instructormobile)}}readonly{{else}}required{{/if}}>
-            {{#if user.ptaverified}}<button type="button" class="clear-input"
-              onclick="clearInput(this)">x</button>{{/if}}
+            <button type="button" class="clear-input"
+              onclick="clearInput(this)">x</button>
           </td>
         </tr>
         <tr>
@@ -224,8 +224,8 @@
           <td class="information">
             <input type="text" name="instructoremail" value="{{registration.instructoremail}}" {{#if (or
               user.ptaverified registration.middlename)}}readonly{{else}}required{{/if}}>
-            {{#if user.ptaverified}}<button type="button" class="clear-input"
-              onclick="clearInput(this)">x</button>{{/if}}
+            <button type="button" class="clear-input"
+              onclick="clearInput(this)">x</button>
           </td>
         </tr>
         <tr>
