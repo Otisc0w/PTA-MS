@@ -964,12 +964,24 @@
             <td>3</td>
             <td><button class="resultsviewathlete" onclick="window.location.href='/athletes-profile/{{thirdPlace2.id}}'">{{thirdPlace2.name}}</button></td>
           </tr>
-          {{#each otherPlayersWithDetails}}
-            <tr>
-            <td>P</td>
-            <td><button class="resultsviewathlete" onclick="window.location.href='/athletes-profile/{{loserDetails.id}}'">{{loserDetails.name}}</button></td>
-          </tr>
-          {{/each}}
+            {{#each otherPlayersWithDetails}}
+              {{#unless isDisqualified}}
+                <tr>
+                  <td>P</td>
+                  <td><button class="resultsviewathlete" onclick="window.location.href='/athletes-profile/{{loserDetails.id}}'">{{this.loserDetails.name}}</button></td>
+                </tr>
+              {{/unless}}
+            {{/each}}
+            {{#each otherPlayersWithDetails}}
+              {{#if isDisqualified}}
+                <tr>
+                  <td>DQ</td>
+                  <td><button class="resultsviewathlete" onclick="window.location.href='/athletes-profile/{{loserDetails.id}}'">{{this.loserDetails.name}}</button></td>
+                </tr>
+              {{else}}
+                nuthn
+              {{/if}}
+            {{/each}}
         </tbody>
       </table>
     {{else if (eq event.eventtype 'Promotion')}}
