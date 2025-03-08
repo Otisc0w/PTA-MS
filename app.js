@@ -7443,6 +7443,242 @@ app.get("/analytics", async (req, res) => {
     // Calculate the total number of registrations
     const totalRegistrations =  nccRegistrationsCount + instructorRegistrationsCount + clubRegistrationsCount;
 
+    // Process application data for time-based charts using the existing fetched data
+    const processTimeBasedApplications = () => {
+      try {
+        // Prepare data structures for different time views
+        const monthlyData = {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          ncc: Array(12).fill(0),
+          instructor: Array(12).fill(0),
+          club: Array(12).fill(0),
+          total: Array(12).fill(0)
+        };
+        
+        const quarterlyData = {
+          labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+          ncc: Array(4).fill(0),
+          instructor: Array(4).fill(0),
+          club: Array(4).fill(0),
+          total: Array(4).fill(0)
+        };
+        
+        const currentYear = new Date().getFullYear();
+        const yearlyData = {
+          labels: [(currentYear-2).toString(), (currentYear-1).toString(), currentYear.toString()],
+          ncc: Array(3).fill(0),
+          instructor: Array(3).fill(0),
+          club: Array(3).fill(0),
+          total: Array(3).fill(0)
+        };
+        
+        // Use the existing registration data instead of making new queries
+        
+        // Process NCC applications (athlete registrations)
+        if (nccRegistrations && nccRegistrations.length > 0) {
+          nccRegistrations.forEach(app => {
+            if (!app.created_at) return;
+            
+            const date = new Date(app.created_at);
+            const month = date.getMonth();
+            const quarter = Math.floor(month / 3);
+            const year = date.getFullYear();
+            
+            // Only count current year for monthly and quarterly views
+            if (year === currentYear) {
+              monthlyData.ncc[month]++;
+              quarterlyData.ncc[quarter]++;
+            }
+            
+            // Count for yearly view if within our 3-year range
+            const yearIndex = yearlyData.labels.indexOf(year.toString());
+            if (yearIndex !== -1) {
+              yearlyData.ncc[yearIndex]++;
+            }
+          });
+        }
+        
+        // Process Instructor applications
+        if (instructorRegistrations && instructorRegistrations.length > 0) {
+          instructorRegistrations.forEach(app => {
+            if (!app.created_at) return;
+            
+            const date = new Date(app.created_at);
+            const month = date.getMonth();
+            const quarter = Math.floor(month / 3);
+            const year = date.getFullYear();
+            
+            if (year === currentYear) {
+              monthlyData.instructor[month]++;
+              quarterlyData.instructor[quarter]++;
+            }
+            
+            const yearIndex = yearlyData.labels.indexOf(year.toString());
+            if (yearIndex !== -1) {
+              yearlyData.instructor[yearIndex]++;
+            }
+          });
+        }
+        
+        // Process Club applications
+        if (clubRegistrations && clubRegistrations.length > 0) {
+          clubRegistrations.forEach(app => {
+            if (!app.created_at) return;
+            
+            const date = new Date(app.created_at);
+            const month = date.getMonth();
+            const quarter = Math.floor(month / 3);
+            const year = date.getFullYear();
+            
+            if (year === currentYear) {
+              monthlyData.club[month]++;
+              quarterlyData.club[quarter]++;
+            }
+            
+            const yearIndex = yearlyData.labels.indexOf(year.toString());
+            if (yearIndex !== -1) {
+              yearlyData.club[yearIndex]++;
+            }
+          });
+        }
+        
+        // Calculate totals for each time period
+        for (let i = 0; i < 12; i++) {
+          monthlyData.total[i] = monthlyData.ncc[i] + monthlyData.instructor[i] + monthlyData.club[i];
+        }
+        
+        for (let i = 0; i < 4; i++) {
+          quarterlyData.total[i] = quarterlyData.ncc[i] + quarterlyData.instructor[i] + quarterlyData.club[i];
+        }
+        
+        for (let i = 0; i < 3; i++) {
+          yearlyData.total[i] = yearlyData.ncc[i] + yearlyData.instructor[i] + yearlyData.club[i];
+        }
+        
+        // Format data for Chart.js
+        const formattedMonthlyData = {
+          labels: monthlyData.labels,
+          datasets: [
+            {
+              label: 'Athlete Applications',
+              data: monthlyData.ncc,
+              borderColor: '#36A2EB',
+              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              tension: 0.3
+            },
+            {
+              label: 'Instructor Applications',
+              data: monthlyData.instructor,
+              borderColor: '#FF6384',
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              tension: 0.3
+            },
+            {
+              label: 'Club Applications',
+              data: monthlyData.club,
+              borderColor: '#FFCE56',
+              backgroundColor: 'rgba(255, 206, 86, 0.2)',
+              tension: 0.3
+            },
+            {
+              label: 'Total Applications',
+              data: monthlyData.total,
+              borderColor: '#4BC0C0',
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderWidth: 3,
+              tension: 0.3
+            }
+          ]
+        };
+        
+        const formattedQuarterlyData = {
+          labels: quarterlyData.labels,
+          datasets: [
+            {
+              label: 'Athlete Applications',
+              data: quarterlyData.ncc,
+              borderColor: '#36A2EB',
+              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              tension: 0.3
+            },
+            {
+              label: 'Instructor Applications',
+              data: quarterlyData.instructor,
+              borderColor: '#FF6384',
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              tension: 0.3
+            },
+            {
+              label: 'Club Applications',
+              data: quarterlyData.club,
+              borderColor: '#FFCE56',
+              backgroundColor: 'rgba(255, 206, 86, 0.2)',
+              tension: 0.3
+            },
+            {
+              label: 'Total Applications',
+              data: quarterlyData.total,
+              borderColor: '#4BC0C0',
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderWidth: 3,
+              tension: 0.3
+            }
+          ]
+        };
+        
+        const formattedYearlyData = {
+          labels: yearlyData.labels,
+          datasets: [
+            {
+              label: 'Athlete Applications',
+              data: yearlyData.ncc,
+              borderColor: '#36A2EB',
+              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              tension: 0.3
+            },
+            {
+              label: 'Instructor Applications',
+              data: yearlyData.instructor,
+              borderColor: '#FF6384',
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              tension: 0.3
+            },
+            {
+              label: 'Club Applications',
+              data: yearlyData.club,
+              borderColor: '#FFCE56',
+              backgroundColor: 'rgba(255, 206, 86, 0.2)',
+              tension: 0.3
+            },
+            {
+              label: 'Total Applications',
+              data: yearlyData.total,
+              borderColor: '#4BC0C0',
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderWidth: 3,
+              tension: 0.3
+            }
+          ]
+        };
+        
+        return {
+          monthlyApplicationsData: JSON.stringify(formattedMonthlyData),
+          quarterlyApplicationsData: JSON.stringify(formattedQuarterlyData),
+          yearlyApplicationsData: JSON.stringify(formattedYearlyData)
+        };
+      } catch (error) {
+        console.error("Error processing time-based application data:", error);
+        return {
+          monthlyApplicationsData: null,
+          quarterlyApplicationsData: null,
+          yearlyApplicationsData: null
+        };
+      }
+    };
+    
+    // Get the time-based application data
+    const timeApplicationsData = processTimeBasedApplications();
+
     // Fetch the total number of users with athleteverified as true
     const { count: athleteVerifiedCount, error: athleteVerifiedCountError } = await supabase
       .from("users")
@@ -7557,9 +7793,10 @@ app.get("/analytics", async (req, res) => {
       //club statuses
       underReviewClubsCount,
       acceptedClubsCount,
-      rejectedClubsCount
-
-
+      rejectedClubsCount,
+      
+      // Add the time-based application data for the line chart
+      ...timeApplicationsData
     });
   } catch (error) {
     console.error("Error fetching analytics data:", error.message);
