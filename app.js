@@ -1376,23 +1376,34 @@ app.post("/update-nccstatus", async (req, res) => {
 
       // Update the suspendmsg column
       const { error: updatesuspendmsgError } = await supabase
-        .from("ncc_registrations")
-        .update({ suspendmsg: suspendmsg, susdescription: susdescription })
-        .eq("id", applicationId);
+      .from("ncc_registrations")
+      .update({ suspendmsg: suspendmsg, susdescription: susdescription })
+      .eq("id", applicationId);
 
       if (updatesuspendmsgError) {
-        console.error("Error updating suspendmsg:", updatesuspendmsgError.message);
-        return res.status(500).send("Error updating suspendmsg");
+      console.error("Error updating suspendmsg:", updatesuspendmsgError.message);
+      return res.status(500).send("Error updating suspendmsg");
       }
 
       const { error: updateAthleteVerifiedError } = await supabase
-        .from("users")
-        .update({ athleteverified: false })
-        .eq("id", registration.submittedby);
+      .from("users")
+      .update({ athleteverified: false })
+      .eq("id", registration.submittedby);
 
       if (updateAthleteVerifiedError) {
-        console.error("Error updating athleteverified:", updateAthleteVerifiedError.message);
-        return res.status(500).send("Error updating athleteverified");
+      console.error("Error updating athleteverified:", updateAthleteVerifiedError.message);
+      return res.status(500).send("Error updating athleteverified");
+      }
+
+      // Remove any event registrations of the player
+      const { error: removeEventRegistrationsError } = await supabase
+      .from("events_registrations")
+      .delete()
+      .eq("userid", registration.submittedby);
+
+      if (removeEventRegistrationsError) {
+      console.error("Error removing event registrations:", removeEventRegistrationsError.message);
+      return res.status(500).send("Error removing event registrations");
       }
     }
 
