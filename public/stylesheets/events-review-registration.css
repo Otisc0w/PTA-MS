@@ -250,7 +250,6 @@ form h2 {
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
   background-color: rgba(0, 0, 0, 0.9);
 }
 
@@ -268,16 +267,30 @@ form h2 {
   color: #fff;
   font-size: 40px;
   font-weight: bold;
-  transition: 0.3s;
+  cursor: pointer;
 }
 
-.lightbox .close:hover,
-.lightbox .close:focus {
+.lightbox .close:hover {
   color: #bbb;
-  text-decoration: none;
-  cursor: pointer;
 }
 
 .review-header{
   margin-left: 15px;
+}
+
+.status {
+  text-align: left;
+  font-size: 22px;
+  margin: 20px 0;
+  font-weight: bold;
+}
+
+.status-shipped {
+  color: #28a745;
+  -webkit-text-stroke: .3px black;
+}
+
+.status-rejected {
+  color: #dc3545;
+  -webkit-text-stroke: .3px black;
 }
