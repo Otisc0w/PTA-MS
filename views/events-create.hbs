@@ -156,7 +156,7 @@
         <div id="additional-selects-container">
           <select name="judges">
             {{#each ptaadmins}}
-            <option value="{{firstname}} {{lastname}}">{{firstname}} {{lastname}}</option>
+            <option value="{{id}}">{{firstname}} {{lastname}}</option>
             {{/each}}
           </select>
         </div>
@@ -190,7 +190,7 @@
           const container = document.getElementById('additional-selects-container');
           const newSelect = document.createElement('select');
           newSelect.name = 'judges';
-            newSelect.innerHTML = `{{#each ptaadmins}}<option value="{{firstname}} {{lastname}}">{{firstname}} {{lastname}}</option>{{/each}}`;
+            newSelect.innerHTML = `{{#each ptaadmins}}<option value="{{id}}">{{firstname}} {{lastname}}</option>{{/each}}`;
           container.appendChild(newSelect);
         }
   </script>
