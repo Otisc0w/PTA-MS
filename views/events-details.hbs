@@ -446,14 +446,15 @@
                       onclick="openKyorugiScoresheet('{{id}}', '{{matchtime}}', '{{eventid}}', '{{player1}}', '{{player2}}', '{{player1_name}}', '{{player2_name}}', '{{player1score}}', '{{player2score}}', '{{matchtime}}', '{{winner}}', '{{loser}}', '{{matchttype}}', '{{round}}', '{{status}}')"
                       class="open-kyorugi-scoresheet">Scoresheet -></button>
                       {{#if dqreason}}
-                        <button class="dqreasonbtn">?</button>
-                        <div style="display: none;">
+                        <button class="dqreasonbtn" id="dqkrgreasonbtn-{{id}}">?</button>
+                        <div style="display: none;" id="dqreason-{{id}}">
                           <p class="reasontext">Reason for disqualification: <strong>{{dqreason}}</strong></p>
                         </div>
                         <script>
-                          document.querySelectorAll('.dqreasonbtn').forEach(button => {
+                          document.querySelectorAll('.dqkrgreasonbtn').forEach(button => {
                             button.addEventListener('click', function() {
-                              const dqReasonDiv = this.nextElementSibling;
+                              const id = this.id.split('-')[1];
+                              const dqReasonDiv = document.getElementById(`dqreason-${id}`);
                               dqReasonDiv.style.display = dqReasonDiv.style.display === 'none' ? 'block' : 'none';
                             });
                           });
@@ -742,8 +743,8 @@
               <tbody>
                 <tr>
                     <td></td>
-                    <td><button type="button" onclick="disqualifyKyorugiPlayer('player1')">Disqualify</button></td>
-                    <td><button type="button" onclick="disqualifyKyorugiPlayer('player2')">Disqualify</button></td>
+                    <td><button type="button" onclick="disqualifyKyorugiPlayer('player1')" class="dqactionbtn">Disqualify</button></td>
+                    <td><button type="button" onclick="disqualifyKyorugiPlayer('player2')" class="dqactionbtn">Disqualify</button></td>
                     {{!-- <input type="text" id="kyorugiDqReason" name="dqreason" style="display:none;" placeholder="Give the reason for DQ"> --}}
                     <label id="kyorugiDqReason" for="disqualifyReason" style="display:none;">Reason for Disqualification:</label>
                       <select  id="kyorugiDqReasonOptions" name="dqreason" style="display:none;">

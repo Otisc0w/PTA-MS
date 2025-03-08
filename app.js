@@ -3859,8 +3859,6 @@ app.post("/decide-kyorugi-winners/:eventid", async (req, res) => {
       return res.status(500).send("Error fetching participants");
     }
 
-
-
     // Fetch the event details
     const { data: event, error: eventError } = await supabase
       .from("events")
@@ -3882,6 +3880,8 @@ app.post("/decide-kyorugi-winners/:eventid", async (req, res) => {
         ranking = 2;
       } else if (thirdPlaceIds.includes(participant.userid)) {
         ranking = 3;
+      } else if (disqualifiedPlayers.includes(participant.userid)) {
+        ranking = -1;
       
       } else {
         ranking = 0; // Ensure ranking is reset for each participant
