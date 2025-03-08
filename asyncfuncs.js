@@ -62,9 +62,9 @@ async function fetchUserData(req, res, next) {
 }
 
 async function checkAndExpireNCCRegistrations(req, res, next) {
-  const currentDate = new Date();
   const currentDateString = moment().format('YYYY-MM-DD');
   const oneWeekBeforeDateString = moment().subtract(7, 'days').format('YYYY-MM-DD');
+  const oneWeekAfterDateString = moment().add(7, 'days').format('YYYY-MM-DD');
 
   try {
     // Fetch all NCC registrations
@@ -84,8 +84,14 @@ async function checkAndExpireNCCRegistrations(req, res, next) {
 
     // Filter registrations that expire in one week
     const oneWeekBeforeRegistrations = registrations.filter(registration => {
-      const expiresOn = moment(registration.expireson, 'YYYY-MM-DD').toDate();
+      const expiresOn = new Date(registration.expireson);
       return expiresOn.toISOString().split('T')[0] === oneWeekBeforeDateString;
+    });
+
+    // Filter registrations that expire in one week from now
+    const oneWeekAfterRegistrations = registrations.filter(registration => {
+      const expiresOn = new Date(registration.expireson);
+      return expiresOn.toISOString().split('T')[0] === oneWeekAfterDateString;
     });
 
     if (expiredRegistrations.length > 0) {
@@ -172,6 +178,46 @@ async function checkAndExpireNCCRegistrations(req, res, next) {
     if (oneWeekBeforeRegistrations.length > 0) {
       // Notify users about upcoming expiration
       const notifications = oneWeekBeforeRegistrations.map(registration => ({
+        userid: registration.submittedby,
+        message: `Your NCC registration will expire in one week.`,
+        desc: 'Please renew your registration to continue being a member of the PTA.',
+        type: "Registration",
+        created_at: new Date().toISOString()
+      }));
+
+      // Fetch existing notifications first
+      const { data: existingNotifications, error: fetchError } = await supabase
+        .from("notifications")
+        .select("*")
+        .in("userid", notifications.map(notification => notification.userid));
+
+      if (fetchError) {
+        throw new Error(`Error fetching existing notifications: ${fetchError.message}`);
+      }
+
+      const daysThreshold = 10; // Define the threshold in days
+
+      for (const notification of notifications) {
+        const existingNotification = existingNotifications.find(n => 
+          n.userid === notification.userid && n.message === notification.message);
+
+        if (!existingNotification || (existingNotification && moment(existingNotification.created_at).isBefore(moment().subtract(daysThreshold, 'days')))) {
+          const { error: notificationError } = await supabase
+            .from("notifications")
+            .insert(notification);
+
+          if (notificationError) {
+            throw new Error(`Error inserting notifications: ${notificationError.message}`);
+          }
+        }
+      }
+
+      console.log(`Inserted notifications for users with upcoming NCC registration expirations.`);
+    }
+
+    if (oneWeekAfterRegistrations.length > 0) {
+      // Notify users about upcoming expiration
+      const notifications = oneWeekAfterRegistrations.map(registration => ({
         userid: registration.submittedby,
         message: `Your NCC registration will expire in one week.`,
         desc: 'Please renew your registration to continue being a member of the PTA.',
