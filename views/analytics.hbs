@@ -37,7 +37,7 @@
       <button class="tablink" onclick="openReport(event, 'clubs')">Clubs</button>
       <button class="tablink" onclick="openReport(event, 'insights')">Other Insights</button>
     </div>
-    
+
     <div class="date-filter">
       <label for="start-date">Start Date:</label>
       <input type="date" id="start-date" name="start-date">
@@ -414,12 +414,9 @@
         <div class="report-summary" id="club-bd-summary">
           <div class="total-revenue">
             <h3>Club Applications Breakdown:</h3>
-            <p>Under Review: {{underReviewClubsCount}}</p>
-            <p>Accepted: {{acceptedClubsCount}}</p>
-            <p>ID Shipped: {{idShippedClubsCount}}</p>
+            <p>Processing: {{underReviewClubsCount}}</p>
+            <p>Accepted and Registered: {{acceptedClubsCount}}</p>
             <p>Rejected: {{rejectedClubsCount}}</p>
-            <p>Suspended: {{suspendedClubsCount}}</p>
-            <p>Expired: {{expiredClubsCount}}</p>
           </div>
           <div class="chart-container" style="width: 300px; height: 300px;">
             <canvas id="clubAppsBreakdown"></canvas>
