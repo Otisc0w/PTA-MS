@@ -38,6 +38,119 @@
       <button class="tablink" onclick="openReport(event, 'insights')">Other Insights</button>
     </div>
 
+    <div class="date-filter">
+      <label for="start-date">Start Date:</label>
+      <input type="date" id="start-date" name="start-date">
+      <label class="end-date" for="end-date">End Date:</label>
+      <input type="date" id="end-date" name="end-date">
+
+      <button onclick="filterByDate()">Apply</button>
+
+      <button onclick="cancelFilter()">Remove Filter</button>
+
+      <label class="end-date" for="search-user">Search User:</label>
+      <input type="text" id="search-user" name="search-user" onkeyup="searchUser()">
+
+      <select id="regtypefilter" onchange="toggleSection(this.value)">
+        <option value="all">All</option>
+        <option value="nccregs">NCC Registrations</option>
+        <option value="instructorregs">Instructor Registrations</option>
+        <option value="clubregs">Club Registrations</option>
+      </select>
+
+      <select id="regtypefiltertxn" onchange="toggleTxnSection(this.value)">
+        <option value="all">All</option>
+        <option value="nccregs">NCC Registrations</option>
+        <option value="instructorregs">Instructor Registrations</option>
+        <option value="clubregs">Club Registrations</option>
+      </select>
+
+      <script>
+        function toggleTxnSection(selectedCategory) {
+          const rows = document.querySelectorAll('#transactions-body tr');
+          rows.forEach(row => row.style.display = 'none'); // Hide all rows
+
+          if (selectedCategory === 'nccregs') {
+            rows.forEach(row => {
+              if (row.cells[3].innerText.toLowerCase().includes('ncc')) {
+                row.style.display = '';
+              }
+            });
+          } else if (selectedCategory === 'instructorregs') {
+            rows.forEach(row => {
+              if (row.cells[3].innerText.toLowerCase().includes('instructor')) {
+                row.style.display = '';
+              }
+            });
+          } else if (selectedCategory === 'clubregs') {
+            rows.forEach(row => {
+              if (row.cells[3].innerText.toLowerCase().includes('club')) {
+                row.style.display = '';
+              }
+            });
+          } else if (selectedCategory === 'all') {
+            rows.forEach(row => row.style.display = '');
+          }
+        }
+      </script>
+
+      <select id="regstatusfilter" onchange="filterStatus(this.value)">
+        <option value="all">All</option>
+        <option value="Expired">Expired</option>
+        <option value="approved">Approved</option>
+        <option value="rejected">Rejected</option>
+        <option value="under review">Under Review</option>
+        <option value="id shipped">ID Shipped</option>
+      </select>
+
+      <select id="province-filter" onchange="filterByProvince(this.value)">
+        <option value="all">All</option>
+        <option value="Pampanga">Pampanga</option>
+        <option value="Nueva Ecija">Nueva Ecija</option>
+        <option value="Tarlac">Tarlac</option>
+        <option value="Bulacan">Bulacan</option>
+        <option value="Bataan">Bataan</option>
+        <option value="Zambales">Zambales</option>
+        <option value="Aurora">Aurora</option>
+      </select>
+
+      <script>
+        function filterByProvince(selectedProvince) {
+          const rows = document.querySelectorAll('#clubs-body tr');
+          rows.forEach(row => {
+            const province = row.cells[2].innerText.toLowerCase();
+            if (selectedProvince === 'all' || province.includes(selectedProvince.toLowerCase())) {
+              row.style.display = '';
+            } else {
+              row.style.display = 'none';
+            }
+          });
+        }
+      </script>
+
+      <script>
+        function filterStatus(selectedStatus) {
+          const rows = document.querySelectorAll('#membership-body tr');
+          const selectedCategory = document.querySelector('#regtypefilter').value;
+
+          rows.forEach(row => {
+            const status = row.cells[2].innerText.toLowerCase();
+            const category = row.cells[0].innerText.toLowerCase();
+
+            const categoryMatch = selectedCategory === 'all' || category.startsWith(selectedCategory);
+            const statusMatch = selectedStatus === 'all' || status.includes(selectedStatus.toLowerCase());
+
+            if (categoryMatch && statusMatch) {
+              row.style.display = '';
+            } else {
+              row.style.display = 'none';
+            }
+          });
+        }
+      </script>
+    </div>
+
+
     <div id="payments" class="report-section" style="display:block">
       <h2>Payments/Transactions</h2>
 
@@ -99,118 +212,6 @@
           document.getElementById('club-summary').style.display = selectedCategory === 'clubregs' ? 'block' : 'none';
         });
       </script>
-
-      <div class="date-filter">
-        <label for="start-date">Start Date:</label>
-        <input type="date" id="start-date" name="start-date">
-        <label class="end-date" for="end-date">End Date:</label>
-        <input type="date" id="end-date" name="end-date">
-
-        <button onclick="filterByDate()">Apply</button>
-
-        <button onclick="cancelFilter()">Remove Filter</button>
-
-        <label class="end-date" for="search-user">Search User:</label>
-        <input type="text" id="search-user" name="search-user" onkeyup="searchUser()">
-
-        <select id="regtypefilter" onchange="toggleSection(this.value)">
-          <option value="all">All</option>
-          <option value="nccregs">NCC Registrations</option>
-          <option value="instructorregs">Instructor Registrations</option>
-          <option value="clubregs">Club Registrations</option>
-        </select>
-
-        <select id="regtypefiltertxn" onchange="toggleTxnSection(this.value)">
-          <option value="all">All</option>
-          <option value="nccregs">NCC Registrations</option>
-          <option value="instructorregs">Instructor Registrations</option>
-          <option value="clubregs">Club Registrations</option>
-        </select>
-
-        <script>
-          function toggleTxnSection(selectedCategory) {
-            const rows = document.querySelectorAll('#transactions-body tr');
-            rows.forEach(row => row.style.display = 'none'); // Hide all rows
-
-            if (selectedCategory === 'nccregs') {
-              rows.forEach(row => {
-                if (row.cells[3].innerText.toLowerCase().includes('ncc')) {
-                  row.style.display = '';
-                }
-              });
-            } else if (selectedCategory === 'instructorregs') {
-              rows.forEach(row => {
-                if (row.cells[3].innerText.toLowerCase().includes('instructor')) {
-                  row.style.display = '';
-                }
-              });
-            } else if (selectedCategory === 'clubregs') {
-              rows.forEach(row => {
-                if (row.cells[3].innerText.toLowerCase().includes('club')) {
-                  row.style.display = '';
-                }
-              });
-            } else if (selectedCategory === 'all') {
-              rows.forEach(row => row.style.display = '');
-            }
-          }
-        </script>
-
-        <select id="regstatusfilter" onchange="filterStatus(this.value)">
-          <option value="all">All</option>
-          <option value="Expired">Expired</option>
-          <option value="approved">Approved</option>
-          <option value="rejected">Rejected</option>
-          <option value="under review">Under Review</option>
-          <option value="id shipped">ID Shipped</option>
-        </select>
-
-        <select id="province-filter" onchange="filterByProvince(this.value)">
-          <option value="all">All</option>
-          <option value="Pampanga">Pampanga</option>
-          <option value="Nueva Ecija">Nueva Ecija</option>
-          <option value="Tarlac">Tarlac</option>
-          <option value="Bulacan">Bulacan</option>
-          <option value="Bataan">Bataan</option>
-          <option value="Zambales">Zambales</option>
-          <option value="Aurora">Aurora</option>
-        </select>
-
-        <script>
-          function filterByProvince(selectedProvince) {
-            const rows = document.querySelectorAll('#clubs-body tr');
-            rows.forEach(row => {
-              const province = row.cells[2].innerText.toLowerCase();
-              if (selectedProvince === 'all' || province.includes(selectedProvince.toLowerCase())) {
-                row.style.display = '';
-              } else {
-                row.style.display = 'none';
-              }
-            });
-          }
-        </script>
-
-        <script>
-          function filterStatus(selectedStatus) {
-            const rows = document.querySelectorAll('#membership-body tr');
-            const selectedCategory = document.querySelector('#regtypefilter').value;
-
-            rows.forEach(row => {
-              const status = row.cells[2].innerText.toLowerCase();
-              const category = row.cells[0].innerText.toLowerCase();
-
-              const categoryMatch = selectedCategory === 'all' || category.startsWith(selectedCategory);
-              const statusMatch = selectedStatus === 'all' || status.includes(selectedStatus.toLowerCase());
-
-              if (categoryMatch && statusMatch) {
-                row.style.display = '';
-              } else {
-                row.style.display = 'none';
-              }
-            });
-          }
-        </script>
-      </div>
 
       <!-- New div for right alignment -->
       <div class="export-container">
@@ -327,101 +328,101 @@
 
       <!--First Row -->
       <div class="report-row">
-      <div class="report-summary" id="ncc-bd-summary">
-        <div class="total-revenue">
-          <h3>NCC Applications Breakdown:</h3>
-          <p>Under Review: {{underReviewNccsCount}}</p>
-          <p>Accepted: {{acceptedNccsCount}}</p>
-          <p>ID Shipped: {{rejectedNccsCount}}</p>
-          <p>Rejected: {{idShippedNccsCount}}</p>
-          <p>Suspended: {{suspendedNccsCount}}</p>
-          <p>Expired: {{expiredNccsCount}}</p>
+        <div class="report-summary" id="ncc-bd-summary">
+          <div class="total-revenue">
+            <h3>NCC Applications Breakdown:</h3>
+            <p>Under Review: {{underReviewNccsCount}}</p>
+            <p>Accepted: {{acceptedNccsCount}}</p>
+            <p>ID Shipped: {{idShippedNccsCount}}</p>
+            <p>Rejected: {{rejectedNccsCount}}</p>
+            <p>Suspended: {{suspendedNccsCount}}</p>
+            <p>Expired: {{expiredNccsCount}}</p>
+          </div>
+          <div class="chart-container" style="width: 300px; height: 300px;">
+            <canvas id="nccappsbreakdown"></canvas>
+          </div>
         </div>
-        <div class="chart-container" style="width: 300px; height: 300px;">
-          <canvas id="nccappsbreakdown"></canvas>
-        </div>
-      </div>
 
-      <script>
-        document.addEventListener("DOMContentLoaded", function () {
-          var ctx = document.getElementById('nccappsbreakdown').getContext('2d');
-          var nccAppsBreakdownChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-              labels: ['Under Review', 'Accepted', 'ID Shipped', 'Rejected', 'Suspended', 'Expired'],
-              datasets: [{
-                data: [{{ underReviewNccsCount }}, {{ acceptedNccsCount }}, {{ idShippedNccsCount }}, {{ rejectedNccsCount }}, {{ suspendedNccsCount }}, {{ expiredNccsCount }}],
-          backgroundColor: ['#FFCE56', '#36A2EB', '#32a852', '#FF6384', '#ad6b00', '#C9CBCF', '#9000ad',],
-          hoverBackgroundColor: ['#FFCE56', '#36A2EB', '#32a852', '#FF6384', '#ad6b00', '#C9CBCF', '#9000ad']
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            var ctx = document.getElementById('nccappsbreakdown').getContext('2d');
+            var nccAppsBreakdownChart = new Chart(ctx, {
+              type: 'doughnut',
+              data: {
+                labels: ['Under Review', 'Accepted', 'ID Shipped', 'Rejected', 'Suspended', 'Expired'],
+                datasets: [{
+                  data: [{{ underReviewNccsCount }}, {{ acceptedNccsCount }}, {{ idShippedNccsCount }}, {{ rejectedNccsCount }}, {{ suspendedNccsCount }}, {{ expiredNccsCount }}],
+            backgroundColor: ['#FFCE56', '#36A2EB', '#32a852', '#FF6384', '#ad6b00', '#C9CBCF', '#9000ad',],
+            hoverBackgroundColor: ['#FFCE56', '#36A2EB', '#32a852', '#FF6384', '#ad6b00', '#C9CBCF', '#9000ad']
             }]
           },
-          options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'bottom',
+            options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+              }
             }
           }
-        }
         });
       });
-      </script>
+        </script>
 
-      <div class="report-summary" id="instructor-bd-summary">
-        <div class="total-revenue">
-          <h3>Instructor Applications Breakdown:</h3>
-          <p>Under Review: {{underReviewInstructorsCount}}</p>
-          <p>Accepted: {{acceptedInstructorsCount}}</p>
-          <p>ID Shipped: {{idShippedInstructorsCount}}</p>
-          <p>Rejected: {{rejectedInstructorsCount}}</p>
-          <p>Suspended: {{suspendedInstructorsCount}}</p>
-          <p>Expired: {{expiredInstructorsCount}}</p>
+        <div class="report-summary" id="instructor-bd-summary">
+          <div class="total-revenue">
+            <h3>Instructor Applications Breakdown:</h3>
+            <p>Under Review: {{underReviewInstructorsCount}}</p>
+            <p>Accepted: {{acceptedInstructorsCount}}</p>
+            <p>ID Shipped: {{idShippedInstructorsCount}}</p>
+            <p>Rejected: {{rejectedInstructorsCount}}</p>
+            <p>Suspended: {{suspendedInstructorsCount}}</p>
+            <p>Expired: {{expiredInstructorsCount}}</p>
+          </div>
+          <div class="chart-container" style="width: 300px; height: 300px;">
+            <canvas id="instructorAppsBreakdown"></canvas>
+          </div>
         </div>
-        <div class="chart-container" style="width: 300px; height: 300px;">
-          <canvas id="instructorAppsBreakdown"></canvas>
-        </div>
-      </div>
-    
 
-      <script>
-        document.addEventListener("DOMContentLoaded", function () {
-          var ctx = document.getElementById('instructorAppsBreakdown').getContext('2d');
-          var instructorAppsBreakdownChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-              labels: ['Under Review', 'Accepted', 'ID Shipped', 'Rejected', 'Suspended', 'Expired'],
-              datasets: [{
-                data: [{{ underReviewInstructorsCount }}, {{ acceptedInstructorsCount }}, {{ idShippedInstructorsCount }}, {{ rejectedInstructorsCount }}, {{ suspendedInstructorsCount }}, {{ expiredInstructorsCount }}],
-          backgroundColor: ['#FFCE56', '#36A2EB', '#32a852', '#FF6384', '#ad6b00', '#C9CBCF'],
-          hoverBackgroundColor: ['#FFCE56', '#36A2EB', '#32a852', '#FF6384', '#ad6b00', '#C9CBCF']
+
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            var ctx = document.getElementById('instructorAppsBreakdown').getContext('2d');
+            var instructorAppsBreakdownChart = new Chart(ctx, {
+              type: 'doughnut',
+              data: {
+                labels: ['Under Review', 'Accepted', 'ID Shipped', 'Rejected', 'Suspended', 'Expired'],
+                datasets: [{
+                  data: [{{ underReviewInstructorsCount }}, {{ acceptedInstructorsCount }}, {{ idShippedInstructorsCount }}, {{ rejectedInstructorsCount }}, {{ suspendedInstructorsCount }}, {{ expiredInstructorsCount }}],
+            backgroundColor: ['#FFCE56', '#36A2EB', '#32a852', '#FF6384', '#ad6b00', '#C9CBCF'],
+            hoverBackgroundColor: ['#FFCE56', '#36A2EB', '#32a852', '#FF6384', '#ad6b00', '#C9CBCF']
             }]
           },
-          options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'bottom',
+            options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+              }
             }
           }
-        }
         });
       });
-      </script>
-  <!-- Second Row: Club Breakdown -->
-      <div class="report-summary" id="club-bd-summary">
-        <div class="total-revenue">
-          <h3>Club Applications Breakdown:</h3>
-          <p>Processing: {{underReviewClubsCount}}</p>
-          <p>Accepted and Registered: {{acceptedClubsCount}}</p>
-          <p>Rejected: {{rejectedClubsCount}}</p>
-        </div>
-        <div class="chart-container" style="width: 300px; height: 300px;">
-          <canvas id="clubAppsBreakdown"></canvas>
+        </script>
+
+        <div class="report-summary" id="club-bd-summary">
+          <div class="total-revenue">
+            <h3>Club Applications Breakdown:</h3>
+            <p>Processing: {{underReviewClubsCount}}</p>
+            <p>Accepted and Registered: {{acceptedClubsCount}}</p>
+            <p>Rejected: {{rejectedClubsCount}}</p>
+          </div>
+          <div class="chart-container" style="width: 300px; height: 300px;">
+            <canvas id="clubAppsBreakdown"></canvas>
+          </div>
         </div>
       </div>
-       </div>
 
       <script>
         document.addEventListener("DOMContentLoaded", function () {
