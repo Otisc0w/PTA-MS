@@ -500,9 +500,43 @@
 
     <div id="events" class="report-section" style="display:none">
       <h2>Upcoming Events</h2>
-      <div class="totaleventcount-box">
-        Total Event Count:<h3> {{eventsCount}}</h3>
+      
+      <!-- 
+        Server-side data requirements:
+        - eventsCount - Total number of events
+        - kyorugiEventsCount - Number of Kyorugi events
+        - poomsaeEventsCount - Number of Poomsae events
+        - promotionEventsCount - Number of Promotion events
+      -->
+      
+      <!-- Event Count with Category Filters -->
+      <div class="event-count-section">
+        <div class="event-type-filter">
+          <button class="event-filter-btn active" onclick="filterEventType('all')">All Events</button>
+          <button class="event-filter-btn" onclick="filterEventType('kyorugi')">Kyorugi</button>
+          <button class="event-filter-btn" onclick="filterEventType('poomsae')">Poomsae</button>
+          <button class="event-filter-btn" onclick="filterEventType('promotion')">Promotion</button>
+        </div>
+        
+        <div class="event-count-container">
+          <div class="totaleventcount-box" id="all-events-count">
+            Total Event Count:<h3> {{eventsCount}}</h3>
+          </div>
+          
+          <div class="totaleventcount-box" id="kyorugi-events-count" style="display: none;">
+            Kyorugi Events:<h3> {{kyorugiEventsCount}}</h3>
+          </div>
+          
+          <div class="totaleventcount-box" id="poomsae-events-count" style="display: none;">
+            Poomsae Events:<h3> {{poomsaeEventsCount}}</h3>
+          </div>
+          
+          <div class="totaleventcount-box" id="promotion-events-count" style="display: none;">
+            Promotion Events:<h3> {{promotionEventsCount}}</h3>
+          </div>
+        </div>
       </div>
+      
       <div class="report-table">
         {{#each eventsByMonth}}
         <h3>{{@key}}</h3>
@@ -527,6 +561,18 @@
       <h2>Clubs</h2>
       <button class="export-csv-btn" onclick="exportClubsTableToCSV('clubs.csv')">Export to CSV</button>
       <p></p>
+      
+      <!-- Added Club Location Breakdown chart -->
+      <h3>Club location breakdown:</h3>
+      <div class="chart-table">
+        <div class="chart-container" style="width: 500px; height: 500px;">
+          <canvas id="clubsChart"></canvas>
+        </div>
+        <div class="insights-summary">
+          <p data-label="Total Clubs:">{{clubsCount}}</p>
+        </div>
+      </div>
+      
       <div class="report-table">
         <table class="clubs-table">
           <thead>
@@ -555,34 +601,6 @@
           </tbody>
         </table>
       </div>
-      <script>
-        function exportClubsTableToCSV(filename) {
-          var csv = [];
-          var rows = document.querySelectorAll(".clubs-table tr");
-
-          for (var i = 0; i < rows.length; i++) {
-            if (rows[i].style.display !== 'none') { // Only include visible rows
-              var row = [], cols = rows[i].querySelectorAll("td, th");
-
-              for (var j = 0; j < cols.length; j++) {
-                row.push(cols[j].innerText);
-              }
-
-              csv.push(row.join(","));
-            }
-          }
-
-          // Download CSV
-          var csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
-          var downloadLink = document.createElement("a");
-          downloadLink.download = filename;
-          downloadLink.href = window.URL.createObjectURL(csvFile);
-          downloadLink.style.display = "none";
-          document.body.appendChild(downloadLink);
-          downloadLink.click();
-          document.body.removeChild(downloadLink);
-        }
-      </script>
     </div>
 
     <div id="insights" class="report-section" style="display:none">
@@ -695,16 +713,6 @@
           <p data-label="Athlete Applications:">{{nccRegistrationsCount}}</p>
           <p data-label="Instructor Applications:">{{instructorRegistrationsCount}}</p>
           <p data-label="Club Applications:">{{clubRegistrationsCount}}</p>
-        </div>
-      </div>
-
-      <h3>Club location breakdown:</h3>
-      <div class="chart-table">
-        <div class="chart-container" style="width: 500px; height: 500px;">
-          <canvas id="clubsChart"></canvas>
-        </div>
-        <div class="insights-summary">
-          <p data-label="Total Clubs:">{{clubsCount}}</p>
         </div>
       </div>
     </div>
@@ -1234,9 +1242,86 @@
         
         revenueChart.update();
       });
+
+      // Event Type Filter Functionality
+      function filterEventType(eventType) {
+        // Update active button
+        document.querySelectorAll('.event-filter-btn').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        document.querySelector(`.event-filter-btn[onclick*="${eventType}"]`).classList.add('active');
+        
+        // Show/hide appropriate count boxes
+        document.getElementById('all-events-count').style.display = eventType === 'all' ? 'flex' : 'none';
+        document.getElementById('kyorugi-events-count').style.display = eventType === 'kyorugi' ? 'flex' : 'none';
+        document.getElementById('poomsae-events-count').style.display = eventType === 'poomsae' ? 'flex' : 'none';
+        document.getElementById('promotion-events-count').style.display = eventType === 'promotion' ? 'flex' : 'none';
+        
+        // Calculate filtered counts
+        const eventCards = document.querySelectorAll('.event-card');
+        let kyorugiCount = 0;
+        let poomsaeCount = 0;
+        let promotionCount = 0;
+        
+        // Count events by type
+        eventCards.forEach(card => {
+          const cardText = card.textContent.toLowerCase();
+          
+          if (cardText.includes('kyorugi') || cardText.includes('sparring') || cardText.includes('combat')) {
+            kyorugiCount++;
+          }
+          
+          if (cardText.includes('poomsae') || cardText.includes('forms') || cardText.includes('patterns')) {
+            poomsaeCount++;
+          }
+          
+          if (cardText.includes('promotion') || cardText.includes('belt') || cardText.includes('grading') || 
+              cardText.includes('rank') || cardText.includes('test')) {
+            promotionCount++;
+          }
+        });
+        
+        // Update filtered count displays - replace placeholders with actual counts
+        document.querySelector('#kyorugi-events-count h3').textContent = kyorugiCount;
+        document.querySelector('#poomsae-events-count h3').textContent = poomsaeCount;
+        document.querySelector('#promotion-events-count h3').textContent = promotionCount;
+        
+        // Filter the event cards
+        eventCards.forEach(card => {
+          if (eventType === 'all') {
+            card.style.display = '';
+          } else {
+            // Check all text content of the card for the event type
+            const cardText = card.textContent.toLowerCase();
+            
+            // More robust check for event types
+            let matches = false;
+            if (eventType === 'kyorugi' && (cardText.includes('kyorugi') || cardText.includes('sparring') || cardText.includes('combat'))) {
+              matches = true;
+            } else if (eventType === 'poomsae' && (cardText.includes('poomsae') || cardText.includes('forms') || cardText.includes('patterns'))) {
+              matches = true;
+            } else if (eventType === 'promotion' && (cardText.includes('promotion') || cardText.includes('belt') || cardText.includes('grading') || cardText.includes('rank') || cardText.includes('test'))) {
+              matches = true;
+            }
+            
+            card.style.display = matches ? '' : 'none';
+          }
+        });
+        
+        // Also update the breakdown in the all-events-count box
+        const breakdownElement = document.querySelector('#all-events-count .event-type-breakdown');
+        if (breakdownElement) {
+          const breakdownHTML = `
+            <p>Kyorugi: ${kyorugiCount}</p>
+            <p>Poomsae: ${poomsaeCount}</p>
+            <p>Promotion: ${promotionCount}</p>
+          `;
+          breakdownElement.innerHTML = breakdownHTML;
+        }
+      }
     </script>
 
-    <!-- Add styling for the time filter buttons -->
+    <!-- Add styling for the time filter buttons and event filters -->
     <style>
       .time-filter {
         margin: 0 auto 20px;
@@ -1264,6 +1349,42 @@
         background-color: #007BFF;
       }
 
+      /* Event Type Filter styling */
+      .event-count-section {
+        margin-bottom: 30px;
+      }
+      
+      .event-type-filter {
+        margin: 0 auto 15px;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+      }
+      
+      .event-filter-btn {
+        background-color: #3a3a3a;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        margin: 0 5px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      
+      .event-filter-btn:hover {
+        background-color: #555;
+      }
+      
+      .event-filter-btn.active {
+        background-color: #007BFF;
+      }
+      
+      .event-count-container {
+        display: flex;
+        justify-content: center;
+      }
+      
       /* Revenue comparison styling */
       .revenue-summary {
         display: flex;
@@ -1337,6 +1458,29 @@
       .percentage-change.decrease .value {
         background-color: rgba(220, 53, 69, 0.2);
         color: #dc3545;
+      }
+
+      .event-type-breakdown {
+        margin-top: 10px;
+        font-size: 14px;
+        color: #cccccc;
+        text-align: center;
+      }
+      
+      .event-type-breakdown p {
+        margin: 5px 0;
+      }
+      
+      .totaleventcount-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #1E1E1E;
+        border-radius: 8px;
+        padding: 15px 20px;
+        margin: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        min-width: 200px;
       }
     </style>
 
@@ -1590,6 +1734,32 @@
       document.body.removeChild(downloadLink);
     }
 
+    function exportClubsTableToCSV(filename) {
+      var csv = [];
+      var rows = document.querySelectorAll(".clubs-table tr");
+
+      for (var i = 0; i < rows.length; i++) {
+        if (rows[i].style.display !== 'none') { // Only include visible rows
+          var row = [], cols = rows[i].querySelectorAll("td, th");
+
+          for (var j = 0; j < cols.length; j++) {
+            row.push(cols[j].innerText);
+          }
+
+          csv.push(row.join(","));
+        }
+      }
+
+      // Download CSV
+      var csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+      var downloadLink = document.createElement("a");
+      downloadLink.download = filename;
+      downloadLink.href = window.URL.createObjectURL(csvFile);
+      downloadLink.style.display = "none";
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    }
 
   </script>
 </body>
