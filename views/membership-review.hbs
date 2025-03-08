@@ -112,7 +112,7 @@
                   <td class="information">
                     {{#if registration.birthcert}}
                       <a href="{{registration.birthcert}}" target="_blank">View Birth Certificate</a>
-                      <input type="text" name="birthcerttext" value="{{registration.birthcert}}" hidden>
+                      <input type="text" name="birthcert" value="{{registration.birthcert}}" hidden>
                       {{#if user.ptaverified}}<button type="button" class="clear-input"
                         onclick="clearInput(this)">x</button>{{/if}}
                     {{else}}
@@ -128,7 +128,7 @@
                   <td class="information">
                     {{#if registration.paymentproof}}
                       <a href="{{registration.paymentproof}}" target="_blank">View Payment Proof</a>
-                      {{!-- <input type="text" name="paymentprooftext" value="{{registration.paymentproof}}"> --}}
+                      <input type="text" name="paymentproof" value="{{registration.paymentproof}}" hidden>
                       {{#if user.ptaverified}}<button type="button" class="clear-input"
                         onclick="clearInput(this)">x</button>{{/if}}
                     {{else}}
