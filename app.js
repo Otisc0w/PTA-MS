@@ -3859,6 +3859,8 @@ app.post("/decide-kyorugi-winners/:eventid", async (req, res) => {
       return res.status(500).send("Error fetching participants");
     }
 
+
+
     // Fetch the event details
     const { data: event, error: eventError } = await supabase
       .from("events")
@@ -3880,8 +3882,6 @@ app.post("/decide-kyorugi-winners/:eventid", async (req, res) => {
         ranking = 2;
       } else if (thirdPlaceIds.includes(participant.userid)) {
         ranking = 3;
-      } else if (disqualifiedPlayers.includes(participant.userid)) {
-        ranking = -1;
       
       } else {
         ranking = 0; // Ensure ranking is reset for each participant
@@ -6167,7 +6167,8 @@ app.get("/events-details/:id", async function (req, res) {
         return res.status(400).json({ error: "Error fetching second place name." });
       }
 
-      secondPlace = secondPlaceAthlete;
+      const isDisqualified = finalMatch.player1score === -1 || finalMatch.player2score === -1;
+      secondPlace = { ...secondPlaceAthlete, isDisqualified };
 
       const { data: highestRound, error: highestRoundError } = await supabase
         .from("kyorugi_matches")
@@ -6209,11 +6210,18 @@ app.get("/events-details/:id", async function (req, res) {
         return res.status(400).json({ error: "Error fetching third place name." });
         }
 
-        thirdPlace1 = thirdPlaceAthlete1;
-        thirdPlace2 = thirdPlaceAthlete2;
+        const isDisqualified1 = semifinalMatches[0].player1score === -1 || semifinalMatches[0].player2score === -1;
+        const isDisqualified2 = semifinalMatches[1].player1score === -1 || semifinalMatches[1].player2score === -1;
+
+        thirdPlace1 = { ...thirdPlaceAthlete1, isDisqualified: isDisqualified1 };
+        thirdPlace2 = { ...thirdPlaceAthlete2, isDisqualified: isDisqualified2 };
       }
       }
     }
+
+    console.log("Second Place:", secondPlace);
+    console.log("Third Place 1:", thirdPlace1);
+    console.log("Third Place 2:", thirdPlace2);
     
     let query = supabase
       .from("kyorugi_matches")

@@ -94,8 +94,7 @@
                 <tr>
                   <td><strong>Phone Number:</strong></td>
                   <td class="information">
-                    <input type="text" name="phonenum" value="{{registration.phonenum}}" {{#if (or user.ptaverified
-                      registration.phonenum)}}readonly{{else}}required{{/if}}>
+                    <input type="text" name="phonenum" value="{{registration.phonenum}}" {{#if user.ptaverified}}readonly{{else}}required{{/if}}>
                     <button type="button" class="clear-input"
                       onclick="clearInput(this)">x</button>
                   </td>
@@ -103,8 +102,7 @@
                 <tr>
                   <td><strong>Email:</strong></td>
                   <td class="information">
-                    <input type="text" name="email" value="{{registration.email}}" {{#if (or user.ptaverified
-                      registration.email)}}readonly{{else}}required{{/if}}>
+                    <input type="text" name="email" value="{{registration.email}}" {{#if user.ptaverified}}readonly{{else}}required{{/if}}>
                     <button type="button" class="clear-input"
                       onclick="clearInput(this)">x</button>
                   </td>
