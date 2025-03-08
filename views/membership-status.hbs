@@ -40,6 +40,9 @@
           <option value="rejected">Rejected</option>
           <option value="suspended">Suspended</option>
         </select>
+
+        <input class="namesearch" type="text" id="nameSearch" placeholder="Search by name" onkeyup="filterByName()">
+
       </div>
       <div class="membership-statuses">
         <div class="nccregs">
@@ -155,6 +158,20 @@
         } else {
           div.style.display = 'none';
         }
+      });
+    }
+
+    function filterByName() {
+      const nameFilter = document.getElementById('nameSearch').value.toLowerCase();
+      const allDivs = document.querySelectorAll('.post-content');
+
+      allDivs.forEach(div => {
+      const name = div.querySelector('.post-details h2').textContent.toLowerCase();
+      if (name.includes(nameFilter)) {
+        div.style.display = '';
+      } else {
+        div.style.display = 'none';
+      }
       });
     }
     

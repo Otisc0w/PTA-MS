@@ -618,7 +618,7 @@
         <span class="close" onclick="closePoomsaeScoresheet()">&times;</span>
         <h2 class="title">Judge's Score Sheet</h2>
         This is only for the following judges to score:
-        {{#each event.judges}}
+        {{#each judgesNames}}
           <strong style="color: #ff3030">{{this}}</strong>
         {{/each}}
           <form action="/submit-poomsae-scores" method="post">
@@ -714,7 +714,7 @@
         <span class="close" onclick="closeKyorugiScoresheet()">&times;</span>
         <h1>Kyorugi Scoresheet</h1>
         This is only for the following judges to score: 
-        {{#each event.judges}}
+        {{#each judgesNames}}
           <strong style="color: #ff3030">{{this}}</strong>
         {{/each}}
         {{!-- {{#if (none (map event.judges 'this') (concat user.firstname ' ' user.lastname))}}
@@ -920,7 +920,7 @@
   <div class="results-container" style="display: none;">
     <h2 class="resultstitle">Results</h2><br>
     {{#if (eq event.eventtype 'Poomsae')}}
-      {{#if poomsaenontop4}}
+      {{#if poomsaetop4}}
         <table class="results-table">
           <thead>
             <tr>
