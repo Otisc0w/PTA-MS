@@ -84,7 +84,7 @@ async function checkAndExpireNCCRegistrations(req, res, next) {
 
     // Filter registrations that expire in one week
     const oneWeekBeforeRegistrations = registrations.filter(registration => {
-      const expiresOn = new Date(registration.expireson);
+      const expiresOn = moment(registration.expireson, 'YYYY-MM-DD').toDate();
       return expiresOn.toISOString().split('T')[0] === oneWeekBeforeDateString;
     });
 

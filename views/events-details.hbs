@@ -66,7 +66,7 @@
           <p><strong>Event Type:</strong> {{event.eventtype}}</p>
           <p><strong>Registration Cap:</strong> {{registrationcount}} / {{event.registrationcap}}</p>
           <p><strong>Judges:</strong>
-            {{#each event.judges}}
+            {{#each judgesNames}}
               <span>{{this}}</span>{{#unless @last}}, {{/unless}}
             {{/each}}
           </p>
@@ -179,7 +179,7 @@
                 <div id="additional-selects-container">
                   <select name="judges">
                     {{#each ptaadmins}}
-                    <option value="{{firstname}} {{lastname}}">{{firstname}} {{lastname}}</option>
+                    <option value="{{id}}">{{firstname}} {{lastname}}</option>
                     {{/each}}
                   </select>
                 </div>
@@ -381,10 +381,9 @@
                   <td>
                     {{#unless (eq ranking 0)}}
                     {{#if (eq ../../event.status 'Ongoing')}}
-                    <button
-                      onclick="openPoomsaeScoresheet('{{id}}', '{{name}}', '{{totalscore}}', '{{technicalscore}}', '{{performancescore}}')"
-                      class="open-poomsae-scoresheet">Open Scoresheet ->
-                    </button>
+                      <button onclick="openPoomsaeScoresheet('{{id}}', '{{name}}', '{{totalscore}}', '{{technicalscore}}', '{{performancescore}}')"
+                      class="open-poomsae-scoresheet">Open Scoresheet -> 
+                      </button>
                     {{/if}}
                     {{else}}
                     <h3 class="eliminatedtag">Eliminated</h3>
@@ -442,9 +441,9 @@
                   </td>
                   <td>
                     {{#if (eq ../event.status 'Ongoing')}}
-                    <button href="#"
-                      onclick="openKyorugiScoresheet('{{id}}', '{{matchtime}}', '{{eventid}}', '{{player1}}', '{{player2}}', '{{player1_name}}', '{{player2_name}}', '{{player1score}}', '{{player2score}}', '{{matchtime}}', '{{winner}}', '{{loser}}', '{{matchttype}}', '{{round}}', '{{status}}')"
-                      class="open-kyorugi-scoresheet">Scoresheet -></button>
+                      <button href="#" onclick="openKyorugiScoresheet('{{id}}', '{{matchtime}}', '{{eventid}}', '{{player1}}', '{{player2}}', '{{player1_name}}', '{{player2_name}}', '{{player1score}}', '{{player2score}}', '{{matchtime}}', '{{winner}}', '{{loser}}', '{{matchttype}}', '{{round}}', '{{status}}')"
+                        class="open-kyorugi-scoresheet">Scoresheet ->
+                      </button>
                       {{#if dqreason}}
                         <button class="dqreasonbtn" id="dqkrgreasonbtn-{{id}}">?</button>
                         <div style="display: none;" id="dqreason-{{id}}">
@@ -496,7 +495,7 @@
               <span class="close" onclick="closeGradeSheetModal()">&times;</span>
               <h2>Promotion Test Grade Sheet</h2>
               This is only for the following judges to score:
-              {{#each event.judges}}
+              {{#each judgesNames}}
                 <strong style="color: #ff3030">{{this}}</strong>
               {{/each}}
               <p></p>
@@ -1225,7 +1224,7 @@
       const container = document.getElementById('additional-selects-container');
       const newSelect = document.createElement('select');
       newSelect.name = 'judges';
-        newSelect.innerHTML = `{{#each ptaadmins}}<option value="{{firstname}} {{lastname}}">{{firstname}} {{lastname}}</option>{{/each}}`;
+        newSelect.innerHTML = `{{#each ptaadmins}}<option value="{{id}}">{{firstname}} {{lastname}}</option>{{/each}}`;
       container.appendChild(newSelect);
     }
 

@@ -157,7 +157,13 @@ hbs.registerHelper('yearsSince', function (date) {
   const pastDate = moment(date);
   return now.diff(pastDate, 'years');
 });
-
+hbs.registerHelper('some', function(array, value, options) {
+  if (array.includes(value)) {
+    return options.fn(this);
+  } else {
+    return options.inverse(this);
+  }
+});
 
 
 app.use( session({
@@ -2924,7 +2930,6 @@ app.post("/create-event", upload.single("eventpicture"), async (req, res) => {
     starttime,
     endtime,
     location,
-    judgeids,
     agedivision,
     weightclass,
     beltlevel,
@@ -5995,6 +6000,18 @@ app.get("/events-details/:id", async function (req, res) {
       return res.status(400).json({ error: eventError.message });
     }
 
+    // Fetch the judges for the specific event
+    const { data: judges, error: judgesError } = await supabase
+      .from("users")
+      .select("id, firstname, lastname")
+      .in("id", event.judges);
+
+    if (judgesError) {
+      return res.status(400).json({ error: judgesError.message });
+    }
+
+    const judgesNames = judges.map(judge => `${judge.firstname} ${judge.lastname}`);
+
     // Fetch the event registrations for the specific event
     const { data: eventregistrations, error: eventregistrationsError } =
       await supabase
@@ -6440,15 +6457,10 @@ app.get("/events-details/:id", async function (req, res) {
     }
 
     console.log("Fetched verified users:", ptaadmins); // Log the verified users data to the console
-
     console.log("Fetched promotion players with athlete data:", promotionPlayersWithAthleteData); // Log the promotion players with athlete data to the console
-
     console.log("Fetched promotion players data:", promotionplayers); // Log the promotion players data to the console
-
     console.log("Fetched current user athlete data:", currentUserAthlete); // Log the current user athlete data to the console
-
     console.log("Fetched top players data:", poomsaetop4); // Log the top players data to the console
-
     console.log("Fetched event data:", event); // Log the event data to the console
     console.log("Fetched event registrations data:", eventregistrations); // Log the event registrations data to the console
     console.log("Fetched participants data:", participants); // Log the participants data to the console
@@ -6481,7 +6493,8 @@ app.get("/events-details/:id", async function (req, res) {
       promotionplayers,
       promotionPlayersWithAthleteData,
       clubMembers,
-      ptaadmins
+      ptaadmins,
+      judgesNames,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
