@@ -120,6 +120,28 @@ th {
   background-color: #444;
 }
 
+.export-container {
+  display: flex;
+  justify-content: flex-end; /* Aligns to the right */
+  width: 100%;
+  margin-top: -40px; /* Adjusts the position to be near the Registration Breakdown */
+}
+
+.export-csv-btn {
+  background-color: #2c2c2c;
+  color: #e0e0e0;
+  border: 1px solid #444;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 14px;
+}
+
+.export-csv-btn:hover {
+  background-color: #444;
+}
+
 .gotoeventbtn{
   margin-top:10px;
   float:right;
@@ -251,16 +273,52 @@ th {
 
 .total-revenue {
   background-color: #3a3a3a;
-  border: 1px solid #dee2e6;
-  border-radius: 0.25rem;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-left: 10px;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  flex: 1;
+  min-width: 250px;
+  max-width: 350px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.total-revenue h3 {
+  font-size: 18px;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.total-revenue h2 {
+  font-size: 24px;
+  color: #f1c40f;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.total-revenue p {
+  font-size: 18px;
+  color: #f1c40f;
+  margin: 5px 0;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .report-summary {
+      flex-direction: column;
+      align-items: center;
+  }
 }
 
 .report-summary {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  gap: 15px;
 }
 
 .insights-summary {
