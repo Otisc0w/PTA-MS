@@ -37,70 +37,7 @@
       <button class="tablink" onclick="openReport(event, 'clubs')">Clubs</button>
       <button class="tablink" onclick="openReport(event, 'insights')">Other Insights</button>
     </div>
-
-    <div id="payments" class="report-section" style="display:block">
-      <h2>Payments/Transactions</h2>
-
-      <div class="report-summary" id="all-summary">
-        <div class="total-revenue">
-          <h3>Total Revenue from Registration Fees:</h3>
-          <h2>PHP {{formatMoney membershiptotalrevenue}}</h2>
-        </div>
-        <div class="total-revenue">
-          <h3>Total Fee Payments:</h3>
-          <h2>{{transactionsCount}}</h2>
-        </div>
-        <div class="total-revenue">
-          <p>NCC: <strong>{{nccTransactionsCount}}</strong></p>
-          <p>Instructor: <strong>{{instructorTransactionsCount}}</strong></p>
-          <p>Club: <strong>{{clubTransactionsCount}}</strong></p>
-        </div>
-      </div>
-
-      <div class="report-summary" id="ncc-summary" style="display:none;">
-        <div class="total-revenue">
-          <h3>Total Revenue from NCC Registration Fees:</h3>
-          <h2>PHP {{formatMoney totalNccRevenue}}</h2>
-        </div>
-        <div class="total-revenue">
-          <h3>Total NCC Fee Payments:</h3>
-          <h2>{{nccTransactionsCount}}</h2>
-        </div>
-      </div>
-
-      <div class="report-summary" id="instructor-summary" style="display:none;">
-        <div class="total-revenue">
-          <h3>Total Revenue from Instructor Registration Fees:</h3>
-          <h2>PHP {{formatMoney totalInstructorRevenue}}</h2>
-        </div>
-        <div class="total-revenue">
-          <h3>Total Instructor Fee Payments:</h3>
-          <h2>{{instructorTransactionsCount}}</h2>
-        </div>
-      </div>
-
-      <div class="report-summary" id="club-summary" style="display:none;">
-        <div class="total-revenue">
-          <h3>Total Revenue from Club Registration Fees:</h3>
-          <h2>PHP {{formatMoney totalClubRevenue}}</h2>
-        </div>
-        <div class="total-revenue">
-          <h3>Total Club Fee Payments:</h3>
-          <h2>{{clubTransactionsCount}}</h2>
-        </div>
-      </div>
-
-      <script>
-        document.getElementById('regtypefiltertxn').addEventListener('change', function () {
-          const selectedCategory = this.value;
-          document.getElementById('all-summary').style.display = selectedCategory === 'all' ? 'block' : 'none';
-          document.getElementById('ncc-summary').style.display = selectedCategory === 'nccregs' ? 'block' : 'none';
-          document.getElementById('instructor-summary').style.display = selectedCategory === 'instructorregs' ? 'block' : 'none';
-          document.getElementById('club-summary').style.display = selectedCategory === 'clubregs' ? 'block' : 'none';
-        });
-      </script>
-
-      <div class="date-filter">
+<div class="date-filter">
         <label for="start-date">Start Date:</label>
         <input type="date" id="start-date" name="start-date">
         <label class="end-date" for="end-date">End Date:</label>
@@ -211,6 +148,69 @@
           }
         </script>
       </div>
+
+
+    <div id="payments" class="report-section" style="display:block">
+      <h2>Payments/Transactions</h2>
+
+      <div class="report-summary" id="all-summary">
+        <div class="total-revenue">
+          <h3>Total Revenue from Registration Fees:</h3>
+          <h2>PHP {{formatMoney membershiptotalrevenue}}</h2>
+        </div>
+        <div class="total-revenue">
+          <h3>Total Fee Payments:</h3>
+          <h2>{{transactionsCount}}</h2>
+        </div>
+        <div class="total-revenue">
+          <p>NCC: <strong>{{nccTransactionsCount}}</strong></p>
+          <p>Instructor: <strong>{{instructorTransactionsCount}}</strong></p>
+          <p>Club: <strong>{{clubTransactionsCount}}</strong></p>
+        </div>
+      </div>
+
+      <div class="report-summary" id="ncc-summary" style="display:none;">
+        <div class="total-revenue">
+          <h3>Total Revenue from NCC Registration Fees:</h3>
+          <h2>PHP {{formatMoney totalNccRevenue}}</h2>
+        </div>
+        <div class="total-revenue">
+          <h3>Total NCC Fee Payments:</h3>
+          <h2>{{nccTransactionsCount}}</h2>
+        </div>
+      </div>
+
+      <div class="report-summary" id="instructor-summary" style="display:none;">
+        <div class="total-revenue">
+          <h3>Total Revenue from Instructor Registration Fees:</h3>
+          <h2>PHP {{formatMoney totalInstructorRevenue}}</h2>
+        </div>
+        <div class="total-revenue">
+          <h3>Total Instructor Fee Payments:</h3>
+          <h2>{{instructorTransactionsCount}}</h2>
+        </div>
+      </div>
+
+      <div class="report-summary" id="club-summary" style="display:none;">
+        <div class="total-revenue">
+          <h3>Total Revenue from Club Registration Fees:</h3>
+          <h2>PHP {{formatMoney totalClubRevenue}}</h2>
+        </div>
+        <div class="total-revenue">
+          <h3>Total Club Fee Payments:</h3>
+          <h2>{{clubTransactionsCount}}</h2>
+        </div>
+      </div>
+
+      <script>
+        document.getElementById('regtypefiltertxn').addEventListener('change', function () {
+          const selectedCategory = this.value;
+          document.getElementById('all-summary').style.display = selectedCategory === 'all' ? 'block' : 'none';
+          document.getElementById('ncc-summary').style.display = selectedCategory === 'nccregs' ? 'block' : 'none';
+          document.getElementById('instructor-summary').style.display = selectedCategory === 'instructorregs' ? 'block' : 'none';
+          document.getElementById('club-summary').style.display = selectedCategory === 'clubregs' ? 'block' : 'none';
+        });
+      </script>
 
       <!-- New div for right alignment -->
       <div class="export-container">
@@ -327,101 +327,104 @@
 
       <!--First Row -->
       <div class="report-row">
-      <div class="report-summary" id="ncc-bd-summary">
-        <div class="total-revenue">
-          <h3>NCC Applications Breakdown:</h3>
-          <p>Under Review: {{underReviewNccsCount}}</p>
-          <p>Accepted: {{acceptedNccsCount}}</p>
-          <p>ID Shipped: {{rejectedNccsCount}}</p>
-          <p>Rejected: {{idShippedNccsCount}}</p>
-          <p>Suspended: {{suspendedNccsCount}}</p>
-          <p>Expired: {{expiredNccsCount}}</p>
+        <div class="report-summary" id="ncc-bd-summary">
+          <div class="total-revenue">
+            <h3>NCC Applications Breakdown:</h3>
+            <p>Under Review: {{underReviewNccsCount}}</p>
+            <p>Accepted: {{acceptedNccsCount}}</p>
+            <p>ID Shipped: {{idShippedNccsCount}}</p>
+            <p>Rejected: {{rejectedNccsCount}}</p>
+            <p>Suspended: {{suspendedNccsCount}}</p>
+            <p>Expired: {{expiredNccsCount}}</p>
+          </div>
+          <div class="chart-container" style="width: 300px; height: 300px;">
+            <canvas id="nccappsbreakdown"></canvas>
+          </div>
         </div>
-        <div class="chart-container" style="width: 300px; height: 300px;">
-          <canvas id="nccappsbreakdown"></canvas>
-        </div>
-      </div>
 
-      <script>
-        document.addEventListener("DOMContentLoaded", function () {
-          var ctx = document.getElementById('nccappsbreakdown').getContext('2d');
-          var nccAppsBreakdownChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-              labels: ['Under Review', 'Accepted', 'ID Shipped', 'Rejected', 'Suspended', 'Expired'],
-              datasets: [{
-                data: [{{ underReviewNccsCount }}, {{ acceptedNccsCount }}, {{ idShippedNccsCount }}, {{ rejectedNccsCount }}, {{ suspendedNccsCount }}, {{ expiredNccsCount }}],
-          backgroundColor: ['#FFCE56', '#36A2EB', '#32a852', '#FF6384', '#ad6b00', '#C9CBCF', '#9000ad',],
-          hoverBackgroundColor: ['#FFCE56', '#36A2EB', '#32a852', '#FF6384', '#ad6b00', '#C9CBCF', '#9000ad']
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            var ctx = document.getElementById('nccappsbreakdown').getContext('2d');
+            var nccAppsBreakdownChart = new Chart(ctx, {
+              type: 'doughnut',
+              data: {
+                labels: ['Under Review', 'Accepted', 'ID Shipped', 'Rejected', 'Suspended', 'Expired'],
+                datasets: [{
+                  data: [{{ underReviewNccsCount }}, {{ acceptedNccsCount }}, {{ idShippedNccsCount }}, {{ rejectedNccsCount }}, {{ suspendedNccsCount }}, {{ expiredNccsCount }}],
+            backgroundColor: ['#FFCE56', '#36A2EB', '#32a852', '#FF6384', '#ad6b00', '#C9CBCF', '#9000ad',],
+            hoverBackgroundColor: ['#FFCE56', '#36A2EB', '#32a852', '#FF6384', '#ad6b00', '#C9CBCF', '#9000ad']
             }]
           },
-          options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'bottom',
+            options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+              }
             }
           }
-        }
         });
       });
-      </script>
+        </script>
 
-      <div class="report-summary" id="instructor-bd-summary">
-        <div class="total-revenue">
-          <h3>Instructor Applications Breakdown:</h3>
-          <p>Under Review: {{underReviewInstructorsCount}}</p>
-          <p>Accepted: {{acceptedInstructorsCount}}</p>
-          <p>ID Shipped: {{idShippedInstructorsCount}}</p>
-          <p>Rejected: {{rejectedInstructorsCount}}</p>
-          <p>Suspended: {{suspendedInstructorsCount}}</p>
-          <p>Expired: {{expiredInstructorsCount}}</p>
+        <div class="report-summary" id="instructor-bd-summary">
+          <div class="total-revenue">
+            <h3>Instructor Applications Breakdown:</h3>
+            <p>Under Review: {{underReviewInstructorsCount}}</p>
+            <p>Accepted: {{acceptedInstructorsCount}}</p>
+            <p>ID Shipped: {{idShippedInstructorsCount}}</p>
+            <p>Rejected: {{rejectedInstructorsCount}}</p>
+            <p>Suspended: {{suspendedInstructorsCount}}</p>
+            <p>Expired: {{expiredInstructorsCount}}</p>
+          </div>
+          <div class="chart-container" style="width: 300px; height: 300px;">
+            <canvas id="instructorAppsBreakdown"></canvas>
+          </div>
         </div>
-        <div class="chart-container" style="width: 300px; height: 300px;">
-          <canvas id="instructorAppsBreakdown"></canvas>
-        </div>
-      </div>
-    
 
-      <script>
-        document.addEventListener("DOMContentLoaded", function () {
-          var ctx = document.getElementById('instructorAppsBreakdown').getContext('2d');
-          var instructorAppsBreakdownChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-              labels: ['Under Review', 'Accepted', 'ID Shipped', 'Rejected', 'Suspended', 'Expired'],
-              datasets: [{
-                data: [{{ underReviewInstructorsCount }}, {{ acceptedInstructorsCount }}, {{ idShippedInstructorsCount }}, {{ rejectedInstructorsCount }}, {{ suspendedInstructorsCount }}, {{ expiredInstructorsCount }}],
-          backgroundColor: ['#FFCE56', '#36A2EB', '#32a852', '#FF6384', '#ad6b00', '#C9CBCF'],
-          hoverBackgroundColor: ['#FFCE56', '#36A2EB', '#32a852', '#FF6384', '#ad6b00', '#C9CBCF']
+
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            var ctx = document.getElementById('instructorAppsBreakdown').getContext('2d');
+            var instructorAppsBreakdownChart = new Chart(ctx, {
+              type: 'doughnut',
+              data: {
+                labels: ['Under Review', 'Accepted', 'ID Shipped', 'Rejected', 'Suspended', 'Expired'],
+                datasets: [{
+                  data: [{{ underReviewInstructorsCount }}, {{ acceptedInstructorsCount }}, {{ idShippedInstructorsCount }}, {{ rejectedInstructorsCount }}, {{ suspendedInstructorsCount }}, {{ expiredInstructorsCount }}],
+            backgroundColor: ['#FFCE56', '#36A2EB', '#32a852', '#FF6384', '#ad6b00', '#C9CBCF'],
+            hoverBackgroundColor: ['#FFCE56', '#36A2EB', '#32a852', '#FF6384', '#ad6b00', '#C9CBCF']
             }]
           },
-          options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'bottom',
+            options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+              }
             }
           }
-        }
         });
       });
-      </script>
-  <!-- Second Row: Club Breakdown -->
-      <div class="report-summary" id="club-bd-summary">
-        <div class="total-revenue">
-          <h3>Club Applications Breakdown:</h3>
-          <p>Processing: {{underReviewClubsCount}}</p>
-          <p>Accepted and Registered: {{acceptedClubsCount}}</p>
-          <p>Rejected: {{rejectedClubsCount}}</p>
-        </div>
-        <div class="chart-container" style="width: 300px; height: 300px;">
-          <canvas id="clubAppsBreakdown"></canvas>
+        </script>
+
+        <div class="report-summary" id="club-bd-summary">
+          <div class="total-revenue">
+            <h3>Club Applications Breakdown:</h3>
+            <p>Under Review: {{underReviewClubsCount}}</p>
+            <p>Accepted: {{acceptedClubsCount}}</p>
+            <p>ID Shipped: {{idShippedClubsCount}}</p>
+            <p>Rejected: {{rejectedClubsCount}}</p>
+            <p>Suspended: {{suspendedClubsCount}}</p>
+            <p>Expired: {{expiredClubsCount}}</p>
+          </div>
+          <div class="chart-container" style="width: 300px; height: 300px;">
+            <canvas id="clubAppsBreakdown"></canvas>
+          </div>
         </div>
       </div>
-       </div>
 
       <script>
         document.addEventListener("DOMContentLoaded", function () {
