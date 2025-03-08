@@ -605,8 +605,8 @@
         <div class="chart-container" style="width: 800px; height: 400px;">
           <canvas id="revenueComparisonChart"></canvas>
         </div>
-        <div class="revenue-summary">
-          <div class="revenue-comparison-card">
+        <div class="revenue-summary" style="display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; overflow-x: auto !important; width: 100% !important;">
+          <div class="revenue-comparison-card" style="width: 270px !important; flex: 0 0 auto !important;">
             <h4>Total Registration Revenue</h4>
             <div class="revenue-comparison">
               <div class="previous-month">
@@ -622,7 +622,7 @@
               </div>
             </div>
           </div>
-          <div class="revenue-comparison-card">
+          <div class="revenue-comparison-card" style="width: 270px !important; flex: 0 0 auto !important;">
             <h4>Athlete Registration Revenue</h4>
             <div class="revenue-comparison">
               <div class="previous-month">
@@ -638,7 +638,7 @@
               </div>
             </div>
           </div>
-          <div class="revenue-comparison-card">
+          <div class="revenue-comparison-card" style="width: 270px !important; flex: 0 0 auto !important;">
             <h4>Instructor Registration Revenue</h4>
             <div class="revenue-comparison">
               <div class="previous-month">
@@ -654,7 +654,7 @@
               </div>
             </div>
           </div>
-          <div class="revenue-comparison-card">
+          <div class="revenue-comparison-card" style="width: 270px !important; flex: 0 0 auto !important;">
             <h4>Club Registration Revenue</h4>
             <div class="revenue-comparison">
               <div class="previous-month">
@@ -675,26 +675,26 @@
 
       <h3>Active member type breakdown:</h3>
       <div class="chart-table">
-        <div class="chart-container" style="width: 500px; height: 500px;">
+        <div class="chart-container" style="width: 800px; height: 400px;">
           <canvas id="membersChart"></canvas>
         </div>
         <div class="insights-summary">
-          <p>Total Members: {{totalMembers}}</p>
-          <p>Registered Athletes: {{athleteVerifiedCount}}</p>
-          <p>Registered Instructors: {{instructorVerifiedCount}}</p>
+          <p data-label="Total Members:">{{totalMembers}}</p>
+          <p data-label="Registered Athletes:">{{athleteVerifiedCount}}</p>
+          <p data-label="Registered Instructors:">{{instructorVerifiedCount}}</p>
         </div>
       </div>
 
       <h3>Membership application type breakdown:</h3>
       <div class="chart-table">
-        <div class="chart-container" style="width: 500px; height: 500px;">
+        <div class="chart-container" style="width: 800px; height: 400px;">
           <canvas id="applicationschart"></canvas>
         </div>
         <div class="insights-summary">
-          <p>Total Registrations: {{totalRegistrations}}</p>
-          <p>Athlete Applications: {{nccRegistrationsCount}}</p>
-          <p>Instructor Applications: {{instructorRegistrationsCount}}</p>
-          <p>Club Applications: {{clubRegistrationsCount}}</p>
+          <p data-label="Total Registrations:">{{totalRegistrations}}</p>
+          <p data-label="Athlete Applications:">{{nccRegistrationsCount}}</p>
+          <p data-label="Instructor Applications:">{{instructorRegistrationsCount}}</p>
+          <p data-label="Club Applications:">{{clubRegistrationsCount}}</p>
         </div>
       </div>
 
@@ -704,7 +704,7 @@
           <canvas id="clubsChart"></canvas>
         </div>
         <div class="insights-summary">
-          <p>Total Clubs: {{clubsCount}}</p>
+          <p data-label="Total Clubs:">{{clubsCount}}</p>
         </div>
       </div>
     </div>
@@ -766,19 +766,23 @@
             labels: ['Athlete Applications', 'Instructor Applications', 'Club Applications'],
             datasets: [{
               data: [{{ nccRegistrationsCount }}, {{ instructorRegistrationsCount }}, {{ clubRegistrationsCount }}],
-        backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
-        hoverBackgroundColor: ['#36A2EB', '#FF6384', '#FFCE56']
+              backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
+              hoverBackgroundColor: ['#36A2EB', '#FF6384', '#FFCE56']
             }]
           },
-        options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: 'bottom',
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Membership Application Distribution'
+              }
+            }
           }
-        }
-      }
         });
       });
 
@@ -1235,9 +1239,10 @@
     <!-- Add styling for the time filter buttons -->
     <style>
       .time-filter {
-        margin-bottom: 15px;
+        margin: 0 auto 20px;
         display: flex;
         justify-content: center;
+        width: 100%;
       }
       
       .time-filter-btn {

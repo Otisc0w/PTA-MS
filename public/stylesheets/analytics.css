@@ -321,31 +321,101 @@ th {
   gap: 15px;
 }
 
-.insights-summary {
-  background-color: #3a3a3a;
-  padding: 10px;
+/* Standard styling for all chart summaries */
+.insights-summary, .revenue-summary {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 800px;
+  padding: 15px;
+  background-color: #1E1E1E;
   border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin-top: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-align: center;
 }
+
 .insights-summary p {
-  margin: 5px 0;
-  font-weight: bold;
+  margin: 10px 0;
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: 500;
 }
-.insights-summary{
-  height: 300px;
+
+/* Revenue summary layout */
+.revenue-summary {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: 15px;
+  justify-content: center;
+  overflow-x: auto !important;
+  padding: 15px 5px;
+  width: 100% !important;
+  max-width: 1200px;
+  margin: 0 auto;
 }
+
+.revenue-comparison-card {
+  background-color: #1E1E1E;
+  border: 1px solid #3a3a3a;
+  border-radius: 5px;
+  padding: 15px;
+  min-width: 270px !important;
+  width: 270px !important;
+  flex: 0 0 auto !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  margin-bottom: 15px;
+}
+
+/* Add smooth scrolling behavior */
+.revenue-summary::-webkit-scrollbar {
+  height: 8px;
+}
+
+.revenue-summary::-webkit-scrollbar-track {
+  background: #1E1E1E;
+  border-radius: 4px;
+}
+
+.revenue-summary::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}
+
+.revenue-summary::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+/* Make insights-summary data appear in card format like revenue cards */
+.insights-summary p {
+  background-color: #2a2a2a;
+  padding: 10px;
+  border-radius: 4px;
+  margin: 8px 0;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+}
+
+.insights-summary p:before {
+  content: attr(data-label);
+  font-weight: normal;
+  color: #a0a0a0;
+}
+
 .chart-container {
-  display: inline-block;
+  display: block;
+  margin: 0 auto 20px;
   vertical-align: top;
-  margin-right: 20px;
 }
 .chart-table div{
-  display: inline-block;
+  display: block;
 }
 
 .chart-table {
-  margin-left: 30%;  
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+  max-width: 1200px;
 }
 .analytics-subtitle{
   text-align: center;
