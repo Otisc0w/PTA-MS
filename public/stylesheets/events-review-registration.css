@@ -78,12 +78,14 @@ body {
     border-radius: 50%;
 }
 
-.athlete-picture {
-    height: 400px;
-    width: 300px;
-    border-radius: 3%;
-    object-fit: cover;
-}
+.athlete-picture  {
+  display: block;
+  margin: 0 auto; /* Center horizontally */
+  width: 250px;
+  height: auto;
+  border-radius: var(--border-radius);
+ }
+
 
 .dropdown-content {
     display: none;
@@ -159,22 +161,6 @@ form h2 {
   outline: none;
 }
 
-.button-padding {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.button-padding:hover {
-  background-color: #0056b3;
-}
-
 .flex {
   display: flex;
   flex-wrap: wrap;
@@ -192,8 +178,8 @@ form h2 {
 
 .action-buttons button,
 .confirmscreen button {
-  padding: 10px 20px;
-  margin: 10px;
+  padding: 10px 16px;
+
   border: none;
   border-radius: var(--border-radius);
   cursor: pointer;
@@ -201,13 +187,27 @@ form h2 {
 }
 
 .action-buttons button {
-  background-color: var(--primary-color);
+  margin-left: 10px;
+  background-color:  #218838;
   color: var(--text-color);
+  margin-left: 4px;
+  margin-bottom: 10px;
 }
 
 .action-buttons button:hover {
-  background-color: var(--hover-color);
+  background-color: #28a745;;
 }
+
+
+.action-buttons button[type="submit"] {
+  background-color: #d32f2f; /* Darker Red */
+  color: var(--text-color);
+}
+
+.action-buttons button[type="submit"]:hover {
+  background-color:  #dc3545;
+}
+
 
 .confirmscreen button.cancel {
   background-color: #dc3545;
@@ -229,17 +229,18 @@ form h2 {
 
 .backtolist a {
   display: inline-block;
-  padding: 10px 20px;
+  padding: 10px 16px;
   background-color: var(--primary-color);
   color: var(--text-color);
   border-radius: var(--border-radius);
   text-decoration: none;
-  margin-top: 20px;
+  box-shadow: var(--box-shadow);
 }
 
 .backtolist a:hover {
   background-color: var(--hover-color);
 }
+
 
 .lightbox {
   display: none;
@@ -275,4 +276,8 @@ form h2 {
   color: #bbb;
   text-decoration: none;
   cursor: pointer;
+}
+
+.review-header{
+  margin-left: 15px;
 }
