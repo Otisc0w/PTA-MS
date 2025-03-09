@@ -69,6 +69,7 @@
                   DQ
                 {{else}}
                   {{#if (eq ranking -1)}}DQ{{else}}{{#unless (eq ranking 0)}}{{ordinal ranking}}{{else}}P{{/unless}}{{/if}}
+                  {{ranking}}
                 {{/if}}
               </td>
               <td>{{#if (eq poomsaefinalscore -1)}} DQ  <button class="dqreasonbtn" id="dqreasonbtn">?</button> 
