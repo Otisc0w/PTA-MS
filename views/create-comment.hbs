@@ -24,7 +24,9 @@
           {{/if}}
         </a>
       </li>
+        {{#if user.ptaverified}}
         <li class="analytics"><a href="analytics">Reports</a></li>
+        {{/if}}
         <li class="profile-pic">
           {{#if user.profilepic}}
           <a href="#" onclick="toggleDropdown()"><img src="{{user.profilepic}}" alt="Profile Picture"
@@ -35,8 +37,6 @@
           {{/if}}
           <div id="dropdown" class="dropdown-content">
             <a href="/profile">Profile</a>
-            <a href="/settings">Settings</a>
-            
             <a href="/">Logout</a>
           </div>
         </li>
