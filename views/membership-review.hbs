@@ -10,6 +10,156 @@
   <link rel="stylesheet" type="text/css" href="../stylesheets/navbar.css">
   <link rel="stylesheet" type="text/css" href="../stylesheets/footer.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* ID card styles */
+    .id-card {
+      width: 2.5in;
+      height: 4in;
+      background: linear-gradient(150deg, #003366 70%, #cc0000 70%);
+      border-radius: 10px;
+      position: relative;
+      color: white;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+      padding: 0;
+      margin: 0 auto;
+    }
+    
+    .id-front {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 10px;
+    }
+    
+    .card-header {
+      font-size: 12px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 5px;
+      position: absolute;
+      top: 10px;
+      width: 100%;
+      left: 0;
+      text-transform: uppercase;
+      color: white;
+    }
+    
+    .pta-header {
+      position: absolute;
+      top: 30px;
+      left: 0;
+      z-index: 2;
+      text-align: center;
+      width: 100%;
+    }
+    
+    .pta-text {
+      font-size: 20px;
+      font-weight: bold;
+      color: rgba(255, 255, 255, 0.8);
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      letter-spacing: 1px;
+    }
+    
+    .photo-area {
+      position: absolute;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1.5in;
+      height: 1.5in;
+      background: white;
+      border: 2px solid white;
+      overflow: hidden;
+    }
+    
+    .athlete-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
+    
+    .card-details {
+      position: absolute;
+      bottom: 15px;
+      left: 15px;
+      width: calc(100% - 30px);
+      z-index: 2;
+      text-align: left;
+    }
+    
+    .athlete-name {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      text-align: left;
+    }
+    
+    .athlete-id,
+    .belt-level,
+    .chapter,
+    .birthdate {
+      font-size: 12px;
+      margin-bottom: 3px;
+      text-transform: uppercase;
+      text-align: left;
+    }
+
+    .membership-type {
+      font-size: 12px;
+      margin: 5px 0;
+      text-transform: uppercase;
+      color: #ffeb3b;
+      font-weight: bold;
+      text-align: left;
+    }
+    
+    .athlete-id {
+      margin-bottom: 8px;
+    }
+    
+    @media print {
+      @page {
+        size: 2.5in 4in;
+        margin: 0;
+      }
+    
+      body * {
+        visibility: hidden;
+      }
+    
+      #printableArea,
+      #printableArea * {
+        visibility: visible;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+    
+      #printableArea {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 2.5in;
+        height: 4in;
+      }
+    
+      .id-card {
+        background: linear-gradient(150deg, #003366 70%, #cc0000 70%) !important;
+        margin: 0;
+        padding: 0;
+      }
+    
+      .photo-area {
+        margin: 0;
+        border: none;
+      }
+    }
+  </style>
 </head>
 
 <body class="container">
@@ -338,8 +488,9 @@
             <div class="card-details">
               <div class="athlete-name">{{registration.firstname}} {{registration.middlename}} {{registration.lastname}}</div>
               <div class="athlete-id">{{registration.id}}</div>
-              <div class="division">DIVISION: {{registration.division}}</div>
-              <div class="chapter">CHAPTER: {{registration.chapter}}</div>
+              <div class="membership-type">MEMBERSHIP TYPE: ATHLETE</div>
+              <div class="belt-level">BELT LEVEL: {{registration.beltlevel}}</div>
+              <div class="chapter">CHAPTER: {{registration.clubregion}}</div>
               <div class="birthdate">BIRTHDATE: {{formatDate registration.bday "MMMM D, YYYY"}}</div>
             </div>
           </div>

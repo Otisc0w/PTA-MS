@@ -697,8 +697,14 @@
               {{/if}}
             {{/if}}
           </div>
-          <div class="division">DIVISION: {{user.division}}</div>
-          <div class="chapter">CHAPTER: {{user.region}}</div>
+          {{#if user.athleteverified}}
+            {{#unless user.instructorverified}}
+              {{#unless user.ptaverified}}
+                <div class="belt-level">BELT LEVEL: {{user.beltlevel}}</div>
+                <div class="chapter">CHAPTER: {{user.region}}</div>
+              {{/unless}}
+            {{/unless}}
+          {{/if}}
           <div class="birthdate">BIRTHDATE: {{formatDate user.bday "MMMM D, YYYY"}}</div>
         </div>
       </div>
@@ -857,7 +863,7 @@
     }
     
     .athlete-id,
-    .division,
+    .belt-level,
     .chapter,
     .birthdate {
       font-size: 12px;

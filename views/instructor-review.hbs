@@ -285,7 +285,6 @@
               <div class="athlete-name">{{registration.firstname}} {{registration.middlename}} {{registration.lastname}}</div>
               <div class="athlete-id">ID: {{registration.id}}</div>
               <div class="membership-type">MEMBERSHIP TYPE: INSTRUCTOR</div>
-              <div class="division">DIVISION: {{registration.division}}</div>
               <div class="chapter">CHAPTER: {{registration.clubprovince}}</div>
               <div class="birthdate">BIRTHDATE: {{formatDate registration.bday "MMMM D, YYYY"}}</div>
             </div>
@@ -498,7 +497,7 @@
       left: 15px;
       width: calc(100% - 30px);
       z-index: 2;
-      text-align: right;
+      text-align: left;
     }
     
     .athlete-name {
@@ -506,17 +505,16 @@
       font-weight: bold;
       margin-bottom: 5px;
       text-transform: uppercase;
-      text-align: right;
+      text-align: left;
     }
     
     .athlete-id,
-    .division,
     .chapter,
     .birthdate {
       font-size: 12px;
       margin-bottom: 3px;
       text-transform: uppercase;
-      text-align: right;
+      text-align: left;
     }
 
     .membership-type {
@@ -525,7 +523,7 @@
       text-transform: uppercase;
       color: #ffeb3b;
       font-weight: bold;
-      text-align: right;
+      text-align: left;
     }
     
     .athlete-id {
