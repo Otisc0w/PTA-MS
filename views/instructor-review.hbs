@@ -268,11 +268,29 @@
       </section>
 
       <div class="printwindow" id="printableArea">
-        <p><strong>ID:</strong> {{registration.id}}</p>
-        <p><strong>First Name:</strong> {{registration.firstname}}</p>
-        <p><strong>Middle Initial:</strong> {{registration.mi}}</p>
-        <p><strong>Last Name:</strong> {{registration.lastname}}</p>
-        {{!-- <p>submitted by: {{registration.submittedby}}</p> --}}
+        <div class="id-card">
+          <div class="id-front">
+            <div class="card-header">NATIONAL COMPETITORS CARD</div>
+            <div class="pta-header">
+              <div class="pta-text">PTA 2024</div>
+            </div>
+            <div class="photo-area">
+              {{#if registration.portrait}}
+              <img src="{{registration.portrait}}" alt="Instructor Photo" class="athlete-photo">
+              {{else}}
+              <img src="/images/none.jpg" alt="Instructor Photo" class="athlete-photo">
+              {{/if}}
+            </div>
+            <div class="card-details">
+              <div class="athlete-name">{{registration.firstname}} {{registration.middlename}} {{registration.lastname}}</div>
+              <div class="athlete-id">ID: {{registration.id}}</div>
+              <div class="membership-type">MEMBERSHIP TYPE: INSTRUCTOR</div>
+              <div class="division">DIVISION: {{registration.division}}</div>
+              <div class="chapter">CHAPTER: {{registration.clubprovince}}</div>
+              <div class="birthdate">BIRTHDATE: {{formatDate registration.bday "MMMM D, YYYY"}}</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="confirmscreen" id="confirmscreen" style="display: none;">
@@ -357,14 +375,43 @@
     });
 
     function printDiv(divName) {
-      var printContents = document.getElementById(divName).innerHTML;
-      var originalContents = document.body.innerHTML;
-      document.getElementById(divName).classList.add('visible');
-      document.body.innerHTML = printContents;
+      // Prevent any form submission
+      event.preventDefault();
+      
+      const printContents = document.getElementById(divName);
+      const originalDisplay = printContents.style.display;
+      
+      // Add print-specific styles
+      const style = document.createElement('style');
+      style.innerHTML = `
+        @media print {
+          body * {
+            visibility: hidden;
+          }
+          #${divName}, #${divName} * {
+            visibility: visible;
+          }
+          #${divName} {
+            position: absolute;
+            left: 0;
+            top: 0;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      // Show the printable area
+      printContents.style.display = 'block';
+      
+      // Print with afterprint handler
+      window.onafterprint = () => {
+        // Cleanup after printing
+        printContents.style.display = originalDisplay;
+        document.head.removeChild(style);
+        window.onafterprint = null;
+      };
+      
       window.print();
-      document.body.innerHTML = originalContents;
-      document.getElementById(divName).classList.remove('visible');
-      window.location.reload(); // Reload to reset the page state
     }
 
     function toggleDropdown() {
@@ -372,6 +419,157 @@
     }
 
   </script>
+
+  <style>
+    /* ID card styles */
+    .id-card {
+      width: 2.5in;
+      height: 4in;
+      background: linear-gradient(150deg, #003366 70%, #cc0000 70%);
+      border-radius: 10px;
+      position: relative;
+      color: white;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+      padding: 0;
+      margin: 0 auto;
+    }
+    
+    .id-front {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 10px;
+    }
+    
+    .card-header {
+      font-size: 12px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 5px;
+      position: absolute;
+      top: 10px;
+      width: 100%;
+      left: 0;
+      text-transform: uppercase;
+      color: white;
+    }
+    
+    .pta-header {
+      position: absolute;
+      top: 30px;
+      left: 0;
+      z-index: 2;
+      text-align: center;
+      width: 100%;
+    }
+    
+    .pta-text {
+      font-size: 20px;
+      font-weight: bold;
+      color: rgba(255, 255, 255, 0.8);
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      letter-spacing: 1px;
+    }
+    
+    .photo-area {
+      position: absolute;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1.5in;
+      height: 1.5in;
+      background: white;
+      border: 2px solid white;
+      overflow: hidden;
+    }
+    
+    .athlete-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
+    
+    .card-details {
+      position: absolute;
+      bottom: 15px;
+      left: 15px;
+      width: calc(100% - 30px);
+      z-index: 2;
+      text-align: right;
+    }
+    
+    .athlete-name {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      text-align: right;
+    }
+    
+    .athlete-id,
+    .division,
+    .chapter,
+    .birthdate {
+      font-size: 12px;
+      margin-bottom: 3px;
+      text-transform: uppercase;
+      text-align: right;
+    }
+
+    .membership-type {
+      font-size: 12px;
+      margin: 5px 0;
+      text-transform: uppercase;
+      color: #ffeb3b;
+      font-weight: bold;
+      text-align: right;
+    }
+    
+    .athlete-id {
+      margin-bottom: 8px;
+    }
+    
+    @media print {
+      @page {
+        size: 2.5in 4in;
+        margin: 0;
+      }
+    
+      body * {
+        visibility: hidden;
+      }
+    
+      #printableArea,
+      #printableArea * {
+        visibility: visible;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+    
+      #printableArea {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 2.5in;
+        height: 4in;
+      }
+    
+      .id-card {
+        background: linear-gradient(150deg, #003366 70%, #cc0000 70%) !important;
+        margin: 0;
+        padding: 0;
+      }
+    
+      .photo-area {
+        margin: 0;
+        border: none;
+      }
+    }
+  </style>
 </body>
 
 </html>

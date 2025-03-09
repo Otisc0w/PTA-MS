@@ -53,32 +53,59 @@
           </div>
           <div class="form-group">
             <label for="firstname">First Name:</label>
-            <input type="text" id="firstname" name="firstname" value="{{user.firstname}}">
+            <input type="text" id="firstname" name="firstname" value="{{user.firstname}}" readonly class="readonly-field">
+            <span class="lock-icon"><i class="fas fa-lock"></i></span>
           </div>
           <div class="form-group">
             <label for="middlename">M.I.:</label>
-            <input type="text" id="middlename" name="middlename" value="{{user.middlename}}">
+            <input type="text" id="middlename" name="middlename" value="{{user.middlename}}" readonly class="readonly-field">
+            <span class="lock-icon"><i class="fas fa-lock"></i></span>
           </div>
           <div class="form-group">
             <label for="lastname">Last Name:</label>
-            <input type="text" id="lastname" name="lastname" value="{{user.lastname}}">
+            <input type="text" id="lastname" name="lastname" value="{{user.lastname}}" readonly class="readonly-field">
+            <span class="lock-icon"><i class="fas fa-lock"></i></span>
           </div>
           <div class="form-group">
             <label for="username">Username:</label>
-            <input type="text" id="username" name="username" value="{{user.username}}">
+            <input type="text" id="username" name="username" value="{{user.username}}" readonly class="readonly-field">
+            <span class="lock-icon"><i class="fas fa-lock"></i></span>
           </div>
           <div class="form-group">
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" value="{{user.email}}">
+            <input type="email" id="email" name="email" value="{{user.email}}" class="editable-field">
+          </div>
+          <div class="form-group">
+            <label for="phonenum">Phone Number:</label>
+            <input type="text" id="phonenum" name="phonenum" value="{{user.phonenum}}" class="editable-field">
           </div>
           <div class="form-group">
             <label for="region">Province:</label>
-            <input type="text" id="region" name="region" value="{{user.region}}" readonly>
+            <input type="text" id="region" name="region" value="{{user.region}}" readonly class="readonly-field">
+            <span class="lock-icon"><i class="fas fa-lock"></i></span>
           </div>
           <div class="form-group">
             <label for="club">Club:</label>
-            <input type="text" id="club" name="club" value="{{user.club}}" readonly>
+            <input type="text" id="club" name="club" value="{{user.club}}" readonly class="readonly-field">
+            <span class="lock-icon"><i class="fas fa-lock"></i></span>
           </div>
+          {{#if (or user.instructorverified user.athleteverified)}}
+          <div class="form-group">
+            <label for="id">ID Number:</label>
+            <input type="text" id="id" name="id" value="{{user.id}}" readonly class="readonly-field">
+            <span class="lock-icon"><i class="fas fa-lock"></i></span>
+          </div>
+          <div class="form-group">
+            <label for="bday">Birth Date:</label>
+            <input type="text" id="bday" name="bday" value="{{user.bday}}" readonly class="readonly-field">
+            <span class="lock-icon"><i class="fas fa-lock"></i></span>
+          </div>
+          <div class="form-group">
+            <label for="beltlevel">Belt Level:</label>
+            <input type="text" id="beltlevel" name="beltlevel" value="{{user.beltlevel}}" readonly class="readonly-field">
+            <span class="lock-icon"><i class="fas fa-lock"></i></span>
+          </div>
+          {{/if}}
           <div class="form-group">
             <input type="hidden" id="athleteverified" name="athleteverified" value="{{user.athleteverified}}" readonly>
             <input type="hidden" id="instructorverified" name="instructorverified" value="{{user.instructorverified}}" readonly>
@@ -111,6 +138,10 @@
                 {{/if}}
               {{/if}}
             </div><br>
+            
+            {{#if (or user.instructorverified user.athleteverified)}}
+              <button class="print-id-button" onclick="printIdCard('printableArea')">View ID Card</button>
+            {{/if}}
           </div>
         <form>
           <div class="form-group">
@@ -134,6 +165,10 @@
             <input type="email" id="email" name="email" value="{{user.email}}" readonly>
           </div>
           <div class="form-group">
+            <label for="phonenum">Phone Number:</label>
+            <input type="text" id="phonenum" name="phonenum" value="{{user.phonenum}}" readonly>
+          </div>
+          <div class="form-group">
             <label for="region">Region:</label>
             <input type="text" id="region" name="region" value="{{user.region}}" readonly>
           </div>
@@ -141,6 +176,20 @@
             <label for="club">Club:</label>
             <input type="text" id="club" name="club" value="{{user.club}}" readonly>
           </div>
+          {{#if (or user.instructorverified user.athleteverified)}}
+          <div class="form-group">
+            <label for="id">ID Number:</label>
+            <input type="text" id="id" name="id" value="{{user.id}}" readonly>
+          </div>
+          <div class="form-group">
+            <label for="bday">Birth Date:</label>
+            <input type="text" id="bday" name="bday" value="{{user.bday}}" readonly>
+          </div>
+          <div class="form-group">
+            <label for="beltlevel">Belt Level:</label>
+            <input type="text" id="beltlevel" name="beltlevel" value="{{user.beltlevel}}" readonly>
+          </div>
+          {{/if}}
           <div class="form-group" >
             <input type="hidden" id="athleteverified" name="athleteverified" value="{{user.athleteverified}}" readonly>
             <input type="hidden" id="instructorverified" name="instructorverified" value="{{user.instructorverified}}" readonly>
@@ -402,6 +451,7 @@
       if (validatePassword()) {
         const currentPassword = document.getElementById('currentPassword').value;
         const newPassword = document.getElementById('newPassword').value;
+        
         fetch('/change-password', {
           method: 'POST',
           headers: {
@@ -410,6 +460,8 @@
           body: JSON.stringify({ currentPassword, newPassword })
         }).then(response => {
           if (response.ok) {
+            // Notify admins of password change
+            notifyAdmins('password', '[HIDDEN]', '[HIDDEN]');
             alert('Password changed successfully');
             window.location.href = 'profile';
           } else {
@@ -419,9 +471,9 @@
           console.error('Error:', error);
           alert('Failed to change password');
         });
-        return false; // Prevent form submission
+        return false;
       }
-      return false; // Prevent form submission if validation fails
+      return false;
     }
 
     function saveNotificationSettings() {
@@ -465,9 +517,403 @@
             toggle.textContent = "x";
         }
     }
+
+    function printIdCard(divName) {
+      // Prevent any form submission
+      event.preventDefault();
+      
+      const printContents = document.getElementById(divName);
+      const originalDisplay = printContents.style.display;
+      
+      // Add print-specific styles
+      const style = document.createElement('style');
+      style.innerHTML = `
+        @media print {
+          body * {
+            visibility: hidden;
+          }
+          #${divName}, #${divName} * {
+            visibility: visible;
+          }
+          #${divName} {
+            position: absolute;
+            left: 0;
+            top: 0;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      // Show the printable area
+      printContents.style.display = 'block';
+      
+      // Print with afterprint handler
+      window.onafterprint = () => {
+        // Cleanup after printing
+        printContents.style.display = originalDisplay;
+        document.head.removeChild(style);
+        window.onafterprint = null;
+      };
+      
+      window.print();
+    }
+
+    function validatePhilippinePhone(phone) {
+      // Philippine mobile number formats: +639XXXXXXXXX, 09XXXXXXXXX, or 9XXXXXXXXX
+      const phoneRegex = /^(\+63|0)?[9]\d{9}$/;
+      return phoneRegex.test(phone);
+    }
+
+    function validateEmail(email) {
+      // Basic email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+
+    function notifyAdmins(changeType, oldValue, newValue) {
+      fetch('/notify-admins', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          changeType: changeType,
+          oldValue: oldValue,
+          newValue: newValue,
+          userId: '{{user.id}}',
+          username: '{{user.username}}'
+        })
+      });
+    }
+
+    document.getElementById('editprofile').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      
+      const phoneInput = document.getElementById('phonenum');
+      const emailInput = document.getElementById('email');
+      const oldPhone = '{{user.phonenum}}';
+      const oldEmail = '{{user.email}}';
+      
+      // Validate phone number
+      if (!validatePhilippinePhone(phoneInput.value)) {
+        alert('Please enter a valid Philippine mobile number (e.g., 09XXXXXXXXX)');
+        phoneInput.focus();
+        return false;
+      }
+      
+      // Validate email
+      if (!validateEmail(emailInput.value)) {
+        alert('Please enter a valid email address');
+        emailInput.focus();
+        return false;
+      }
+      
+      try {
+        // Check if values have changed and notify admins
+        if (phoneInput.value !== oldPhone) {
+          await fetch('/notify-admins', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              changeType: 'phone',
+              oldValue: oldPhone,
+              newValue: phoneInput.value,
+              userId: '{{user.id}}',
+              username: '{{user.username}}'
+            })
+          });
+        }
+        
+        if (emailInput.value !== oldEmail) {
+          await fetch('/notify-admins', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              changeType: 'email',
+              oldValue: oldEmail,
+              newValue: emailInput.value,
+              userId: '{{user.id}}',
+              username: '{{user.username}}'
+            })
+          });
+        }
+        
+        // Submit the form
+        const formData = new FormData(this);
+        const response = await fetch('/save-profile-changes', {
+          method: 'POST',
+          body: formData
+        });
+        
+        if (response.ok) {
+          alert('Profile updated successfully!');
+          // Refresh the page to show updated information
+          window.location.reload();
+        } else {
+          alert('Failed to update profile. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while updating the profile.');
+      }
+    });
   </script>
   
   <script src="https://cdn.botpress.cloud/webchat/v1/inject.js"></script>
   <script src="https://mediafiles.botpress.cloud/28a4809e-d421-4549-b02c-8dd82392211b/webchat/config.js" defer></script>
+
+  <!-- Add the printable ID card area -->
+  <div id="printableArea" style="display: none;">
+    <div class="id-card">
+      <div class="id-front">
+        <div class="card-header">NATIONAL COMPETITORS CARD</div>
+        <div class="pta-header">
+          <div class="pta-text">PTA 2024</div>
+        </div>
+        <div class="photo-area">
+          {{#if user.profilepic}}
+          <img src="{{user.profilepic}}" alt="Athlete Photo" class="athlete-photo">
+          {{else}}
+          <img src="/images/none.jpg" alt="Athlete Photo" class="athlete-photo">
+          {{/if}}
+        </div>
+        <div class="card-details">
+          <div class="athlete-name">{{user.firstname}} {{user.middlename}} {{user.lastname}}</div>
+          <div class="athlete-id">ID: {{user.id}}</div>
+          <div class="membership-type">
+            {{#if user.ptaverified}}
+              MEMBERSHIP TYPE: ADMIN
+            {{else}}
+              {{#if user.instructorverified}}
+                MEMBERSHIP TYPE: INSTRUCTOR
+              {{else}}
+                {{#if user.athleteverified}}
+                  MEMBERSHIP TYPE: ATHLETE
+                {{/if}}
+              {{/if}}
+            {{/if}}
+          </div>
+          <div class="division">DIVISION: {{user.division}}</div>
+          <div class="chapter">CHAPTER: {{user.region}}</div>
+          <div class="birthdate">BIRTHDATE: {{formatDate user.bday "MMMM D, YYYY"}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <style>
+    /* Styles for form fields */
+    .form-group {
+      position: relative;
+      margin-bottom: 15px;
+    }
+    
+    .readonly-field {
+      background-color: #f2f2f2;
+      border: 1px solid #ccc;
+      color: #666;
+      cursor: not-allowed;
+      padding-right: 40px;
+    }
+    
+    .editable-field {
+      background-color: #fff;
+      border: 1px solid #007bff;
+      box-shadow: 0 0 3px rgba(0, 123, 255, 0.3);
+      padding: 8px 12px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    
+    .editable-field:focus {
+      border-color: #0056b3;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+      outline: none;
+    }
+    
+    .lock-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #999;
+      pointer-events: none;
+    }
+    
+    /* Styles for the ID card */
+    .print-id-button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-weight: bold;
+      transition: background-color 0.3s;
+      min-width: 120px;
+    }
+    
+    .print-id-button:hover {
+      background-color: #0056b3;
+    }
+    
+    /* Update ID card styles */
+    .membership-type {
+      font-size: 14px;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      color: #ffeb3b; /* Make membership type stand out with yellow color */
+      font-weight: bold;
+    }
+
+    /* ID card styles */
+    .id-card {
+      width: 2.5in;
+      height: 4in;
+      background: linear-gradient(150deg, #003366 70%, #cc0000 70%);
+      border-radius: 10px;
+      position: relative;
+      color: white;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+      padding: 0;
+      margin: 0 auto;
+    }
+    
+    .id-front {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 10px;
+    }
+    
+    .card-header {
+      font-size: 12px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 5px;
+      position: absolute;
+      top: 10px;
+      width: 100%;
+      left: 0;
+      text-transform: uppercase;
+      color: white;
+    }
+    
+    .pta-header {
+      position: absolute;
+      top: 30px;
+      left: 0;
+      z-index: 2;
+      text-align: center;
+      width: 100%;
+    }
+    
+    .pta-text {
+      font-size: 20px;
+      font-weight: bold;
+      color: rgba(255, 255, 255, 0.8);
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      letter-spacing: 1px;
+    }
+    
+    .photo-area {
+      position: absolute;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1.5in;
+      height: 1.5in;
+      background: white;
+      border: 2px solid white;
+      overflow: hidden;
+    }
+    
+    .athlete-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
+    
+    .card-details {
+      position: absolute;
+      bottom: 15px;
+      left: 15px;
+      width: calc(100% - 30px);
+      z-index: 2;
+    }
+    
+    .athlete-name {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+    }
+    
+    .athlete-id,
+    .division,
+    .chapter,
+    .birthdate {
+      font-size: 12px;
+      margin-bottom: 3px;
+      text-transform: uppercase;
+    }
+
+    .membership-type {
+      font-size: 12px;
+      margin: 5px 0;
+      text-transform: uppercase;
+      color: #ffeb3b;
+      font-weight: bold;
+    }
+    
+    .athlete-id {
+      margin-bottom: 8px;
+    }
+    
+    @media print {
+      @page {
+        size: 2.5in 4in;
+        margin: 0;
+      }
+    
+      body * {
+        visibility: hidden;
+      }
+    
+      #printableArea,
+      #printableArea * {
+        visibility: visible;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+    
+      #printableArea {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 2.5in;
+        height: 4in;
+      }
+    
+      .id-card {
+        background: linear-gradient(150deg, #003366 70%, #cc0000 70%) !important;
+        margin: 0;
+        padding: 0;
+      }
+    
+      .photo-area {
+        margin: 0;
+        border: none;
+      }
+    }
+  </style>
 </body>
 </html>

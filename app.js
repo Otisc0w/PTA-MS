@@ -7831,4 +7831,38 @@ app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
 
+// Add the admin notification route
+app.post('/notify-admins', async (req, res) => {
+  try {
+    const { changeType, oldValue, newValue, userId, username } = req.body;
+    
+    // Get all admin users
+    const admins = await User.find({ ptaverified: true });
+    
+    // Create notification message
+    const message = `User ${username} (ID: ${userId}) changed their ${changeType}`;
+    const details = changeType === 'password' ? 
+      'Password was changed' : 
+      `Changed from ${oldValue} to ${newValue}`;
+    
+    // Create notifications for each admin
+    const notifications = admins.map(admin => ({
+      userId: admin._id,
+      message: message,
+      details: details,
+      type: 'user_update',
+      timestamp: new Date(),
+      read: false
+    }));
+    
+    // Save notifications to database
+    await Notification.insertMany(notifications);
+    
+    res.status(200).json({ message: 'Admins notified successfully' });
+  } catch (error) {
+    console.error('Error notifying admins:', error);
+    res.status(500).json({ message: 'Failed to notify admins' });
+  }
+});
+
 
