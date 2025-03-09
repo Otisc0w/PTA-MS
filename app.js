@@ -3523,7 +3523,7 @@ app.post("/conclude-promotion-event/:id", async (req, res) => {
         "Black/Dan Belt"
       ];
 
-      const currentBeltIndex = beltLevels.indexOf(athlete.beltlevel);
+      const currentBeltIndex = beltLevels.findIndex(belt => belt.toLowerCase() === athlete.beltlevel.toLowerCase());
       const newBeltLevel = currentBeltIndex >= 0 && currentBeltIndex < beltLevels.length - 1
         ? beltLevels[currentBeltIndex + 1]
         : athlete.beltlevel;
@@ -3532,13 +3532,15 @@ app.post("/conclude-promotion-event/:id", async (req, res) => {
         .from("athletes")
         .update({ 
           beltlevel: newBeltLevel,
-          lastpromotion: new Date()
+          lastpromo: new Date().toISOString().split('T')[0]
         })
         .eq("id", athleteid);
 
       if (updateError) {
         console.error("Error updating belt level:", updateError.message);
       }
+
+      console.log("New Belt Level:", newBeltLevel);
     }
 
     // Update the result column for the promotion player
