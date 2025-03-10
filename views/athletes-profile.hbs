@@ -75,10 +75,12 @@
               <td>{{#if (eq poomsaefinalscore -1)}} DQ {{else}} {{poomsaefinalscore}} {{/if}}</td>
               <td>
                 {{dq}}
-                <button class="dqreasonbtn" id="dqreasonbtn-{{id}}">? </button>
-                <div>
-                  <p class="dqreason" id="dqreason-{{id}}" style="display:none">Reason for disqualification: <strong>{{dqreason}}</strong></p>
-                </div>
+                {{#if (eq dq "DQ")}}
+                  <button class="dqreasonbtn" id="dqreasonbtn-{{id}}">? </button><br>
+                  <div>
+                      <p class="dqreason" id="dqreason-{{id}}" style="display:none">Reason for disqualification: <strong>{{dqreason}}</strong></p>
+                  </div>
+                {{/if}}
               </td>
             </tr>
             {{/each}}

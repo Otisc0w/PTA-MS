@@ -4261,6 +4261,7 @@ app.post("/decide-poomsae-winners/:eventid", async (req, res) => {
         eventlocation: events.location,
         poomsaefinalscore: player.totalscore,
         dqreason: player.dqreason,
+        dq: player.totalscore === -1 ? "DQ" : null,
         },
       ]);
 

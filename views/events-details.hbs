@@ -936,20 +936,18 @@
           <tbody>
             {{#each poomsaetop4}}
             <tr>
-              <td>{{ranking}}</td>
+              <td>{{#if (eq totalscore -1)}}DQ{{else}}{{ranking}}{{/if}}</td>
               <td><button class="resultsviewathlete" onclick="window.location.href='/athletes-profile/{{athleteid}}'">{{name}}</button></td>
               {{!-- <td>{{technicalscore}}</td>
               <td>{{performancescore}}</td> --}}
-              
             </tr>
             {{/each}}
             {{#each poomsaenontop4}}
             <tr>
-              <td>P</td>
+              <td>{{#if (eq totalscore -1)}}DQ{{else}}P{{/if}}</td>
               <td><button class="resultsviewathlete" onclick="window.location.href='/athletes-profile/{{athleteid}}'">{{name}}</button></td>
               {{!-- <td>{{technicalscore}}</td>
               <td>{{performancescore}}</td> --}}
-            
             </tr>
             {{/each}}
           </tbody>
