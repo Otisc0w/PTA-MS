@@ -72,23 +72,14 @@
                   {{#if (eq ranking -1)}}DQ{{else}}{{#unless (eq ranking 0)}}{{ordinal ranking}}{{else}}P{{/unless}}{{/if}}
                 {{/if}}
               </td>
-              <td>{{#if (eq poomsaefinalscore -1)}} DQ  
-              <button class="dqreasonbtn" id="dqreasonbtn-{{id}}">? </button>
+              <td>{{#if (eq poomsaefinalscore -1)}} DQ {{else}} {{poomsaefinalscore}} {{/if}}</td>
+              <td>
+                {{dq}}
+                <button class="dqreasonbtn" id="dqreasonbtn-{{id}}">? </button>
                 <div>
                   <p class="dqreason" id="dqreason-{{id}}" style="display:none">Reason for disqualification: <strong>{{dqreason}}</strong></p>
                 </div>
-              
-              <script>
-                document.querySelectorAll('.dqreasonbtn').forEach(button => {
-                  button.addEventListener('click', function() {
-                    const id = this.id.split('-')[1];
-                    const dqReasonDiv = document.getElementById(`dqreason-${id}`);
-                    dqReasonDiv.style.display = dqReasonDiv.style.display === 'none' ? 'block' : 'none';
-                  });
-                });
-              </script>
-              {{else}} {{poomsaefinalscore}} {{/if}}</td>
-              <td>{{dq}}</td>
+              </td>
             </tr>
             {{/each}}
           </tbody>
@@ -155,7 +146,16 @@
       document.querySelector('.poomgolds').textContent = count;
       console.log(`Number of rows where ranking is '1' and type is 'Poomsae': ${count}`);
     });
+    
+    document.querySelectorAll('.dqreasonbtn').forEach(button => {
+      button.addEventListener('click', function() {
+        const id = this.id.split('-')[1];
+        const dqReasonDiv = document.getElementById(`dqreason-${id}`);
+        dqReasonDiv.style.display = dqReasonDiv.style.display === 'none' ? 'block' : 'none';
+      });
+    });
   </script>
 </body>
 </html>
-
+</body>
+</html>

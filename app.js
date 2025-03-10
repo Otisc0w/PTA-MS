@@ -3822,22 +3822,26 @@ app.post("/decide-kyorugi-winners/:eventid", async (req, res) => {
     const championId = finalMatch.winner;
     const secondPlaceId = finalMatch.loser;
     const secondPlaceScore = Math.min(finalMatch.player1score, finalMatch.player2score);
+    const secondPlaceDqReason = finalMatch.dqreason;
 
     console.log("secondplacescore", secondPlaceScore);
     
 
-    // const { data: disqualifiedMatches, error: disqualifiedMatchesError } = await supabase
-    //   .from("kyorugi_matches")
-    //   .select("*")
-    //   .eq("eventid", eventid)
-    //   .or("player1score.eq.-1,player2score.eq.-1");
+    const { data: disqualifiedMatches, error: disqualifiedMatchesError } = await supabase
+      .from("kyorugi_matches")
+      .select("*")
+      .eq("eventid", eventid)
+      .or("player1score.eq.-1,player2score.eq.-1");
 
-    // if (disqualifiedMatchesError) {
-    //   console.error("Error fetching disqualified matches:", disqualifiedMatchesError.message);
-    //   return res.status(500).send("Error fetching disqualified matches");
-    // }
+    if (disqualifiedMatchesError) {
+      console.error("Error fetching disqualified matches:", disqualifiedMatchesError.message);
+      return res.status(500).send("Error fetching disqualified matches");
+    }
 
-    // const disqualifiedPlayers = disqualifiedMatches.map(match => match.loser);
+    const disqualifiedPlayers = disqualifiedMatches.map(match => ({
+      loser: match.loser,
+      dqreason: match.dqreason
+    }));
 
     // Fetch the highest round number for the event
     const { data: highestRound, error: highestRoundError } = await supabase
@@ -3869,6 +3873,7 @@ app.post("/decide-kyorugi-winners/:eventid", async (req, res) => {
 
     const thirdPlaceIds = semifinalMatches ? semifinalMatches.map(match => match.loser) : [];
     const thirdPlaceScores = semifinalMatches.map(match => match.player2score);
+    const thirdPlaceDqReasons = semifinalMatches.map(match => match.dqreason);
     console.log("thirdPlaceScores", thirdPlaceScores);
 
 
@@ -3900,20 +3905,28 @@ app.post("/decide-kyorugi-winners/:eventid", async (req, res) => {
     for (const participant of participants) {
       let ranking = 0;
       let dq = null;
-      if (participant.userid === championId) {
-      ranking = 1;
-      } else if (participant.userid === secondPlaceId) {
-      ranking = 2;
-      if (secondPlaceScore === -1) {
-        dq = "DQ";
-      }
-      } else if (thirdPlaceIds.includes(participant.userid)) {
-      ranking = 3;
-      } else {
-      ranking = 0; // Ensure ranking is reset for each participant
-      }
+      let dqreason = null;
 
-      console.log("NIGGANGINAIGNAINGIANGIANIGNAG", dq);
+      if (participant.userid === championId) {
+        ranking = 1;
+      } else if (participant.userid === secondPlaceId) {
+        ranking = 2;
+        if (secondPlaceScore === -1) {
+          dq = "DQ";
+          dqreason = secondPlaceDqReason;
+        }
+      } else if (thirdPlaceIds.includes(participant.userid)) {
+        ranking = 3;
+        if (thirdPlaceScores[thirdPlaceIds.indexOf(participant.userid)] === -1) {
+          dq = "DQ";
+          dqreason = thirdPlaceDqReasons[thirdPlaceIds.indexOf(participant.userid)];
+        } 
+      } else if (disqualifiedPlayers.some(player => player.loser === participant.userid)) {
+        dq = "DQ";
+        dqreason = disqualifiedPlayers.find(player => player.loser === participant.userid).dqreason;
+      } else {
+        ranking = 0; // Ensure ranking is reset for each participant
+      }
 
       const { error: matchHistoryError } = await supabase
       .from("match_history")
@@ -3925,6 +3938,7 @@ app.post("/decide-kyorugi-winners/:eventid", async (req, res) => {
         eventname: event.name,
         eventlocation: event.location,
         dq,
+        dqreason: dqreason, // Insert dqreason
         },
       ]);
 
