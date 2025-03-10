@@ -3872,7 +3872,7 @@ app.post("/decide-kyorugi-winners/:eventid", async (req, res) => {
     }
 
     const thirdPlaceIds = semifinalMatches ? semifinalMatches.map(match => match.loser) : [];
-    const thirdPlaceScores = semifinalMatches.map(match => match.player2score);
+    const thirdPlaceScores = semifinalMatches.map(match => Math.min(match.player1score, match.player2score));
     const thirdPlaceDqReasons = semifinalMatches.map(match => match.dqreason);
     console.log("thirdPlaceScores", thirdPlaceScores);
 
@@ -3926,7 +3926,13 @@ app.post("/decide-kyorugi-winners/:eventid", async (req, res) => {
         dqreason = disqualifiedPlayers.find(player => player.loser === participant.userid).dqreason;
       } else {
         ranking = 0; // Ensure ranking is reset for each participant
+        dq = null;
+        dqreason = null;
       }
+
+      console.log("Athlete ID:", participant.athleteid);
+      console.log("DQ:", dq);
+      console.log("DQ Reason:", dqreason);
 
       const { error: matchHistoryError } = await supabase
       .from("match_history")
