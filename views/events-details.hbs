@@ -624,10 +624,11 @@
         {{/each}}
           <form action="/submit-poomsae-scores" method="post">
             <h3 class="playername"></h3>
-            <button type="button" onclick="disqualifyPlayer()">Disqualify Player</button>
+            <button class="dqactionbtn" type="button" onclick="disqualifyPlayer()">Disqualify Player</button>
             <div id="disqualifyReasonContainer" style="display:none;">
               <label for="disqualifyReason">Reason for Disqualification:</label>
                 <select id="disqualifyReason" name="dqreason">
+                  <option value="" selected disabled>Select Reason</option>
                   <option value="Illegal Move">Illegal Move</option>
                   <option value="Unsportsmanlike Conduct">Unsportsmanlike Conduct</option>
                   <option value="Injury">Injury</option>
