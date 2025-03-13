@@ -164,7 +164,13 @@ hbs.registerHelper('some', function(array, value, options) {
     return options.inverse(this);
   }
 });
-
+hbs.registerHelper("contains", function (array, value, options) {
+  if (array && array.includes(value)) {
+    return options.fn(this);
+  } else {
+    return options.inverse(this);
+  }
+});
 
 app.use( session({
     secret: "your_secret_key", // Replace with a secure secret key

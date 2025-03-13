@@ -50,7 +50,12 @@
               <button class="edit-button" onclick="openModal()"></button>
               {{/if}}
                  <button class="canceleventbtn" onclick="opencanceleventmodal()">Cancel</button>
-              {{/if}} 
+              {{/if}}
+              {{#contains judges user.id}}
+                <p>You are a judge for this event.</p>
+              {{else}}
+                <p>ID:{{user.id}}. You are not a judge for this event.</p>
+              {{/contains}}
             </div>
           </div>
 
