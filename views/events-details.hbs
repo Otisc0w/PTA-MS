@@ -14,7 +14,11 @@
 
 <body class="container">
   <div class="header">
-    {{> navbar}}
+    {{#contains event.judges user.id}}
+      {{#unless (eq event.status 'Ongoing')}}
+        {{> navbar}}
+      {{/unless}}
+    {{/contains}}
   </div>
 
   <div class="events-container">
@@ -51,8 +55,8 @@
               {{/if}}
                  <button class="canceleventbtn" onclick="opencanceleventmodal()">Cancel</button>
               {{/if}}
-              {{#contains judges user.id}}
-                <p>You are a judge for this event.</p>
+              {{#contains event.judges user.id}}
+                <p>ID:{{user.id}}.You are a judge for this event.</p>
               {{else}}
                 <p>ID:{{user.id}}. You are not a judge for this event.</p>
               {{/contains}}

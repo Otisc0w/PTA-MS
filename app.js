@@ -164,12 +164,8 @@ hbs.registerHelper('some', function(array, value, options) {
     return options.inverse(this);
   }
 });
-hbs.registerHelper("contains", function (array, value, options) {
-  if (array && array.includes(value)) {
-    return options.fn(this);
-  } else {
-    return options.inverse(this);
-  }
+hbs.registerHelper("contains", function (array, value) {
+  return array && array.map(String).includes(String(value));
 });
 
 app.use( session({
