@@ -14,11 +14,15 @@
 
 <body class="container">
   <div class="header">
-    {{#contains event.judges user.id}}
-      {{#unless (eq event.status 'Ongoing')}}
+    {{#if (eq event.status 'Ongoing')}}
+      {{#contains event.judges user.id}}
+          <h1>Focus on Event</h1>
+      {{else}}
         {{> navbar}}
-      {{/unless}}
-    {{/contains}}
+      {{/contains}}
+    {{else}}
+      {{> navbar}}
+    {{/if}}
   </div>
 
   <div class="events-container">
@@ -56,7 +60,7 @@
                  <button class="canceleventbtn" onclick="opencanceleventmodal()">Cancel</button>
               {{/if}}
               {{#contains event.judges user.id}}
-                <p>ID:{{user.id}}.You are a judge for this event.</p>
+                <p>ID:{{user.id}}. You are a judge for this event.</p>
               {{else}}
                 <p>ID:{{user.id}}. You are not a judge for this event.</p>
               {{/contains}}
@@ -297,44 +301,58 @@
           {{#if (and user.ptaverified (me registrationcount event.registrationcap ))}}
           {{#if (eq event.status 'Active')}}
             {{#if (eq event.eventtype 'Kyorugi')}}
+              {{#contains event.judges user.id}}
               <form action="/begin-kyorugi-competition/{{event.id}}" method="post" onsubmit="return confirm('Are you sure you want to begin this competition? This will form initial Kyorugi matches');">
                 <button type="submit" class="begincompe">Begin Competition</button>
               </form>
+              {{/contains}}
             {{else if (eq event.eventtype 'Poomsae')}}
+              {{#contains event.judges user.id}}
               <form action="/begin-poomsae-competition/{{event.id}}" method="post" onsubmit="return confirm('Are you sure you want to begin this competition? This will form lineups for the competition');">
                 <button type="submit" class="begincompe">Begin Competition</button>
               </form>
+              {{/contains}}
             {{else if (eq event.eventtype 'Promotion')}}
+              {{#contains event.judges user.id}}
               <form action="/begin-promotion-event/{{event.id}}" method="post" onsubmit="return confirm('Are you sure you want to begin this competition?');">
                 <button type="submit" class="begincompe">Begin Promotion Event</button>
               </form>
+              {{/contains}}
             {{/if}}
           {{else if (eq event.status 'Ongoing')}}
           {{#if (le event.currentround 1)}}
           {{#if (eq event.eventtype 'Poomsae')}}
-          <form action="/next-poomsae-round/{{event.id}}" method="post" onsubmit="return confirm('Are you sure you want to proceed to the next round? Check if all players have been scored.');">
-            <button type="submit" class="begincompe">Proceed to next round</button>
-          </form>
-
+            {{#contains event.judges user.id}}
+            <form action="/next-poomsae-round/{{event.id}}" method="post" onsubmit="return confirm('Are you sure you want to proceed to the next round? Check if all players have been scored.');">
+              <button type="submit" class="begincompe">Proceed to next round</button>
+            </form>
+            {{/contains}}
           {{else if (eq event.eventtype 'Kyorugi')}}
-          <form action="/next-kyorugi-round/{{event.id}}" method="post" onsubmit="return confirm('Are you sure you want to proceed to the next round? Check if all matches have been scored and have a winner.');">
-            <button type="submit" class="begincompe">Proceed to next round</button>
-          </form>
-
+            {{#contains event.judges user.id}}
+            <form action="/next-kyorugi-round/{{event.id}}" method="post" onsubmit="return confirm('Are you sure you want to proceed to the next round? Check if all matches have been scored and have a winner.');">
+              <button type="submit" class="begincompe">Proceed to next round</button>
+            </form>
+            {{/contains}}
           {{else if (eq event.eventtype 'Promotion')}}
-          <form action="/conclude-promotion-event/{{event.id}}" method="post" onsubmit="return confirm('WARNING: This action will update players' belt levels and record the event in each players match history');">
-            <button type="submit" class="begincompe">Conclude Event</button>
-          </form>
+            {{#contains event.judges user.id}}
+            <form action="/conclude-promotion-event/{{event.id}}" method="post" onsubmit="return confirm('WARNING: This action will update players' belt levels and record the event in each players match history');">
+              <button type="submit" class="begincompe">Conclude Event</button>
+            </form>
+            {{/contains}}
           {{/if}}
           {{else}}
           {{#if (eq event.eventtype 'Poomsae')}}
-          <form action="/decide-poomsae-winners/{{event.id}}" method="post" onsubmit="return confirm('WARNING: This action will finalize winners and record the competition in each players match history');">
-            <button type="submit" class="begincompe">Decide Winners</button>
-          </form>
+            {{#contains event.judges user.id}}
+            <form action="/decide-poomsae-winners/{{event.id}}" method="post" onsubmit="return confirm('WARNING: This action will finalize winners and record the competition in each players match history');">
+              <button type="submit" class="begincompe">Decide Winners</button>
+            </form>
+            {{/contains}}
           {{else if (eq event.eventtype 'Kyorugi')}}
-          <form action="/decide-kyorugi-winners/{{event.id}}" method="post" onsubmit="return confirm('WARNING: This action will finalize winners and record the competition in each players match history');">
-            <button type="submit" class="begincompe">Decide Winners</button>
-          </form>
+            {{#contains event.judges user.id}}
+            <form action="/decide-kyorugi-winners/{{event.id}}" method="post" onsubmit="return confirm('WARNING: This action will finalize winners and record the competition in each players match history');">
+              <button type="submit" class="begincompe">Decide Winners</button>
+            </form>
+            {{/contains}}
           {{/if}}
           {{/if}}
           {{/if}}
@@ -450,10 +468,11 @@
                   </td>
                   <td>
                     {{#if (eq ../event.status 'Ongoing')}}
+                      {{#contains ../event.judges ../user.id}}
                       <button href="#" onclick="openKyorugiScoresheet('{{id}}', '{{matchtime}}', '{{eventid}}', '{{player1}}', '{{player2}}', '{{player1_name}}', '{{player2_name}}', '{{player1score}}', '{{player2score}}', '{{matchtime}}', '{{winner}}', '{{loser}}', '{{matchttype}}', '{{round}}', '{{status}}')"
                         class="open-kyorugi-scoresheet">Scoresheet ->
                       </button>
-                      
+                      {{/contains}}
                     {{/if}}
                     {{#if dqreason}}
                       <button class="dqreasonbtn" id="dqkrgreasonbtn-{{id}}">?</button>
