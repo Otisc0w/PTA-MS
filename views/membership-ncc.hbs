@@ -47,8 +47,10 @@
 							<div class="form-group">
 								<label for="gender">Gender</label>
 								<select id="gender" name="gender" required>
-									<option value="female" {{#if (eq usersncc.gender "female")}}selected{{/if}}>Female</option>
-									<option value="male" {{#if (eq usersncc.gender "male")}}selected{{/if}}>Male</option>
+									<option value="female" {{#if (eq usersncc.gender "female" )}}selected{{/if}}>Female
+									</option>
+									<option value="male" {{#if (eq usersncc.gender "male" )}}selected{{/if}}>Male
+									</option>
 								</select>
 							</div>
 							<div class="form-group">
@@ -57,15 +59,15 @@
 							</div>
 							<div class="form-group">
 								<label for="age">Age:</label>
-								<input type="number" id="age" name="age"  readonly>
+								<input type="number" id="age" name="age" readonly>
 							</div>
 						</div>
 
 						<div class="form-row">
 							<div class="form-group">
 								<label for="phonenum">Mobile Number</label>
-								<input type="tel" id="phonenum" name="phonenum" value="{{usersncc.phonenum}}" pattern="\d{4}\d{3}\d{4}"
-									placeholder="0912-345-6789" required>
+								<input type="tel" id="phonenum" name="phonenum" value="{{usersncc.phonenum}}"
+									pattern="\d{4}\d{3}\d{4}" placeholder="0912-345-6789" required>
 							</div>
 							<div class="form-group">
 								<label for="email">E-mail</label>
@@ -128,17 +130,29 @@
 							<div class="form-group">
 								<label for="beltlevel">Current Belt Level</label>
 								<select name="beltlevel" id="beltlevel" required>
-									<option value="White Belt" {{#if (eq usersathlete.beltlevel "White Belt")}}selected{{/if}}>White Belt</option>
-									<option value="Low Yellow Belt" {{#if (eq usersathlete.beltlevel "Low Yellow Belt")}}selected{{/if}}>Low Yellow Belt</option>
-									<option value="High Yellow Belt" {{#if (eq usersathlete.beltlevel "High Yellow Belt")}}selected{{/if}}>High Yellow Belt</option>
-									<option value="Low Blue Belt" {{#if (eq usersathlete.beltlevel "Low Blue Belt")}}selected{{/if}}>Low Blue Belt</option>
-									<option value="High Blue Belt" {{#if (eq usersathlete.beltlevel "High Blue Belt")}}selected{{/if}}>High Blue Belt</option>
-									<option value="Low Red Belt" {{#if (eq usersathlete.beltlevel "Low Red Belt")}}selected{{/if}}>Low Red Belt</option>
-									<option value="High Red Belt" {{#if (eq usersathlete.beltlevel "High Red Belt")}}selected{{/if}}>High Red Belt</option>
-									<option value="Low Brown Belt" {{#if (eq usersathlete.beltlevel "Low Brown Belt")}}selected{{/if}}>Low Brown Belt</option>
-									<option value="High Brown Belt" {{#if (eq usersathlete.beltlevel "High Brown Belt")}}selected{{/if}}>High Brown Belt</option>
-									<option value="Junior/Poom Black Belt" {{#if (eq usersathlete.beltlevel "Junior/Poom Black Belt")}}selected{{/if}}>Junior/Poom Black Belt</option>
-									<option value="Black/Dan Belt" {{#if (eq usersathlete.beltlevel "Black/Dan Belt")}}selected{{/if}}>Black/Dan Belt</option>
+									<option value="White Belt" {{#if (eq usersathlete.beltlevel "White Belt"
+										)}}selected{{/if}}>White Belt</option>
+									<option value="Low Yellow Belt" {{#if (eq usersathlete.beltlevel "Low Yellow Belt"
+										)}}selected{{/if}}>Low Yellow Belt</option>
+									<option value="High Yellow Belt" {{#if (eq usersathlete.beltlevel "High Yellow Belt"
+										)}}selected{{/if}}>High Yellow Belt</option>
+									<option value="Low Blue Belt" {{#if (eq usersathlete.beltlevel "Low Blue Belt"
+										)}}selected{{/if}}>Low Blue Belt</option>
+									<option value="High Blue Belt" {{#if (eq usersathlete.beltlevel "High Blue Belt"
+										)}}selected{{/if}}>High Blue Belt</option>
+									<option value="Low Red Belt" {{#if (eq usersathlete.beltlevel "Low Red Belt"
+										)}}selected{{/if}}>Low Red Belt</option>
+									<option value="High Red Belt" {{#if (eq usersathlete.beltlevel "High Red Belt"
+										)}}selected{{/if}}>High Red Belt</option>
+									<option value="Low Brown Belt" {{#if (eq usersathlete.beltlevel "Low Brown Belt"
+										)}}selected{{/if}}>Low Brown Belt</option>
+									<option value="High Brown Belt" {{#if (eq usersathlete.beltlevel "High Brown Belt"
+										)}}selected{{/if}}>High Brown Belt</option>
+									<option value="Junior/Poom Black Belt" {{#if (eq
+										usersathlete.beltlevel "Junior/Poom Black Belt" )}}selected{{/if}}>Junior/Poom
+										Black Belt</option>
+									<option value="Black/Dan Belt" {{#if (eq usersathlete.beltlevel "Black/Dan Belt"
+										)}}selected{{/if}}>Black/Dan Belt</option>
 								</select>
 							</div>
 						</div>
@@ -154,15 +168,18 @@
 						<div class="form-row">
 							<div class="form-group">
 								<label for="instructorfirstname">Instructor First Name</label>
-								<input type="text" id="instructorfirstname" name="instructorfirstname" value="{{headInstructor.firstname}}" required>
+								<input type="text" id="instructorfirstname" name="instructorfirstname"
+									value="{{headInstructor.firstname}}" required>
 							</div>
 							<div class="form-group">
 								<label for="instructormi">Instructor M.I.</label>
-								<input type="text" id="instructormi" name="instructormi" value="{{headInstructor.middlename}}" required>
+								<input type="text" id="instructormi" name="instructormi"
+									value="{{headInstructor.middlename}}" required>
 							</div>
 							<div class="form-group">
 								<label for="instructorlastname">Instructor Last Name</label>
-								<input type="text" id="instructorlastname" name="instructorlastname" value="{{headInstructor.lastname}}" required>
+								<input type="text" id="instructorlastname" name="instructorlastname"
+									value="{{headInstructor.lastname}}" required>
 							</div>
 						</div>
 
@@ -170,11 +187,13 @@
 							<div class="form-group">
 								<label for="instructormobile">Instructor Mobile Number</label>
 								<input type="tel" id="instructormobile" name="instructormobile"
-									pattern="\d{4}\d{3}\d{4}" placeholder="0912-345-6789" value="{{headInstructor.phonenum}}" required>
+									pattern="\d{4}\d{3}\d{4}" placeholder="0912-345-6789"
+									value="{{headInstructor.phonenum}}" required>
 							</div>
 							<div class="form-group">
 								<label for="instructoremail">Instructor E-mail</label>
-								<input type="email" id="instructoremail" name="instructoremail" value="{{headInstructor.email}}" required>
+								<input type="email" id="instructoremail" name="instructoremail"
+									value="{{headInstructor.email}}" required>
 							</div>
 							<div class="form-group">
 								<label for="confemail">Verify E-mail</label>
@@ -194,22 +213,23 @@
 							<div class="form-group">
 								<label for="birthcert">Birth Certificate NSO/PSA</label>
 								{{#if usersncc.birthcert}}
-									<p>&#10003; Uploaded</p>
+								<p>&#10003; Uploaded</p>
 								{{else}}
-									<input type="file" id="birthcert" name="birthcert" required>
+								<input type="file" id="birthcert" name="birthcert" required>
 								{{/if}}
 							</div>
 							<div class="form-group">
 								<label for="portrait">1:1 Player Picture</label>
 								{{#if usersncc.portrait}}
-									<p>&#10003; Uploaded</p>
+								<p>&#10003; Uploaded</p>
 								{{else}}
-									<input type="file" id="portrait" name="portrait"required>
+								<input type="file" id="portrait" name="portrait" required>
 								{{/if}}
 							</div>
 							<div class="form-group">
 								<label for="signature">Sign Here</label>
-								<input type="text" id="signature" name="signature" {{#if usersncc.signature}}disabled{{/if}} required>
+								<input type="text" id="signature" name="signature" {{#if
+									usersncc.signature}}disabled{{/if}} required>
 							</div>
 						</div>
 
@@ -251,21 +271,23 @@
 							<div class="form-group">
 								<label for="paymentproof">Upload Payment Proof</label>
 								{{#if usersncc.paymentproof}}
-									<p>&#10003; Already Paid</p>
+								<p>&#10003; Already Paid</p>
 								{{else}}
-									<input type="file" id="paymentproof" name="paymentproof" required>
+								<input type="file" id="paymentproof" name="paymentproof" required>
 								{{/if}}
-								
+
 							</div>
 						</div>
 						<button class="cancel-button" type="button" onclick="showPreviousPage()">Previous</button>
-						<button class="next-button" type="submit" onclick="showConfirmationMessage(event)">Submit</button>
+						<button class="next-button" type="submit"
+							onclick="showConfirmationMessage(event)">Submit</button>
 						<p id="error-message" style="color:red;"></p>
 					</div>
 				</form>
 
-				
-				<div id="confirmation-message" class="hidden">Application successful! Please allow up to 2 weeks to receive an update on your
+
+				<div id="confirmation-message" class="hidden">Application successful! Please allow up to 2 weeks to
+					receive an update on your
 					membership status.
 				</div>
 			</div>
@@ -389,6 +411,120 @@
 			}
 		}
 
+		document.addEventListener("DOMContentLoaded", function () {
+			let currentPage = 0;
+			const pages = document.querySelectorAll(".ncc-page");
+			const nextButtons = document.querySelectorAll(".next-button");
+			const prevButtons = document.querySelectorAll(".cancel-button");
+			const emailInput = document.getElementById("email");
+			const confirmEmailInput = document.getElementById("confemail");
+
+			function validateForm() {
+				const currentFormPage = pages[currentPage];
+				const requiredFields = currentFormPage.querySelectorAll("[required]");
+				let allValid = true;
+				let firstInvalidField = null;
+
+				requiredFields.forEach(field => {
+					const errorSpan = field.nextElementSibling; // Look for error message span
+
+					if (!field.value.trim() || !field.checkValidity()) {
+						allValid = false;
+
+						// Show error message if missing
+						if (!errorSpan || !errorSpan.classList.contains("error-message")) {
+							const errorMsg = document.createElement("span");
+							errorMsg.classList.add("error-message");
+							errorMsg.style.color = "red";
+							errorMsg.style.fontSize = "12px";
+							errorMsg.innerText = "This field is required or invalid.";
+							field.parentNode.appendChild(errorMsg);
+						}
+
+						// Focus the first invalid field
+						if (!firstInvalidField) firstInvalidField = field;
+					} else {
+						// Remove error message if valid
+						if (errorSpan && errorSpan.classList.contains("error-message")) {
+							errorSpan.remove();
+						}
+					}
+				});
+
+				// 🔴 Ensure email and confirm email match
+				if (emailInput && confirmEmailInput) {
+					const emailErrorSpan = confirmEmailInput.nextElementSibling;
+
+					if (emailInput.value !== confirmEmailInput.value) {
+						confirmEmailInput.setCustomValidity("Emails do not match!");
+						allValid = false;
+
+						// Show specific error message for email mismatch
+						if (!emailErrorSpan || !emailErrorSpan.classList.contains("error-message")) {
+							const errorMsg = document.createElement("span");
+							errorMsg.classList.add("error-message");
+							errorMsg.style.color = "red";
+							errorMsg.style.fontSize = "12px";
+							errorMsg.innerText = "Emails do not match.";
+							confirmEmailInput.parentNode.appendChild(errorMsg);
+						}
+						if (!firstInvalidField) firstInvalidField = confirmEmailInput;
+					} else {
+						confirmEmailInput.setCustomValidity("");
+						if (emailErrorSpan && emailErrorSpan.classList.contains("error-message")) {
+							emailErrorSpan.remove();
+						}
+					}
+				}
+
+				console.log(`Page ${currentPage} - Next button enabled: ${allValid}`);
+				nextButtons[currentPage].disabled = !allValid;
+
+				return allValid;
+			}
+
+			// Ensure input fields update validation dynamically
+			document.querySelectorAll("input, select").forEach(input => {
+				input.addEventListener("input", validateForm);
+				input.addEventListener("change", validateForm);
+				input.addEventListener("blur", validateForm);
+			});
+
+			// Click event for Next buttons
+			nextButtons.forEach((button, index) => {
+				button.addEventListener("click", function (event) {
+					if (!validateForm()) {
+						event.preventDefault();
+						alert("Please correct all errors before proceeding.");
+					} else if (index < pages.length - 1) {
+						currentPage++;
+						showPage(currentPage);
+					}
+				});
+			});
+
+			// Click event for Previous buttons
+			prevButtons.forEach(button => {
+				button.addEventListener("click", function () {
+					if (currentPage > 0) {
+						currentPage--;
+						showPage(currentPage);
+					}
+				});
+			});
+
+			function showPage(pageIndex) {
+				pages.forEach((page, index) => {
+					page.classList.toggle("hidden", index !== pageIndex);
+				});
+
+				// 🔴 Enforce revalidation whenever a page is displayed
+				validateForm();
+			}
+
+			// Run validation immediately when the page loads
+			showPage(currentPage);
+		});
 	</script>
 </body>
 </html>
