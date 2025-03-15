@@ -739,3 +739,22 @@ button.clear-input:hover {
 .helpbtn:hover {
     transform: scale(1.05);
 }
+
+.showqrbtn {
+    padding: 4px 8px;
+    border: none;
+    border-radius: var(--border-radius);
+    background-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.2s;
+    display: inline-block;
+    text-align: center;
+}
+
+.showqrbtn:hover {
+    background-color: var(--hover-color);
+    transform: scale(1.05);
+}

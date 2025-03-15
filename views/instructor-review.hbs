@@ -114,7 +114,7 @@
                   <td colspan="2"><strong>Proof of Education:</strong></td>
                   <td class="information">
                     {{#if registration.educproof}}
-                      <a href="{{registration.educproof}}" target="_blank">View Payment Proof</a>
+                      <a href="{{registration.educproof}}" target="_blank">View Education Proof</a>
                       <input type="text" name="educprooftext" value="{{registration.educproof}}" hidden>
                       {{#if user.ptaverified}}<button type="button" class="clear-input"
                         onclick="clearInput(this)">x</button>{{/if}}
@@ -128,7 +128,7 @@
                   <td colspan="2"><strong>Poomsae Certificate:</strong></td>
                   <td class="information">
                     {{#if registration.educproof}}
-                      <a href="{{registration.educproof}}" target="_blank">View Payment Proof</a>
+                      <a href="{{registration.educproof}}" target="_blank">View Poomsae Certificate</a>
                       <input type="text" name="educprooftext" value="{{registration.educproof}}" hidden>
                       {{#if user.ptaverified}}<button type="button" class="clear-input"
                         onclick="clearInput(this)">x</button>{{/if}}
@@ -142,7 +142,7 @@
                   <td colspan="2"><strong>Kukkiwon Certificate:</strong></td>
                   <td class="information">
                     {{#if registration.kukkiwoncert}}
-                      <a href="{{registration.kukkiwoncert}}" target="_blank">View Payment Proof</a>
+                      <a href="{{registration.kukkiwoncert}}" target="_blank">View Kukkiwon Certificate</a>
                       <input type="text" name="kukkiwoncerttext" value="{{registration.kukkiwoncert}}" hidden>
                       {{#if user.ptaverified}}<button type="button" class="clear-input"
                         onclick="clearInput(this)">x</button>{{/if}}
@@ -156,7 +156,7 @@
                   <td colspan="2"><strong>PTA Black-Belt Certificate:</strong></td>
                   <td class="information">
                     {{#if registration.ptablackbeltcert}}
-                      <a href="{{registration.ptablackbeltcert}}" target="_blank">View Payment Proof</a>
+                      <a href="{{registration.ptablackbeltcert}}" target="_blank">View Black-Belt Certificate</a>
                       <input type="text" name="ptablackbeltcerttext" value="{{registration.ptablackbeltcert}}" hidden>
                       {{#if user.ptaverified}}<button type="button" class="clear-input"
                         onclick="clearInput(this)">x</button>{{/if}}
@@ -167,7 +167,10 @@
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="2"><strong>Proof of Payment:</strong></td>
+                  
+                 
+                  <td colspan="2"><strong>Proof of Payment:</strong>
+                  <button class="showqrbtn" type="button" onclick="togglePicture(this, '{{registration.paymentproof}}')">QR</button></td>
                   <td class="information">
                     {{#if registration.paymentproof}}
                       <a href="{{registration.paymentproof}}" target="_blank">View Payment Proof</a>
@@ -187,7 +190,11 @@
         {{#if user.ptaverified}}
          <button type="button" class="confirm-reject-btn" onclick="openConfirmRejectionScreen()">Confirm rejections</button>
         {{else}}
-        <button type="submit" class="submit-changes-btn">Submit Changes</button>
+          {{#if (eq registration.status 5)}}
+            <button type="submit" class="submit-changes-btn">Renew Membership</button>
+          {{else}}
+            <button type="submit" class="submit-changes-btn">Submit Changes</button>
+          {{/if}}
         {{/if}}
     </section>
 
@@ -417,6 +424,34 @@
       document.getElementById("dropdown").classList.toggle("show");
     }
 
+    function togglePicture(button, imageUrl) {
+      const img = document.createElement('img');
+        img.src = '../images/uselss qr.png';
+      img.style.maxWidth = '100%';
+      img.style.maxHeight = '100%';
+      img.style.display = 'block';
+      img.style.margin = '0 auto';
+
+      const modal = document.createElement('div');
+      modal.style.position = 'fixed';
+      modal.style.top = '0';
+      modal.style.left = '0';
+      modal.style.width = '100%';
+      modal.style.height = '100%';
+      modal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+      modal.style.display = 'flex';
+      modal.style.justifyContent = 'center';
+      modal.style.alignItems = 'center';
+      modal.style.zIndex = '1000';
+
+      modal.appendChild(img);
+
+      modal.addEventListener('click', () => {
+        document.body.removeChild(modal);
+      });
+
+      document.body.appendChild(modal);
+    }
   </script>
 
   <style>
