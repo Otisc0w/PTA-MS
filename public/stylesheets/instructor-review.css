@@ -167,6 +167,11 @@ body {
     color: var(--text-color);
     margin-top: 20px;
 }
+
+.application-actions span{
+    font-size: 20px;
+}
+
 .action-buttons {
     display: flex;
     justify-content: left;

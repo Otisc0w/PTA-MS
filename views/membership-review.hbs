@@ -454,56 +454,60 @@
           {{/if}}
         </h1>
         {{#if user.ptaverified}}
-        <div class="action-buttons">
-          <button type="button" class="printbtn" onclick="printIdCard('printableArea', event)">Print ID</button>
-          <button type="submit" name="status" value="1">Under Review</button>
-          <button type="submit" name="status" value="2">Accepted and En-route to Regional Office</button>
-          {{#unless (eq registration.status 3)}}
-            <button type="button" id="idshipped" class="idshipped">ID Shipped</button>
-          {{/unless}}
-          {{#if (eq registration.status 3)}}
-          <button type="button" id="suspendbtn" class="suspendbtn">Suspend this Player</button>
-          {{else}}
-          <button type="button" id="rejectbtn" class="rejectbtn">Reject Application</button>
-          {{/if}}
-        </div>
+          <div class="action-buttons">
+            <button type="button" class="printbtn" onclick="printIdCard('printableArea', event)">Print ID</button>
+            <button type="submit" name="status" value="1">Under Review</button>
+            <button type="submit" name="status" value="2">Accepted and En-route to Regional Office</button>
+            {{#unless (eq registration.status 3)}}
+              <button type="button" id="idshipped" class="idshipped">ID Shipped</button>
+            {{/unless}}
+            {{#if (eq registration.status 3)}}
+            <button type="button" id="suspendbtn" class="suspendbtn">Suspend this Player</button>
+            {{else}}
+            <button type="button" id="rejectbtn" class="rejectbtn">Reject Application</button>
+            {{/if}}
+            <form action="/activate-ncc-membership" method="post">
+              <input type="text" name="activate" value="{{registration.id}}" hidden>
+              <button type="button" id="activatebtn">Activate Membership</button>
+            </form>
+          </div>
 
-        <div class="confirmrejectscreen" id="confirmrejectscreen" style="display: none;">
-          <h3>Please state reason for rejection.</h3>
-          <select name="rejectmsg" id="rejectmsg">
-            <option value="Incomplete application">Incomplete application</option>
-            <option value="Invalid documents">Invalid documents</option>
-            <option value="Payment issues">Payment issues</option>
-            <option value="Eligibility criteria not met">Eligibility criteria not met</option>
-            <option value="Other">Other</option>
-          </select>
-          <textarea name="description" id="description" cols="30"
-            rows="10">Give a description for the rejection</textarea>
-          <button type="button" class="cancelreject" id="cancelreject">Cancel</button>
-          <button type="submit" value="4" name="status" id="confirm">Confirm</button>
-        </div>
+          <div class="confirmrejectscreen" id="confirmrejectscreen" style="display: none;">
+            <h3>Please state reason for rejection.</h3>
+            <select name="rejectmsg" id="rejectmsg">
+              <option value="Incomplete application">Incomplete application</option>
+              <option value="Invalid documents">Invalid documents</option>
+              <option value="Payment issues">Payment issues</option>
+              <option value="Eligibility criteria not met">Eligibility criteria not met</option>
+              <option value="Other">Other</option>
+            </select>
+            <textarea name="description" id="description" cols="30"
+              rows="10">Give a description for the rejection</textarea>
+            <button type="button" class="cancelreject" id="cancelreject">Cancel</button>
+            <button type="submit" value="4" name="status" id="confirm">Confirm</button>
+          </div>
 
-        <div class="confirmsuspendscreen" id="confirmsuspendscreen" style="display: none;">
-          <h3>This action will remove the player's athlete profile suspending them from registering into any games.
-            Please state reason for suspension.</h3>
-          <select name="suspendmsg" id="suspendmsg">
-            <option value="Inappropriate behavior">Inappropriate behavior</option>
-            <option value="Violence">Violence</option>
-            <option value="Cheating">Cheating</option>
-            <option value="Other">Other</option>
-          </select>
-          <textarea name="susdescription" id="susdescription" cols="30"
-            rows="10">Give a description for the suspension</textarea>
-          <button type="button" class="cancelsuspend" id="cancelsuspend">Cancel</button>
-          <button type="submit" value="6" name="status" id="confirm">Confirm</button>
-        </div>
+          <div class="confirmsuspendscreen" id="confirmsuspendscreen" style="display: none;">
+            <h3>This action will remove the player's athlete profile suspending them from registering into any games.
+              Please state reason for suspension.</h3>
+            <select name="suspendmsg" id="suspendmsg">
+              <option value="Inappropriate behavior">Inappropriate behavior</option>
+              <option value="Violence">Violence</option>
+              <option value="Cheating">Cheating</option>
+              <option value="Other">Other</option>
+            </select>
+            <textarea name="susdescription" id="susdescription" cols="30"
+              rows="10">Give a description for the suspension</textarea>
+            <button type="button" class="cancelsuspend" id="cancelsuspend">Cancel</button>
+            <button type="submit" value="6" name="status" id="confirm">Confirm</button>
+          </div>
 
-        <div class="confirmscreen" id="confirmscreen" style="display: none;">
-          <h3>Are you sure? The player will be notified that his ID is ready for pickup. His profile will also be added
-            to the list of athletes</h3>
-          <button type="button" class="cancel" id="cancel">Cancel</button>
-          <button type="submit" value="3" name="status" id="confirm">Confirm</button>
-        </div>
+          <div class="confirmscreen" id="confirmscreen" style="display: none;">
+            <h3>Are you sure? The player will be notified that his ID is ready for pickup. His profile will also be added
+              to the list of athletes</h3>
+            <button type="button" class="cancel" id="cancel">Cancel</button>
+            <button type="submit" value="3" name="status" id="confirm">Confirm</button>
+          </div>
         {{/if}}
         <div class="back">
           <button type="button" onclick="window.location.href='/membership-status'" class="backtolist">
