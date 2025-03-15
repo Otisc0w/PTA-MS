@@ -292,7 +292,10 @@ async function checkAndExpireInstructorRegistrations(req, res, next) {
       const ids = expiredRegistrations.map(registration => registration.id);
       const { error: updateError } = await supabase
         .from("instructor_registrations")
-        .update({ status: 5 })
+        .update({ 
+          status: 5,
+          paymentproof: null
+         })
         .in("id", ids);
 
       if (updateError) {
