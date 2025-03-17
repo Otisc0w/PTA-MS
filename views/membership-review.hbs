@@ -467,12 +467,12 @@
 
       {{#if user.ptaverified}}
       <div class="action-buttons">
-        <h3>Shipping Status</h3>
+        <h3>Shipping Status Buttons</h3>
         <button type="button" class="printbtn" onclick="printIdCard('printableArea', event)">Print ID</button>
         {{#unless (eq registration.status 3)}}
         <button type="button" id="idshipped" class="idshipped">ID Shipped</button>
         {{/unless}}
-        <h3>Application Status</h3>
+        <h3>Application Status Buttons</h3>
         <button type="submit" name="status" value="1">Under Review</button>
         <button type="submit" name="status" value="2">Accepted and En-route to Regional Office</button>
         {{#if thisuser.athleteverified}}
@@ -549,7 +549,7 @@
       </div>
     </div>
     </form>
-    <h3> Activation Status </h3>
+    <h3> Activation Status Buttons</h3>
     <div class="action-buttons">
       {{#unless thisuser.athleteverified}}
       <form action="/activate-ncc-membership" method="post">
