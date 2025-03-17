@@ -435,6 +435,7 @@
       <input type="hidden" name="submittedby" value="{{registration.submittedby}}">
       <section class="application-actions">
         <h1 class="status">
+          <h2>Shipping Status:</h2>
           {{#if (eq registration.status 1)}}
           <span class="status-under-review">Under Review</span>
           {{else if (eq registration.status 2)}}
@@ -452,6 +453,13 @@
           Reason:<p class="suspendmsg">{{registration.suspendmsg}}</p>
           <p class="description">{{registration.susdescription}}</p>
           {{/if}}
+
+          <h2>Activation Status:</h2>
+          {{#if thisuser.athleteverified}}
+            <span class="status-activated" style="color: rgb(0, 212, 0);"><strong>Active</strong></span>
+          {{else}}
+            <span class="status-disabled" style="color: rgb(252, 42, 42);"><strong>Inactive</strong></span>
+          {{/if}}
         </h1>
         {{#if user.ptaverified}}
           <div class="action-buttons">
@@ -461,15 +469,11 @@
             {{#unless (eq registration.status 3)}}
               <button type="button" id="idshipped" class="idshipped">ID Shipped</button>
             {{/unless}}
-            {{#if (eq registration.status 3)}}
+            {{#if thisuser.athleteverified}}
             <button type="button" id="suspendbtn" class="suspendbtn">Suspend this Player</button>
             {{else}}
             <button type="button" id="rejectbtn" class="rejectbtn">Reject Application</button>
             {{/if}}
-            <form action="/activate-ncc-membership" method="post">
-              <input type="text" name="applicationId" value="{{registration.id}}" hidden>
-              <button type="button" id="activatebtn">Activate Membership</button>
-            </form>
           </div>
 
           <div class="confirmrejectscreen" id="confirmrejectscreen" style="display: none;">
@@ -509,12 +513,9 @@
             <button type="submit" value="3" name="status" id="confirm">Confirm</button>
           </div>
         {{/if}}
-        <div class="back">
-          <button type="button" onclick="window.location.href='/membership-status'" class="backtolist">
-            Back to list
-          </button>
-        </div>
-      </section>
+
+        
+      {{!-- </section> --}}
       <!-- Printable ID card area - separate from the form -->
       <div id="printableArea" style="display: none;">
         <div class="id-card">
@@ -538,6 +539,23 @@
         </div>
       </div>
     </form>
+      <div class="action-buttons">
+        {{#unless thisuser.athleteverified}}
+          <form action="/activate-ncc-membership" method="post">
+            <input type="text" name="applicationId" value="{{registration.id}}" hidden>
+            <input type="text" name="submittedby" value="{{registration.submittedby}}" hidden>
+              <button type="submit" id="activatebtn" onclick="return confirm('Are you sure you want to activate this membership?')">Activate Membership</button>
+          </form>
+        {{/unless}}
+      </div>
+
+      <div class="back">
+        <button type="button" onclick="window.location.href='/membership-status'" class="backtolist">
+          Back to list
+        </button>
+      </div>
+
+    </section>
   </main>
 
   {{> footer}}

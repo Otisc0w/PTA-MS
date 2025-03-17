@@ -1494,17 +1494,16 @@ app.post("/update-nccstatus", async (req, res) => {
       console.log("Updating user with ID:", submittedby);
 
       // Update the corresponding user's registered column to true
-      // const { data: user, error: updateUserError } = await supabase
-      //   .from("users")
-      //   .update({ athleteverified: true })
-      //   .eq("id", submittedby)
-      //   .select("*")
-      //   .single();
+      const { data: user, error: updateUserError } = await supabase
+        .from("users")
+        .eq("id", submittedby)
+        .select("*")
+        .single();
 
-      // if (updateUserError) {
-      //   console.error("Error updating user:", updateUserError.message);
-      //   return res.status(500).send("Error updating user");
-      // }
+      if (updateUserError) {
+        console.error("Error updating user:", updateUserError.message);
+        return res.status(500).send("Error updating user");
+      }
 
       // Update the expireson column
       // const { error: updateExpiresOnError } = await supabase
@@ -1517,7 +1516,7 @@ app.post("/update-nccstatus", async (req, res) => {
       //   return res.status(500).send("Error updating expireson");
       // }
 
-      console.log("User updated:", user);
+      // console.log("User updated:", user);
       const name = `${firstname} ${middlename} ${lastname}`;
       const instructor = `${instructorfirstname} ${instructorlastname}`;
 
@@ -2007,35 +2006,35 @@ app.post("/update-instructorstatus", async (req, res) => {
       }
     }
 
-    // Check if status is 4, indicating the need to update the user's instructorverified column
+    // Check if status is 3, indicating the need to update the user's instructorverified column
     if (status == 3) {
       const { submittedby } = registration;
 
       console.log("Updating user with username:", submittedby);
 
       // Update the corresponding user's instructorverified column to true
-      const { data: user, error: updateUserError } = await supabase
-        .from("users")
-        .update({ instructorverified: true })
-        .eq("id", submittedby)
-        .select("*")
-        .single();
+      // const { data: user, error: updateUserError } = await supabase
+      //   .from("users")
+      //   .update({ instructorverified: true })
+      //   .eq("id", submittedby)
+      //   .select("*")
+      //   .single();
 
-      if (updateUserError) {
-        console.error("Error updating user:", updateUserError.message);
-        return res.status(500).send("Error updating user");
-      }
+      // if (updateUserError) {
+      //   console.error("Error updating user:", updateUserError.message);
+      //   return res.status(500).send("Error updating user");
+      // }
 
-      // Update the expireson column
-      const { error: updateExpiresOnError } = await supabase
-        .from("instructor_registrations")
-        .update({ expireson })
-        .eq("id", applicationId);
+      // // Update the expireson column
+      // const { error: updateExpiresOnError } = await supabase
+      //   .from("instructor_registrations")
+      //   .update({ expireson })
+      //   .eq("id", applicationId);
 
-      if (updateExpiresOnError) {
-        console.error("Error updating expireson:", updateExpiresOnError.message);
-        return res.status(500).send("Error updating expireson");
-      }
+      // if (updateExpiresOnError) {
+      //   console.error("Error updating expireson:", updateExpiresOnError.message);
+      //   return res.status(500).send("Error updating expireson");
+      // }
 
       const { data: applicantuser, error: applicantuserError } = await supabase
         .from("users")
@@ -2079,7 +2078,7 @@ app.post("/activate-instructor-membership", async (req, res) => {
     return res.status(401).send("Unauthorized: No user logged in");
   }
 
-  const { applicationId } = req.body; // Capture application ID from the form
+  const { submittedby, applicationId } = req.body; // Capture application ID from the form
   let expireson = new Date();
   expireson.setFullYear(expireson.getFullYear() + 1);
 
@@ -2087,7 +2086,7 @@ app.post("/activate-instructor-membership", async (req, res) => {
     // Update the status of the specific registration in the database
     const { data: registration, error: updateStatusError } = await supabase
       .from("instructor_registrations")
-      .update({ status: 3, expireson })
+      .update({ active: true, expireson })
       .eq("id", applicationId)
       .select("*")
       .single(); // Fetch the updated registration to get the submittedby value
@@ -2308,6 +2307,7 @@ app.post("/update-clubstatus", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 
 app.post("/add-comment", async (req, res) => {
   if (!req.session.user) {
@@ -7244,10 +7244,24 @@ app.get("/membership-review/:id", async (req, res) => {
       return res.status(500).send("Error fetching registration");
     }
 
+    // Fetch user details using registration.submittedby
+    const { data: thisuser, error: thisuserError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", data.submittedby)
+      .single();
+
+    if (thisuserError) {
+      console.error("Error fetching thisuser details:", thisuserError.message);
+      return res.status(500).send("Error fetching thisuser details");
+    }
+
     // Render the membership-review.hbs template with the fetched data
     res.render("membership-review", {
       registration: data,
       user: req.session.user,
+      thisuser,
+      
     });
   } catch (error) {
     console.error("Server error:", error.message);
@@ -7275,10 +7289,23 @@ app.get("/instructor-review/:id", async (req, res) => {
       return res.status(500).send("Error fetching registration");
     }
 
+    // Fetch user details using registration.submittedby
+    const { data: thisinstructor, error: thisinstructorError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", data.submittedby)
+      .single();
+
+    if (thisinstructorError) {
+      console.error("Error fetching thisinstructor details:", thisinstructorError.message);
+      return res.status(500).send("Error fetching thisinstructor details");
+    }
+
     // Render the membership-review.hbs template with the fetched data
     res.render("instructor-review", {
       registration: data,
       user: req.session.user,
+      thisinstructor,
     });
   } catch (error) {
     console.error("Server error:", error.message);
