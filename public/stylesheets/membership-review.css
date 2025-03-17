@@ -762,3 +762,20 @@ button.clear-input:hover {
     background-color: var(--hover-color);
     transform: scale(1.05);
 }
+
+.savechanges {
+    display: block;
+    margin: 10px auto 0; /* Centers the button and adds top margin */
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--border-radius);
+    background-color:  #0056b3;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center; /* Aligns text in the button */
+    font-weight: bold;
+}
+.savechanges:hover {
+    background-color: #0056b3;
+}
