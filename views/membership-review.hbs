@@ -467,7 +467,7 @@
             <button type="button" id="rejectbtn" class="rejectbtn">Reject Application</button>
             {{/if}}
             <form action="/activate-ncc-membership" method="post">
-              <input type="text" name="activate" value="{{registration.id}}" hidden>
+              <input type="text" name="applicationId" value="{{registration.id}}" hidden>
               <button type="button" id="activatebtn">Activate Membership</button>
             </form>
           </div>

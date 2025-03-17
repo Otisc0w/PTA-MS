@@ -1494,28 +1494,28 @@ app.post("/update-nccstatus", async (req, res) => {
       console.log("Updating user with ID:", submittedby);
 
       // Update the corresponding user's registered column to true
-      const { data: user, error: updateUserError } = await supabase
-        .from("users")
-        .update({ athleteverified: true })
-        .eq("id", submittedby)
-        .select("*")
-        .single();
+      // const { data: user, error: updateUserError } = await supabase
+      //   .from("users")
+      //   .update({ athleteverified: true })
+      //   .eq("id", submittedby)
+      //   .select("*")
+      //   .single();
 
-      if (updateUserError) {
-        console.error("Error updating user:", updateUserError.message);
-        return res.status(500).send("Error updating user");
-      }
+      // if (updateUserError) {
+      //   console.error("Error updating user:", updateUserError.message);
+      //   return res.status(500).send("Error updating user");
+      // }
 
       // Update the expireson column
-      const { error: updateExpiresOnError } = await supabase
-        .from("ncc_registrations")
-        .update({ expireson })
-        .eq("id", applicationId);
+      // const { error: updateExpiresOnError } = await supabase
+      //   .from("ncc_registrations")
+      //   .update({ expireson })
+      //   .eq("id", applicationId);
 
-      if (updateExpiresOnError) {
-        console.error("Error updating expireson:", updateExpiresOnError.message);
-        return res.status(500).send("Error updating expireson");
-      }
+      // if (updateExpiresOnError) {
+      //   console.error("Error updating expireson:", updateExpiresOnError.message);
+      //   return res.status(500).send("Error updating expireson");
+      // }
 
       console.log("User updated:", user);
       const name = `${firstname} ${middlename} ${lastname}`;
@@ -1646,7 +1646,67 @@ app.post("/update-nccstatus", async (req, res) => {
   }
 });
 
+app.post("/activate-ncc-membership", async (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).send("Unauthorized: No user logged in");
+  }
 
+  const { applicationId } = req.body; // Capture application ID from the form
+  let expireson = new Date();
+  expireson.setFullYear(expireson.getFullYear() + 1);
+
+  try {
+    // Update the status of the specific registration in the database
+    const { data: registration, error: updateStatusError } = await supabase
+      .from("ncc_registrations")
+      .update({ status: 3, expireson })
+      .eq("id", applicationId)
+      .select("*")
+      .single(); // Fetch the updated registration to get the submittedby value
+
+    if (updateStatusError) {
+      console.error("Error activating membership:", updateStatusError.message);
+      return res.status(500).send("Error activating membership");
+    }
+
+    if (!registration) {
+      return res.status(404).send("Registration not found");
+    }
+
+    // Update the user's athleteverified column to true
+    const { error: updateUserError } = await supabase
+      .from("users")
+      .update({ athleteverified: true })
+      .eq("id", registration.submittedby);
+
+    if (updateUserError) {
+      console.error("Error updating user:", updateUserError.message);
+      return res.status(500).send("Error updating user");
+    }
+
+    // Add a notification for the user about their membership activation
+    const { error: notificationError } = await supabase
+      .from("notifications")
+      .insert([
+        {
+          userid: registration.submittedby,
+          type: "Membership",
+          message: "Your NCC membership has been activated.",
+          desc: "Congratulations! Your NCC membership is now active. Please check your membership status for details.",
+        },
+      ]);
+
+    if (notificationError) {
+      console.error("Error creating notification:", notificationError.message);
+      return res.status(500).send("Error creating notification");
+    }
+
+    res.redirect(`/membership-review/${applicationId}`);
+  } catch (error) {
+    console.error("Server error:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+});
 
 app.post("/reject-ncc-fields", async (req, res) => {
 
@@ -2008,6 +2068,68 @@ app.post("/update-instructorstatus", async (req, res) => {
     }
 
     res.redirect(`/instructor-review/${applicationId}`); // Redirect back to the review page
+  } catch (error) {
+    console.error("Server error:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post("/activate-instructor-membership", async (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).send("Unauthorized: No user logged in");
+  }
+
+  const { applicationId } = req.body; // Capture application ID from the form
+  let expireson = new Date();
+  expireson.setFullYear(expireson.getFullYear() + 1);
+
+  try {
+    // Update the status of the specific registration in the database
+    const { data: registration, error: updateStatusError } = await supabase
+      .from("instructor_registrations")
+      .update({ status: 3, expireson })
+      .eq("id", applicationId)
+      .select("*")
+      .single(); // Fetch the updated registration to get the submittedby value
+
+    if (updateStatusError) {
+      console.error("Error activating membership:", updateStatusError.message);
+      return res.status(500).send("Error activating membership");
+    }
+
+    if (!registration) {
+      return res.status(404).send("Registration not found");
+    }
+
+    // Update the user's instructorverified column to true
+    const { error: updateUserError } = await supabase
+      .from("users")
+      .update({ instructorverified: true })
+      .eq("id", registration.submittedby);
+
+    if (updateUserError) {
+      console.error("Error updating user:", updateUserError.message);
+      return res.status(500).send("Error updating user");
+    }
+
+    // Add a notification for the user about their membership activation
+    const { error: notificationError } = await supabase
+      .from("notifications")
+      .insert([
+        {
+          userid: registration.submittedby,
+          type: "Membership",
+          message: "Your Instructor membership has been activated.",
+          desc: "Congratulations! Your Instructor membership is now active. Please check your membership status for details.",
+        },
+      ]);
+
+    if (notificationError) {
+      console.error("Error creating notification:", notificationError.message);
+      return res.status(500).send("Error creating notification");
+    }
+
+    res.redirect(`/instructor-review/${applicationId}`);
   } catch (error) {
     console.error("Server error:", error.message);
     res.status(500).json({ error: error.message });
