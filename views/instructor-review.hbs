@@ -221,7 +221,7 @@
           {{/if}}
 
           <h2>Activation Status:</h2>
-          {{#if thisinstructor.instructorverified}}
+          {{#if registration.active}}
             <span class="status-activated" style="color: rgb(0, 212, 0);"><strong>Active</strong></span>
           {{else}}
             <span class="status-disabled" style="color: rgb(252, 42, 42);"><strong>Inactive</strong></span>
@@ -236,12 +236,13 @@
             {{#unless (eq registration.status 3)}}
               <button type="button" id="idshipped" class="idshipped">ID Shipped</button>
             {{/unless}}
-            {{!-- {{#if (eq registration.status 3)}} --}}
-            {{#if thisinstructor.instructorverified}}
-              <button type="button" id="suspendbtn" class="suspendbtn">Suspend this Instructor</button>
+            {{#if (eq registration.status 3)}}
+            <button type="button" id="suspendbtn" class="suspendbtn">Suspend this Instructor</button>
             {{else}}
-              <button type="button" id="rejectbtn" class="rejectbtn">Reject Application</button>
+            <button type="button" id="rejectbtn" class="rejectbtn">Reject Application</button>
             {{/if}}
+
+            <button type="button" id="activatebtn" class="activatebtn">Activate Membership</button>
           </div>
 
           <div class="confirmrejectscreen" id="confirmrejectscreen" style="display: none;">
@@ -272,14 +273,17 @@
           </div>
 
           <div class="confirmscreen" id="confirmscreen" style="display: none;">
-            <h3>Are you sure? The applicant will be notified that his ID is ready for pickup.</h3>
+            <h3>Are you sure? The applicant will be notified that his ID is ready. This registration will also disappear
+              after a few days.</h3>
             <button type="button" class="cancel" id="cancel">Cancel</button>
             <button type="submit" value="3" name="status" id="confirm">Confirm</button>
           </div>
         {{/if}}
-        
+        <div class="backtolist">
+          <a href="/membership-status">Back to list</a>
+        </div>
 
-      {{!-- </section> --}}
+      </section>
 
       <div class="printwindow" id="printableArea">
         <div class="id-card">
@@ -313,20 +317,6 @@
         <button type="submit" value="4" name="status" id="confirm">Confirm</button>
       </div>
     </form>
-    
-    <div class="action-buttons">
-      <form action="/activate-instructor-membership" method="post">
-        <input type="text" name="applicationId" value="{{registration.id}}" hidden>
-        <input type="text" name="submittedby" value="{{registration.submittedby}}" hidden>
-        {{#unless thisinstructor.instructorverified}}
-          <button type="submit" id="activatebtn" class="activatebtn" onclick="return confirm('Are you sure you want to activate this membership?')">Activate Membership</button>
-        {{/unless}}
-      </form>
-    </div>
-    <div class="backtolist">
-      <a href="/membership-status">Back to list</a>
-    </div>
-  </section>
   </main>
 
   {{> footer}}

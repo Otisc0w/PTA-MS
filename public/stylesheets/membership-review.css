@@ -162,10 +162,6 @@ body {
     color: var(--text-color);
 }
 
-.action-buttons {
-    margin-top: 10px;
-}
-
 .action-buttons button {
     margin-right: 10px;
     padding: 10px 20px;
