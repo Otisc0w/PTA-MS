@@ -298,7 +298,9 @@
         </div>
 
         <div class="schedule">
-          {{#if (and user.ptaverified (me registrationcount event.registrationcap ))}}
+          {{!-- {{#if (and user.ptaverified (me registrationcount event.registrationcap ))}} --}}
+          {{#if (me registrationcount event.registrationcap )}}
+
           {{#if (eq event.status 'Active')}}
             {{#if (eq event.eventtype 'Kyorugi')}}
               {{#contains event.judges user.id}}
@@ -408,9 +410,11 @@
                   <td>
                     {{#unless (eq ranking 0)}}
                     {{#if (eq ../../event.status 'Ongoing')}}
-                      <button onclick="openPoomsaeScoresheet('{{id}}', '{{name}}', '{{totalscore}}', '{{technicalscore}}', '{{performancescore}}')"
-                      class="open-poomsae-scoresheet">Open Scoresheet -> 
-                      </button>
+                      {{#contains ../../event.judges ../../user.id}}
+                        <button onclick="openPoomsaeScoresheet('{{id}}', '{{name}}', '{{totalscore}}', '{{technicalscore}}', '{{performancescore}}')"
+                        class="open-poomsae-scoresheet">Open Scoresheet -> 
+                        </button>
+                      {{/contains}}
                     {{/if}}
                     {{else}}
                     <h3 class="eliminatedtag">Eliminated</h3>
@@ -800,8 +804,8 @@
                 </tr>
                 <tr>
                   <td>1</td>
-                  <td><input type="number" name="player1_round1" {{#unless user.ptaverified}}readonly{{/unless}} required></td>
-                  <td><input type="number" name="player2_round1" {{#unless user.ptaverified}}readonly{{/unless}} required></td>
+                  <td><input type="number" name="player1_round1" {{#contains event.judges user.id}}{{else}}readonly{{/contains}} required></td>
+                  <td><input type="number" name="player2_round1" {{#contains event.judges user.id}}{{else}}readonly{{/contains}} required></td>
                 </tr>
                 <tr>
                   <td>2</td>
@@ -820,7 +824,7 @@
                 </tr>
               </tbody>
             </table>
-            {{#if user.ptaverified}}<button type="submit">Submit Scores</button>{{/if}}
+            {{#contains event.judges user.id}}<button type="submit">Submit Scores</button>{{/contains}}
           </form>
         </div>
       </div>

@@ -164,8 +164,12 @@ hbs.registerHelper('some', function(array, value, options) {
     return options.inverse(this);
   }
 });
-hbs.registerHelper("contains", function (array, value) {
-  return array && array.map(String).includes(String(value));
+hbs.registerHelper("contains", function (array, value, options) {
+  if (array && array.map(String).includes(String(value))) {
+    return options.fn(this); // Render the block if condition is true
+  } else {
+    return options.inverse(this); // Render the else block if condition is false
+  }
 });
 
 app.use( session({
@@ -1373,6 +1377,18 @@ app.post("/update-nccstatus", async (req, res) => {
 
     console.log("Registration updated:", registration);
 
+    if (status == 1) {
+      const { error: updateAthleteVerifiedError } = await supabase
+        .from("users")
+        .update({ athleteverified: false })
+        .eq("id", registration.submittedby);
+
+      if (updateAthleteVerifiedError) {
+        console.error("Error updating athleteverified:", updateAthleteVerifiedError.message);
+        return res.status(500).send("Error updating athleteverified");
+      }
+    }
+
     if (status == 6) {
       const { suspendmsg, susdescription } = req.body; // Capture the reject message from the form
 
@@ -1494,19 +1510,18 @@ app.post("/update-nccstatus", async (req, res) => {
       console.log("Updating user with ID:", submittedby);
 
       // Update the corresponding user's registered column to true
-      // const { data: user, error: updateUserError } = await supabase
-      //   .from("users")
-      //   .update({ athleteverified: true })
-      //   .eq("id", submittedby)
-      //   .select("*")
-      //   .single();
+      const { data: user, error: updateUserError } = await supabase
+        .from("users")
+        .eq("id", submittedby)
+        .select("*")
+        .single();
 
-      // if (updateUserError) {
-      //   console.error("Error updating user:", updateUserError.message);
-      //   return res.status(500).send("Error updating user");
-      // }
+      if (updateUserError) {
+        console.error("Error updating user:", updateUserError.message);
+        return res.status(500).send("Error updating user");
+      }
 
-      // Update the expireson column
+      // // Update the expireson column
       // const { error: updateExpiresOnError } = await supabase
       //   .from("ncc_registrations")
       //   .update({ expireson })
@@ -1659,7 +1674,7 @@ app.post("/activate-ncc-membership", async (req, res) => {
     // Update the status of the specific registration in the database
     const { data: registration, error: updateStatusError } = await supabase
       .from("ncc_registrations")
-      .update({ status: 3, expireson })
+      .update({ expireson })
       .eq("id", applicationId)
       .select("*")
       .single(); // Fetch the updated registration to get the submittedby value
@@ -1966,6 +1981,18 @@ app.post("/update-instructorstatus", async (req, res) => {
       return res.status(500).send("Error creating notification");
     }
 
+    if (status == 1) {
+      const { error: updateInstructorVerifiedError } = await supabase
+      .from("users")
+      .update({ instructorverified: false })
+      .eq("id", registration.submittedby);
+
+      if (updateInstructorVerifiedError) {
+      console.error("Error updating instructorverified:", updateInstructorVerifiedError.message);
+      return res.status(500).send("Error updating instructorverified");
+      }
+    }
+
     if (status == 6) {
       const { suspendmsg, susdescription } = req.body; // Capture the suspend message from the form
 
@@ -2016,7 +2043,6 @@ app.post("/update-instructorstatus", async (req, res) => {
       // Update the corresponding user's instructorverified column to true
       const { data: user, error: updateUserError } = await supabase
         .from("users")
-        .update({ instructorverified: true })
         .eq("id", submittedby)
         .select("*")
         .single();
@@ -2027,15 +2053,15 @@ app.post("/update-instructorstatus", async (req, res) => {
       }
 
       // Update the expireson column
-      const { error: updateExpiresOnError } = await supabase
-        .from("instructor_registrations")
-        .update({ expireson })
-        .eq("id", applicationId);
+      // const { error: updateExpiresOnError } = await supabase
+      //   .from("instructor_registrations")
+      //   .update({ expireson })
+      //   .eq("id", applicationId);
 
-      if (updateExpiresOnError) {
-        console.error("Error updating expireson:", updateExpiresOnError.message);
-        return res.status(500).send("Error updating expireson");
-      }
+      // if (updateExpiresOnError) {
+      //   console.error("Error updating expireson:", updateExpiresOnError.message);
+      //   return res.status(500).send("Error updating expireson");
+      // }
 
       const { data: applicantuser, error: applicantuserError } = await supabase
         .from("users")
@@ -2087,7 +2113,7 @@ app.post("/activate-instructor-membership", async (req, res) => {
     // Update the status of the specific registration in the database
     const { data: registration, error: updateStatusError } = await supabase
       .from("instructor_registrations")
-      .update({ status: 3, expireson })
+      .update({ expireson })
       .eq("id", applicationId)
       .select("*")
       .single(); // Fetch the updated registration to get the submittedby value
@@ -7166,21 +7192,49 @@ app.get("/membership-status", async function (req, res) {
     let nccError, clubError;
 
     if (ptaverified) {
+      
+      const { data: users, error: usersError } = await supabase
+        .from("users")
+        .select("id, athleteverified, instructorverified");
+
+      if (usersError) {
+        console.error("Error fetching users:", usersError.message);
+        return res.status(500).send("Error fetching users");
+      }
+
       // Fetch all rows if user is 'pta'
       ({ data: nccData, error: nccError } = await supabase
       .from("ncc_registrations")
       .select("*")
       .order("created_at", { ascending: false }));
+      nccData = nccData.map((ncc) => {
+        const user = users.find((user) => user.id === ncc.submittedby);
+        return {
+          ...ncc,
+          athleteverified: user ? user.athleteverified : null,
+        };
+      });
+      
+      ({ data: instData, error: clubError } = await supabase
+        .from("instructor_registrations")
+        .select("*")
+        .order("created_at", { ascending: false }));
+      instData = instData.map((inst) => {
+        const user = users.find((user) => user.id === inst.submittedby);
+        return {
+          ...inst,
+          instructorverified: user ? user.instructorverified : null,
+        };
+      });
+
+      console.log("ncc data: ", nccData);
+      console.log("inst data: ", instData);
 
       ({ data: clubData, error: clubError } = await supabase
       .from("club_registrations")
       .select("*")
       .order("created_at", { ascending: false }));
 
-      ({ data: instData, error: clubError } = await supabase
-      .from("instructor_registrations")
-      .select("*")
-      .order("created_at", { ascending: false }));
     } else {
       // Fetch only rows submitted by the current user
       ({ data: nccData, error: nccError } = await supabase
@@ -7244,10 +7298,23 @@ app.get("/membership-review/:id", async (req, res) => {
       return res.status(500).send("Error fetching registration");
     }
 
+    // Fetch the applicant user details
+    const { data: thisathlete, error: thisathleteError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", data.submittedby)
+      .single();
+
+    if (thisathleteError) {
+      console.error("Error fetching applicant user:", thisuserError.message);
+      return res.status(500).send("Error fetching applicant user");
+    }
+
     // Render the membership-review.hbs template with the fetched data
     res.render("membership-review", {
       registration: data,
       user: req.session.user,
+      thisathlete
     });
   } catch (error) {
     console.error("Server error:", error.message);
@@ -7275,10 +7342,23 @@ app.get("/instructor-review/:id", async (req, res) => {
       return res.status(500).send("Error fetching registration");
     }
 
+    // Fetch the applicant user details
+    const { data: thisinstructor, error: thisinstructorError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", data.submittedby)
+      .single();
+
+    if (thisinstructorError) {
+      console.error("Error fetching applicant user:", thisinstructorError.message);
+      return res.status(500).send("Error fetching applicant user");
+    }
+
     // Render the membership-review.hbs template with the fetched data
     res.render("instructor-review", {
       registration: data,
       user: req.session.user,
+      thisinstructor
     });
   } catch (error) {
     console.error("Server error:", error.message);

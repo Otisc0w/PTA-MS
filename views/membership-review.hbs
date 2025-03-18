@@ -455,11 +455,12 @@
           {{/if}}
 
           <h2>Activation Status:</h2>
-          {{#if thisuser.athleteverified}}
+          {{#if thisathlete.athleteverified}}
             <span class="status-activated" style="color: rgb(0, 212, 0);"><strong>Active</strong></span>
           {{else}}
-            <span class="status-disabled" style="color: rgb(252, 42, 42);"><strong>Inactive</strong></span>
+            <span class="status-disabled" style="color: rgb(252, 42, 42);"><strong>Inactive {{thisuser.athleteverified}}</strong></span>
           {{/if}}
+          <p></p>
         </h1>
         {{#if user.ptaverified}}
           <div class="action-buttons">
@@ -539,8 +540,9 @@
         </div>
       </div>
     </form>
+    <p>
       <div class="action-buttons">
-        {{#unless thisuser.athleteverified}}
+        {{#unless thisathlete.athleteverified}}
           <form action="/activate-ncc-membership" method="post">
             <input type="text" name="applicationId" value="{{registration.id}}" hidden>
             <input type="text" name="submittedby" value="{{registration.submittedby}}" hidden>

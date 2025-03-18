@@ -52,13 +52,18 @@
           <div class='post-content'>
             <div class="post-details">
               <span class='small'>Applicant: <h2>{{firstname}} {{lastname}}</h2>{{formatCreatedAt created_at}}</span>
-              {{#if (eq status 3)}}
+              {{#if athleteverified}}
               <span class='small'>Expires on {{formatDate expireson "MM/DD/YYYY"}}</span>
               {{/if}}
             </div>
 
             <div class="post-status">
-              Status: {{{formatStatus status}}}
+              Status: {{{formatStatus status}}}<br>
+              {{#if athleteverified}}
+                <p style="color:rgb(47, 255, 57)">Active</p>
+              {{else}}
+                <p style="color:rgb(255, 47, 47)">Inactive</p>
+              {{/if}}
             </div>
 
             <div class="post-action">
@@ -78,13 +83,18 @@
           <div class='post-content'>
             <div class="post-details">
               <span class='small'>Applicant: <h2>{{firstname}} {{lastname}}</h2>{{formatCreatedAt created_at}}</span>
-              {{#if (eq status 3)}}
+              {{#if instructorverified}}
               <span class='small'>Expires on {{formatDate expireson "MM/DD/YYYY"}}</span>
               {{/if}}
             </div>
 
             <div class="post-status">
-              Status: {{{formatStatus status}}}
+              Status: {{{formatStatus status}}}<br>
+              {{#if instructorverified}}
+                <p style="color:rgb(47, 255, 57)">Active</p>
+              {{else}}
+                <p style="color:rgb(255, 47, 47)">Inactive</p>
+              {{/if}}
             </div>
 
             <div class="post-action">
