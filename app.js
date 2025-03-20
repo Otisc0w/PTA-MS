@@ -7994,7 +7994,19 @@ app.get("/analytics", async (req, res) => {
       throw clubsCountError;
     }
 
-    
+    // Fetch match history with ranking = 1 JERICKO FIX THIS
+    const { data: firstplacers, error: firstplacersError } = await supabase
+      .from("match_history")
+      .select("*")
+      .eq("ranking", 1)
+      .filter("created_at", "gte", new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString())
+      .filter("created_at", "lte", new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).toISOString());
+
+    if (firstplacersError) {
+      throw firstplacersError;
+    }
+
+    console.log("Fetched firstplacers from match history:", firstplacers);
 
     console.log("Total number of clubs:", clubsCount);
 
@@ -8046,6 +8058,7 @@ app.get("/analytics", async (req, res) => {
       underReviewClubsCount,
       acceptedClubsCount,
       rejectedClubsCount,
+      firstplacers,
       
       // Add the time-based application data for the line chart
       ...timeApplicationsData
