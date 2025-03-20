@@ -191,7 +191,7 @@
                 <label for="additional-selects">Add Judges for this Event:</label>
                 <div id="additional-selects-container">
                   <select name="judges">
-                    {{#each ptaadmins}}
+                    {{#each allusers}}
                     <option value="{{id}}">{{firstname}} {{lastname}}</option>
                     {{/each}}
                   </select>
@@ -1257,7 +1257,7 @@
       const container = document.getElementById('additional-selects-container');
       const newSelect = document.createElement('select');
       newSelect.name = 'judges';
-        newSelect.innerHTML = `{{#each ptaadmins}}<option value="{{id}}">{{firstname}} {{lastname}}</option>{{/each}}`;
+        newSelect.innerHTML = `{{#each allusers}}<option value="{{id}}">{{firstname}} {{lastname}}</option>{{/each}}`;
       container.appendChild(newSelect);
     }
 
