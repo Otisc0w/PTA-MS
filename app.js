@@ -4060,26 +4060,26 @@ app.post("/decide-kyorugi-winners/:eventid", async (req, res) => {
       let dqreason = null;
 
       if (participant.userid === championId) {
-      ranking = 1;
+        ranking = 1;
       } else if (participant.userid === secondPlaceId) {
-      ranking = 2;
-      if (secondPlaceScore === -1) {
-        dq = "DQ";
-        dqreason = secondPlaceDqReason;
-      }
+        ranking = 2;
+        if (secondPlaceScore === -1) {
+          dq = "DQ";
+          dqreason = secondPlaceDqReason;
+        }
       } else if (thirdPlaceIds.includes(participant.userid)) {
-      ranking = 3;
-      if (thirdPlaceScores[thirdPlaceIds.indexOf(participant.userid)] === -1) {
-        dq = "DQ";
-        dqreason = thirdPlaceDqReasons[thirdPlaceIds.indexOf(participant.userid)];
-      } 
+        ranking = 3;
+        if (thirdPlaceScores[thirdPlaceIds.indexOf(participant.userid)] === -1) {
+          dq = "DQ";
+          dqreason = thirdPlaceDqReasons[thirdPlaceIds.indexOf(participant.userid)];
+        } 
       } else if (disqualifiedPlayers.some(player => player.loser === participant.userid)) {
-      dq = "DQ";
-      dqreason = disqualifiedPlayers.find(player => player.loser === participant.userid).dqreason;
+        dq = "DQ";
+        dqreason = disqualifiedPlayers.find(player => player.loser === participant.userid).dqreason;
       } else {
-      ranking = 0; // Ensure ranking is reset for each participant
-      dq = null;
-      dqreason = null;
+        ranking = 0; // Ensure ranking is reset for each participant
+        dq = null;
+        dqreason = null;
       }
 
       console.log("Athlete ID:", participant.athleteid);
@@ -4089,39 +4089,20 @@ app.post("/decide-kyorugi-winners/:eventid", async (req, res) => {
       const { error: matchHistoryError } = await supabase
       .from("match_history")
       .insert([
-      {
-      eventid,
-      athleteid: participant.athleteid,
-      ranking,
-      eventname: event.name,
-      eventlocation: event.location,
-      dq,
-      dqreason: dqreason, // Insert dqreason
-      },
+        {
+        eventid,
+        athleteid: participant.athleteid,
+        ranking,
+        eventname: event.name,
+        eventlocation: event.location,
+        dq,
+        dqreason: dqreason, // Insert dqreason
+        },
       ]);
 
       if (matchHistoryError) {
       console.error("Error inserting match history:", matchHistoryError.message);
       return res.status(500).send("Error inserting match history");
-      }
-
-      // Notify player if they have been disqualified
-      if (dq === "DQ" && dqreason === "Overqualified") {
-      const { error: notificationError } = await supabase
-        .from("notifications")
-        .insert([
-        {
-          userid: participant.userid,
-          type: "Event",
-          message: `You have been disqualified from the event ${event.name}.`,
-          desc: `Reason: ${dqreason}. Please join a promotion event to regain eligibility.`,
-        },
-        ]);
-
-      if (notificationError) {
-        console.error("Error creating notification:", notificationError.message);
-        return res.status(500).send("Error creating notification");
-      }
       }
     }
 
@@ -4445,25 +4426,6 @@ app.post("/decide-poomsae-winners/:eventid", async (req, res) => {
       if (matchHistoryError) {
       console.error("Error inserting match history:", matchHistoryError.message);
       return res.status(500).send("Error inserting match history");
-      }
-
-      // Notify player if they have been disqualified
-      if (player.totalscore === -1 && player.dqreason === "Overqualified") {
-        const { error: notificationError } = await supabase
-          .from("notifications")
-          .insert([
-        {
-          userid: player.userid,
-          type: "Event",
-          message: `You have been disqualified from the event ${events.name}.`,
-          desc: `Reason: ${player.dqreason}. Please join a promotion event to regain eligibility.`,
-        },
-          ]);
-
-        if (notificationError) {
-          console.error("Error creating notification:", notificationError.message);
-          return res.status(500).send("Error creating notification");
-        }
       }
     }
 
@@ -6035,22 +5997,23 @@ app.get("/events-create/:type", async function (req, res) {
 
     console.log("Fetched data:", data); // Log the data to the console
 
-    const { data: allusers, error: allusersError } = await supabase
+    const { data: ptaadmins, error: ptaadminsError } = await supabase
       .from("users")
       .select("*")
+      .eq("ptaverified", true);
 
-    if (allusersError) {
-      return res.status(400).json({ error: allusersError.message });
+    if (ptaadminsError) {
+      return res.status(400).json({ error: ptaadminsError.message });
     }
 
-    console.log("Fetched verified users:", allusers); // Log the verified users data to the console
+    console.log("Fetched verified users:", ptaadmins); // Log the verified users data to the console
 
     // Render the events-create.hbs template with the fetched data
     res.render("events-create", {
       events: data,
       user: req.session.user,
       eventtype: type,
-      allusers,
+      ptaadmins,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -6681,15 +6644,16 @@ app.get("/events-details/:id", async function (req, res) {
       };
     });
 
-    const { data: allusers, error: allusersError } = await supabase
+    const { data: ptaadmins, error: ptaadminsError } = await supabase
       .from("users")
       .select("*")
+      .eq("ptaverified", true);
 
-    if (allusersError) {
-      return res.status(400).json({ error: allusersError.message });
+    if (ptaadminsError) {
+      return res.status(400).json({ error: ptaadminsError.message });
     }
 
-    console.log("Fetched verified users:", allusers); // Log the verified users data to the console
+    console.log("Fetched verified users:", ptaadmins); // Log the verified users data to the console
     console.log("Fetched promotion players with athlete data:", promotionPlayersWithAthleteData); // Log the promotion players with athlete data to the console
     console.log("Fetched promotion players data:", promotionplayers); // Log the promotion players data to the console
     console.log("Fetched current user athlete data:", currentUserAthlete); // Log the current user athlete data to the console
@@ -6726,7 +6690,7 @@ app.get("/events-details/:id", async function (req, res) {
       promotionplayers,
       promotionPlayersWithAthleteData,
       clubMembers,
-      allusers,
+      ptaadmins,
       judgesNames,
     });
   } catch (error) {
@@ -7963,6 +7927,8 @@ app.get("/analytics", async (req, res) => {
         };
       }
     };
+
+
     
     // Get the time-based application data
     const timeApplicationsData = processTimeBasedApplications();
@@ -8030,19 +7996,7 @@ app.get("/analytics", async (req, res) => {
       throw clubsCountError;
     }
 
-    // Fetch match history with ranking = 1 JERICKO FIX THIS
-    const { data: firstplacers, error: firstplacersError } = await supabase
-      .from("match_history")
-      .select("*")
-      .eq("ranking", 1)
-      .filter("created_at", "gte", new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString())
-      .filter("created_at", "lte", new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).toISOString());
-
-    if (firstplacersError) {
-      throw firstplacersError;
-    }
-
-    console.log("Fetched firstplacers from match history:", firstplacers);
+    
 
     console.log("Total number of clubs:", clubsCount);
 
@@ -8094,7 +8048,6 @@ app.get("/analytics", async (req, res) => {
       underReviewClubsCount,
       acceptedClubsCount,
       rejectedClubsCount,
-      firstplacers,
       
       // Add the time-based application data for the line chart
       ...timeApplicationsData
@@ -8142,4 +8095,5 @@ app.post('/notify-admins', async (req, res) => {
     res.status(500).json({ message: 'Failed to notify admins' });
   }
 });
+
 

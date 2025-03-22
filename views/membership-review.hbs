@@ -542,13 +542,15 @@
     </form>
     <p>
       <div class="action-buttons">
-        {{#unless thisathlete.athleteverified}}
+        {{#if user.ptaverfied}}
+        {{#unless (or thisathlete.athleteverified (eq registration.status 1))}}
           <form action="/activate-ncc-membership" method="post">
             <input type="text" name="applicationId" value="{{registration.id}}" hidden>
             <input type="text" name="submittedby" value="{{registration.submittedby}}" hidden>
               <button type="submit" id="activatebtn" onclick="return confirm('Are you sure you want to activate this membership?')">Activate Membership</button>
           </form>
         {{/unless}}
+        {{/if}}
       </div>
 
       <div class="back">
