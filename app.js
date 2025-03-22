@@ -1522,15 +1522,15 @@ app.post("/update-nccstatus", async (req, res) => {
       }
 
       // // Update the expireson column
-      // const { error: updateExpiresOnError } = await supabase
-      //   .from("ncc_registrations")
-      //   .update({ expireson })
-      //   .eq("id", applicationId);
+      const { error: updateExpiresOnError } = await supabase
+        .from("ncc_registrations")
+        .update({ expireson })
+        .eq("id", applicationId);
 
-      // if (updateExpiresOnError) {
-      //   console.error("Error updating expireson:", updateExpiresOnError.message);
-      //   return res.status(500).send("Error updating expireson");
-      // }
+      if (updateExpiresOnError) {
+        console.error("Error updating expireson:", updateExpiresOnError.message);
+        return res.status(500).send("Error updating expireson");
+      }
 
       console.log("User updated:", user);
       const name = `${firstname} ${middlename} ${lastname}`;
