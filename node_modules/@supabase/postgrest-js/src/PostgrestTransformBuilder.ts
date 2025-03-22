@@ -1,6 +1,6 @@
 import PostgrestBuilder from './PostgrestBuilder'
-import { GetResult } from './select-query-parser'
-import { GenericSchema } from './types'
+import { GetResult } from './select-query-parser/result'
+import { GenericSchema, CheckMatchingArrayTypes } from './types'
 
 export default class PostgrestTransformBuilder<
   Schema extends GenericSchema,
@@ -141,7 +141,7 @@ export default class PostgrestTransformBuilder<
   }
 
   /**
-   * Limit the query result by starting at an offset (`from`) and ending at the offset (`from + to`).
+   * Limit the query result by starting at an offset `from` and ending at the offset `to`.
    * Only records within this range are returned.
    * This respects the query order and if there is no order clause the range could behave unexpectedly.
    * The `from` and `to` values are 0-based and inclusive: `range(1, 3)` will include the second, third
@@ -192,7 +192,7 @@ export default class PostgrestTransformBuilder<
     ResultOne = Result extends (infer ResultOne)[] ? ResultOne : never
   >(): PostgrestBuilder<ResultOne> {
     this.headers['Accept'] = 'application/vnd.pgrst.object+json'
-    return this as PostgrestBuilder<ResultOne>
+    return this as unknown as PostgrestBuilder<ResultOne>
   }
 
   /**
@@ -212,7 +212,7 @@ export default class PostgrestTransformBuilder<
       this.headers['Accept'] = 'application/vnd.pgrst.object+json'
     }
     this.isMaybeSingle = true
-    return this as PostgrestBuilder<ResultOne | null>
+    return this as unknown as PostgrestBuilder<ResultOne | null>
   }
 
   /**
@@ -220,7 +220,7 @@ export default class PostgrestTransformBuilder<
    */
   csv(): PostgrestBuilder<string> {
     this.headers['Accept'] = 'text/csv'
-    return this as PostgrestBuilder<string>
+    return this as unknown as PostgrestBuilder<string>
   }
 
   /**
@@ -228,7 +228,7 @@ export default class PostgrestTransformBuilder<
    */
   geojson(): PostgrestBuilder<Record<string, unknown>> {
     this.headers['Accept'] = 'application/geo+json'
-    return this as PostgrestBuilder<Record<string, unknown>>
+    return this as unknown as PostgrestBuilder<Record<string, unknown>>
   }
 
   /**
@@ -285,8 +285,8 @@ export default class PostgrestTransformBuilder<
     this.headers[
       'Accept'
     ] = `application/vnd.pgrst.plan+${format}; for="${forMediatype}"; options=${options};`
-    if (format === 'json') return this as PostgrestBuilder<Record<string, unknown>[]>
-    else return this as PostgrestBuilder<string>
+    if (format === 'json') return this as unknown as PostgrestBuilder<Record<string, unknown>[]>
+    else return this as unknown as PostgrestBuilder<string>
   }
 
   /**
@@ -307,18 +307,19 @@ export default class PostgrestTransformBuilder<
    * Override the type of the returned `data`.
    *
    * @typeParam NewResult - The new result type to override with
+   * @deprecated Use overrideTypes<yourType, { merge: false }>() method at the end of your call chain instead
    */
   returns<NewResult>(): PostgrestTransformBuilder<
     Schema,
     Row,
-    NewResult,
+    CheckMatchingArrayTypes<Result, NewResult>,
     RelationName,
     Relationships
   > {
     return this as unknown as PostgrestTransformBuilder<
       Schema,
       Row,
-      NewResult,
+      CheckMatchingArrayTypes<Result, NewResult>,
       RelationName,
       Relationships
     >

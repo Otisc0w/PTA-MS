@@ -1507,136 +1507,136 @@ app.post("/update-nccstatus", async (req, res) => {
         lastpromo
       } = registration;
 
-      console.log("Updating user with ID:", submittedby);
+      // console.log("Updating user with ID:", submittedby);
 
-      // Update the corresponding user's registered column to true
-      const { data: user, error: updateUserError } = await supabase
-        .from("users")
-        .eq("id", submittedby)
-        .select("*")
-        .single();
+      // // Update the corresponding user's registered column to true
+      // const { data: user, error: updateUserError } = await supabase
+      //   .from("users")
+      //   .eq("id", submittedby)
+      //   .select("*")
+      //   .single();
 
-      if (updateUserError) {
-        console.error("Error updating user:", updateUserError.message);
-        return res.status(500).send("Error updating user");
-      }
+      // if (updateUserError) {
+      //   console.error("Error updating user:", updateUserError.message);
+      //   return res.status(500).send("Error updating user");
+      // }
 
-      // // Update the expireson column
-      const { error: updateExpiresOnError } = await supabase
-        .from("ncc_registrations")
-        .update({ expireson })
-        .eq("id", applicationId);
+      // // // Update the expireson column
+      // const { error: updateExpiresOnError } = await supabase
+      //   .from("ncc_registrations")
+      //   .update({ expireson })
+      //   .eq("id", applicationId);
 
-      if (updateExpiresOnError) {
-        console.error("Error updating expireson:", updateExpiresOnError.message);
-        return res.status(500).send("Error updating expireson");
-      }
+      // if (updateExpiresOnError) {
+      //   console.error("Error updating expireson:", updateExpiresOnError.message);
+      //   return res.status(500).send("Error updating expireson");
+      // }
 
-      console.log("User updated:", user);
-      const name = `${firstname} ${middlename} ${lastname}`;
-      const instructor = `${instructorfirstname} ${instructorlastname}`;
+      // console.log("User updated:", user);
+      // const name = `${firstname} ${middlename} ${lastname}`;
+      // const instructor = `${instructorfirstname} ${instructorlastname}`;
 
-      const userid = submittedby;
+      // const userid = submittedby;
 
-      let division;
-      if (age >= 10 && age <= 11) {
-        division = "Youth";
-      } else if (age >= 12 && age <= 14) {
-        division = "Cadet";
-      } else if (age >= 15 && age <= 17) {
-        division = "Junior";
-      } else if (age >= 18 && age <= 32) {
-        division = "Senior";
-      } else if (age >= 33) {
-        division = "Ultra";
-      } else {
-        division = "Unknown";
-      }
+      // let division;
+      // if (age >= 10 && age <= 11) {
+      //   division = "Youth";
+      // } else if (age >= 12 && age <= 14) {
+      //   division = "Cadet";
+      // } else if (age >= 15 && age <= 17) {
+      //   division = "Junior";
+      // } else if (age >= 18 && age <= 32) {
+      //   division = "Senior";
+      // } else if (age >= 33) {
+      //   division = "Ultra";
+      // } else {
+      //   division = "Unknown";
+      // }
 
-      // Check if the athlete already exists
-      const { data: existingAthlete, error: fetchAthleteError } = await supabase
-        .from("athletes")
-        .select("*")
-        .eq("userid", userid)
-        .single();
+      // // Check if the athlete already exists
+      // const { data: existingAthlete, error: fetchAthleteError } = await supabase
+      //   .from("athletes")
+      //   .select("*")
+      //   .eq("userid", userid)
+      //   .single();
 
-      if (fetchAthleteError && fetchAthleteError.code !== 'PGRST116') {
-        console.error("Error fetching athlete:", fetchAthleteError.message);
-        return res.status(500).send("Error fetching athlete");
-      }
+      // if (fetchAthleteError && fetchAthleteError.code !== 'PGRST116') {
+      //   console.error("Error fetching athlete:", fetchAthleteError.message);
+      //   return res.status(500).send("Error fetching athlete");
+      // }
 
-      if (existingAthlete) {
-        // Update the existing athlete
-        const { error: updateAthleteError } = await supabase
-          .from("athletes")
-          .update({
-            name,
-            gender,
-            bday,
-            clubregion,
-            beltlevel,
-            portrait,
-            agedivision: division,
-            height,
-            weight,
-            instructor,
-            age,
-            lastpromo
-          })
-          .eq("userid", userid);
+      // if (existingAthlete) {
+      //   // Update the existing athlete
+      //   const { error: updateAthleteError } = await supabase
+      //     .from("athletes")
+      //     .update({
+      //       name,
+      //       gender,
+      //       bday,
+      //       clubregion,
+      //       beltlevel,
+      //       portrait,
+      //       agedivision: division,
+      //       height,
+      //       weight,
+      //       instructor,
+      //       age,
+      //       lastpromo
+      //     })
+      //     .eq("userid", userid);
 
-        if (updateAthleteError) {
-          console.error("Error updating athlete:", updateAthleteError.message);
-          return res.status(500).send("Error updating athlete");
-        }
+      //   if (updateAthleteError) {
+      //     console.error("Error updating athlete:", updateAthleteError.message);
+      //     return res.status(500).send("Error updating athlete");
+      //   }
 
-        console.log("Athlete updated successfully");
-      } else {
-        // Insert the new athlete
-        const { error: insertAthleteError } = await supabase
-          .from("athletes")
-          .insert([
-            {
-              name,
-              gender,
-              bday,
-              clubregion,
-              beltlevel,
-              portrait,
-              agedivision: division,
-              height,
-              weight,
-              instructor,
-              userid,
-              age,
-              lastpromo
-            },
-          ]);
+      //   console.log("Athlete updated successfully");
+      // } else {
+      //   // Insert the new athlete
+      //   const { error: insertAthleteError } = await supabase
+      //     .from("athletes")
+      //     .insert([
+      //       {
+      //         name,
+      //         gender,
+      //         bday,
+      //         clubregion,
+      //         beltlevel,
+      //         portrait,
+      //         agedivision: division,
+      //         height,
+      //         weight,
+      //         instructor,
+      //         userid,
+      //         age,
+      //         lastpromo
+      //       },
+      //     ]);
 
-        if (insertAthleteError) {
-          console.error("Error inserting athlete:", insertAthleteError.message);
-          return res.status(500).send("Error inserting athlete");
-        }
+      //   if (insertAthleteError) {
+      //     console.error("Error inserting athlete:", insertAthleteError.message);
+      //     return res.status(500).send("Error inserting athlete");
+      //   }
 
-        console.log("Athlete inserted successfully");
-      }
+      //   console.log("Athlete inserted successfully");
+      // }
       
 
-      const { error: transactionError } = await supabase
-        .from("transactions")
-        .insert([
-          {
-            name: user.firstname + " " + user.lastname,
-            userid: registration.submittedby,
-            type: "NCC",
-            amount: 500, // Adjust the amount as needed
-          },
-        ]);
+      // const { error: transactionError } = await supabase
+      //   .from("transactions")
+      //   .insert([
+      //     {
+      //       name: user.firstname + " " + user.lastname,
+      //       userid: registration.submittedby,
+      //       type: "NCC",
+      //       amount: 500, // Adjust the amount as needed
+      //     },
+      //   ]);
 
-      if (transactionError) {
-        console.error("Error creating transaction:", transactionError.message);
-        return res.status(500).send("Error creating transaction");
-      }
+      // if (transactionError) {
+      //   console.error("Error creating transaction:", transactionError.message);
+      //   return res.status(500).send("Error creating transaction");
+      // }
 
       // Store athlete data in session
       req.session.athlete = {
@@ -1648,7 +1648,7 @@ app.post("/update-nccstatus", async (req, res) => {
         clubregion,
         beltlevel,
         portrait,
-        division,
+        // division,
         height,
         weight,
       };

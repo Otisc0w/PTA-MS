@@ -467,13 +467,13 @@
             <button type="button" class="printbtn" onclick="printIdCard('printableArea', event)">Print ID</button>
             <button type="submit" name="status" value="1">Under Review</button>
             <button type="submit" name="status" value="2">Accepted and En-route to Regional Office</button>
-            {{#unless (eq registration.status 3)}}
+            {{!-- {{#unless (eq registration.status 3)}} --}}
               <button type="button" id="idshipped" class="idshipped">ID Shipped</button>
-            {{/unless}}
-            {{#if thisuser.athleteverified}}
-            <button type="button" id="suspendbtn" class="suspendbtn">Suspend this Player</button>
+            {{!-- {{/unless}} --}}
+            {{#if thisathlete.athleteverified}}
+              <button type="button" id="suspendbtn" class="suspendbtn">Suspend this Player</button>
             {{else}}
-            <button type="button" id="rejectbtn" class="rejectbtn">Reject Application</button>
+              <button type="button" id="rejectbtn" class="rejectbtn">Reject Application</button>
             {{/if}}
           </div>
 
@@ -542,14 +542,14 @@
     </form>
     <p>
       <div class="action-buttons">
-        {{#if user.ptaverfied}}
-        {{#unless (or thisathlete.athleteverified (eq registration.status 1))}}
-          <form action="/activate-ncc-membership" method="post">
-            <input type="text" name="applicationId" value="{{registration.id}}" hidden>
-            <input type="text" name="submittedby" value="{{registration.submittedby}}" hidden>
-              <button type="submit" id="activatebtn" onclick="return confirm('Are you sure you want to activate this membership?')">Activate Membership</button>
-          </form>
-        {{/unless}}
+        {{#if user.ptaverified}}
+          {{#unless (or thisathlete.athleteverified (eq registration.status 1))}}
+            <form action="/activate-ncc-membership" method="post">
+              <input type="text" name="applicationId" value="{{registration.id}}" hidden>
+              <input type="text" name="submittedby" value="{{registration.submittedby}}" hidden>
+                <button type="submit" id="activatebtn" onclick="return confirm('Are you sure you want to activate this membership?')">Activate Membership</button>
+            </form>
+          {{/unless}}
         {{/if}}
       </div>
 
