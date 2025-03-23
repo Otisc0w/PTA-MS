@@ -67,7 +67,7 @@
 							<div class="form-group">
 								<label for="phonenum">Mobile Number</label>
 								<input type="tel" id="phonenum" name="phonenum" value="{{usersncc.phonenum}}"
-									pattern="\d{4}\d{3}\d{4}" placeholder="0912-345-6789" required>
+									 placeholder="0912-345-6789">
 							</div>
 							<div class="form-group">
 								<label for="email">E-mail</label>
@@ -418,12 +418,90 @@
 			const prevButtons = document.querySelectorAll(".cancel-button");
 			const emailInput = document.getElementById("email");
 			const confirmEmailInput = document.getElementById("confemail");
-
+			
 			function validateForm() {
 				const currentFormPage = pages[currentPage];
 				const requiredFields = currentFormPage.querySelectorAll("[required]");
 				let allValid = true;
 				let firstInvalidField = null;
+
+
+				const phoneInput = document.getElementById("phonenum");
+				const phonePattern = /^(09\d{9}|\+63\d{10})$/;
+				const phoneErrorSpan = phoneInput.nextElementSibling;
+				const rawPhone = phoneInput.value.replace(/-/g, '');
+
+				if (!phonePattern.test(rawPhone)) {
+    			phoneInput.setCustomValidity("Invalid phone format");
+    			allValid = false;
+
+    			// Show error message
+    			if (!phoneErrorSpan || !phoneErrorSpan.classList.contains("error-message")) {
+					const errorMsg = document.createElement("span");
+					errorMsg.classList.add("error-message");
+					errorMsg.style.color = "red";
+					errorMsg.style.fontSize = "12px";
+					errorMsg.innerText = "Please enter a valid mobile number (09123456789 or +639123456789)";
+					phoneInput.parentNode.appendChild(errorMsg);
+				}
+
+					if (!firstInvalidField) firstInvalidField = phoneInput;
+				} else {
+					phoneInput.setCustomValidity("");
+					if (phoneErrorSpan && phoneErrorSpan.classList.contains("error-message")) {
+						phoneErrorSpan.remove();
+					}
+				}
+
+				const emailInput = document.getElementById("email");
+				const confirmEmailInput = document.getElementById("confemail");
+				const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+				const emailErrorSpan = emailInput.nextElementSibling;
+
+				if (!emailPattern.test(emailInput.value)) {
+					emailInput.setCustomValidity("Invalid email format");
+					allValid = false;
+
+					if (!emailErrorSpan || !emailErrorSpan.classList.contains("error-message")) {
+						const errorMsg = document.createElement("span");
+						errorMsg.classList.add("error-message");
+						errorMsg.style.color = "red";
+						errorMsg.style.fontSize = "12px";
+						errorMsg.innerText = "Please enter a valid email address.";
+						emailInput.parentNode.appendChild(errorMsg);
+					}
+
+					if (!firstInvalidField) firstInvalidField = emailInput;
+				} else {
+					emailInput.setCustomValidity("");
+					if (emailErrorSpan && emailErrorSpan.classList.contains("error-message")) {
+						emailErrorSpan.remove();
+					}
+				}
+
+				// 🔁 EMAIL CONFIRMATION MATCH
+				const confirmEmailErrorSpan = confirmEmailInput.nextElementSibling;
+
+				if (emailInput.value !== confirmEmailInput.value) {
+					confirmEmailInput.setCustomValidity("Emails do not match");
+					allValid = false;
+
+					if (!confirmEmailErrorSpan || !confirmEmailErrorSpan.classList.contains("error-message")) {
+						const errorMsg = document.createElement("span");
+						errorMsg.classList.add("error-message");
+						errorMsg.style.color = "red";
+						errorMsg.style.fontSize = "12px";
+						errorMsg.innerText = "Emails do not match.";
+						confirmEmailInput.parentNode.appendChild(errorMsg);
+					}
+
+					if (!firstInvalidField) firstInvalidField = confirmEmailInput;
+				} else {
+					confirmEmailInput.setCustomValidity("");
+					if (confirmEmailErrorSpan && confirmEmailErrorSpan.classList.contains("error-message")) {
+						confirmEmailErrorSpan.remove();
+					}
+				}
 
 				requiredFields.forEach(field => {
 					const errorSpan = field.nextElementSibling; // Look for error message span
@@ -525,6 +603,7 @@
 			// Run validation immediately when the page loads
 			showPage(currentPage);
 		});
+	
 	</script>
 </body>
 </html>
