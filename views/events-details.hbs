@@ -601,7 +601,11 @@
                   {{#unless (or currentregistrant (me registrationcount event.registrationcap))}}
                     {{#if (eq event.status 'Active')}}
                       {{#isBefore (now) event.backoutdl}}
-                      <a href="/events-registration/{{event.id}}" class="register-button">Register</a>
+                        {{#if (and (ne user.pendingpromo "false") (eq event.eventtype "Promotion"))}} {{!--if guy is pending promotion --}}
+                          <a href="/events-registration/{{event.id}}" class="register-button">Register</a>
+                        {{else}}
+                          <a class="grayed-register-button">Pending Promotion</a>
+                        {{/if}}
                       {{else}}
                       <h3>Registration Closed</h3>
                       {{/isBefore}}

@@ -236,10 +236,10 @@
             {{#unless (eq registration.status 3)}}
               <button type="button" id="idshipped" class="idshipped">ID Shipped</button>
             {{/unless}}
-            {{#if (eq registration.status 3)}}
-            <button type="button" id="suspendbtn" class="suspendbtn">Suspend this Instructor</button>
+            {{#if thisinstructor.instructorverified}}
+              <button type="button" id="suspendbtn" class="suspendbtn">Suspend this Player</button>
             {{else}}
-            <button type="button" id="rejectbtn" class="rejectbtn">Reject Application</button>
+              <button type="button" id="rejectbtn" class="rejectbtn">Reject Application</button>
             {{/if}}
           </div>
 
