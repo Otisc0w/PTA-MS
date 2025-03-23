@@ -2041,16 +2041,16 @@ app.post("/update-instructorstatus", async (req, res) => {
       console.log("Updating user with username:", submittedby);
 
       // Update the corresponding user's instructorverified column to true
-      const { data: user, error: updateUserError } = await supabase
-        .from("users")
-        .eq("id", submittedby)
-        .select("*")
-        .single();
+      // const { data: user, error: updateUserError } = await supabase
+      //   .from("users")
+      //   .eq("id", submittedby)
+      //   .select("*")
+      //   .single();
 
-      if (updateUserError) {
-        console.error("Error updating user:", updateUserError.message);
-        return res.status(500).send("Error updating user");
-      }
+      // if (updateUserError) {
+      //   console.error("Error updating user:", updateUserError.message);
+      //   return res.status(500).send("Error updating user");
+      // }
 
       // Update the expireson column
       // const { error: updateExpiresOnError } = await supabase
@@ -2063,34 +2063,34 @@ app.post("/update-instructorstatus", async (req, res) => {
       //   return res.status(500).send("Error updating expireson");
       // }
 
-      const { data: applicantuser, error: applicantuserError } = await supabase
-        .from("users")
-        .select("*")
-        .eq("id", submittedby)
-        .single();
+      // const { data: applicantuser, error: applicantuserError } = await supabase
+      //   .from("users")
+      //   .select("*")
+      //   .eq("id", submittedby)
+      //   .single();
 
-      if (applicantuserError) {
-        console.error("Error fetching applicantuser:", applicantuserError.message);
-        return res.status(500).send("Error fetching applicantuser");
-      }
+      // if (applicantuserError) {
+      //   console.error("Error fetching applicantuser:", applicantuserError.message);
+      //   return res.status(500).send("Error fetching applicantuser");
+      // }
 
-      const { data: transactions, error: transactionError } = await supabase
-        .from("transactions")
-        .insert([
-          {
-            name: applicantuser.firstname + " " + applicantuser.lastname,
-            userid: registration.submittedby,
-            type: "Instructor",
-            amount: 500, // Adjust the amount as needed
-          },
-        ]);
+      // const { data: transactions, error: transactionError } = await supabase
+      //   .from("transactions")
+      //   .insert([
+      //     {
+      //       name: applicantuser.firstname + " " + applicantuser.lastname,
+      //       userid: registration.submittedby,
+      //       type: "Instructor",
+      //       amount: 500, // Adjust the amount as needed
+      //     },
+      //   ]);
 
-      if (transactionError) {
-        console.error("Error creating transaction:", transactionError.message);
-        return res.status(500).send("Error creating transaction");
-      }
+      // if (transactionError) {
+      //   console.error("Error creating transaction:", transactionError.message);
+      //   return res.status(500).send("Error creating transaction");
+      // }
 
-      console.log("Instructor verified successfully");
+      // console.log("Instructor verified successfully");
     }
 
     res.redirect(`/instructor-review/${applicationId}`); // Redirect back to the review page
@@ -2105,55 +2105,57 @@ app.post("/activate-instructor-membership", async (req, res) => {
     return res.status(401).send("Unauthorized: No user logged in");
   }
 
-  const { applicationId } = req.body; // Capture application ID from the form
+  const { applicationId, submittedby } = req.body; // Capture application ID from the form
   let expireson = new Date();
   expireson.setFullYear(expireson.getFullYear() + 1);
 
   try {
     // Update the status of the specific registration in the database
-    const { data: registration, error: updateStatusError } = await supabase
-      .from("instructor_registrations")
-      .update({ expireson })
-      .eq("id", applicationId)
-      .select("*")
-      .single(); // Fetch the updated registration to get the submittedby value
+    // const { data: registration, error: updateStatusError } = await supabase
+    //   .from("instructor_registrations")
+    //   .update({ expireson })
+    //   .eq("id", applicationId)
+    //   .select("*")
+    //   .single(); // Fetch the updated registration to get the submittedby value
 
-    if (updateStatusError) {
-      console.error("Error activating membership:", updateStatusError.message);
-      return res.status(500).send("Error activating membership");
-    }
+    // if (updateStatusError) {
+    //   console.error("Error activating membership:", updateStatusError.message);
+    //   return res.status(500).send("Error activating membership");
+    // }
 
-    if (!registration) {
-      return res.status(404).send("Registration not found");
-    }
+    // if (!registration) {
+    //   return res.status(404).send("Registration not found");
+    // }
 
     // Update the user's instructorverified column to true
     const { error: updateUserError } = await supabase
       .from("users")
       .update({ instructorverified: true })
-      .eq("id", registration.submittedby);
+      .eq("id", submittedby);
 
     if (updateUserError) {
       console.error("Error updating user:", updateUserError.message);
       return res.status(500).send("Error updating user");
     }
 
-    // Add a notification for the user about their membership activation
-    const { error: notificationError } = await supabase
-      .from("notifications")
-      .insert([
-        {
-          userid: registration.submittedby,
-          type: "Membership",
-          message: "Your Instructor membership has been activated.",
-          desc: "Congratulations! Your Instructor membership is now active. Please check your membership status for details.",
-        },
-      ]);
+    console.log("BRUH",  applicationId, submittedby);
 
-    if (notificationError) {
-      console.error("Error creating notification:", notificationError.message);
-      return res.status(500).send("Error creating notification");
-    }
+    // Add a notification for the user about their membership activation
+    // const { error: notificationError } = await supabase
+    //   .from("notifications")
+    //   .insert([
+    //     {
+    //       userid: registration.submittedby,
+    //       type: "Membership",
+    //       message: "Your Instructor membership has been activated.",
+    //       desc: "Congratulations! Your Instructor membership is now active. Please check your membership status for details.",
+    //     },
+    //   ]);
+
+    // if (notificationError) {
+    //   console.error("Error creating notification:", notificationError.message);
+    //   return res.status(500).send("Error creating notification");
+    // }
 
     res.redirect(`/instructor-review/${applicationId}`);
   } catch (error) {

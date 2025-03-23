@@ -241,8 +241,6 @@
             {{else}}
             <button type="button" id="rejectbtn" class="rejectbtn">Reject Application</button>
             {{/if}}
-
-            <button type="button" id="activatebtn" class="activatebtn">Activate Membership</button>
           </div>
 
           <div class="confirmrejectscreen" id="confirmrejectscreen" style="display: none;">
@@ -279,9 +277,23 @@
             <button type="submit" value="3" name="status" id="confirm">Confirm</button>
           </div>
         {{/if}}
+        </form>
+        <div class="action-buttons">
+          {{#if user.ptaverified}}
+            {{#unless (or thisinstructor.instructorverified (eq registration.status 1))}}
+              <form action="/activate-instructor-membership" method="post">
+                <input type="text" name="applicationId" value="{{registration.id}}" hidden>
+                <input type="text" name="submittedby" value="{{registration.submittedby}}" hidden>
+                  <button type="submit" id="activatebtn" onclick="return confirm('Are you sure you want to activate this membership?')">Activate Membership</button>
+              </form>
+            {{/unless}}
+          {{/if}}
+        </div>
+
         <div class="backtolist">
           <a href="/membership-status">Back to list</a>
         </div>
+        
 
       </section>
 
@@ -316,7 +328,7 @@
         <button type="button" class="cancel" id="cancel">Cancel</button>
         <button type="submit" value="4" name="status" id="confirm">Confirm</button>
       </div>
-    </form>
+    
   </main>
 
   {{> footer}}
