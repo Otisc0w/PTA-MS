@@ -265,6 +265,34 @@
       }
     });
 
+  const phoneInput = page.querySelector('#phonenum');
+  if (phoneInput) {
+    const phonePattern = /^(09\d{9}|\+63\d{10})$/;
+    const rawPhone = phoneInput.value.replace(/-/g, '');
+
+    if (!phonePattern.test(rawPhone)) {
+      showInlineError(phoneInput, "Enter a valid mobile number (09123456789 or +639123456789)");
+      isValid = false;
+    }
+  }
+
+  
+  const emailInput = page.querySelector('#email');
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (emailInput && !emailPattern.test(emailInput.value)) {
+    showInlineError(emailInput, "Please enter a valid email address.");
+    isValid = false;
+  }
+
+  
+  const confEmailInput = page.querySelector('#confemail');
+  if (emailInput && confEmailInput && emailInput.value !== confEmailInput.value) {
+    showInlineError(confEmailInput, "Emails do not match.");
+    isValid = false;
+  }
+
+
     return isValid;
   }
 

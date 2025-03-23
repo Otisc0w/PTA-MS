@@ -244,7 +244,7 @@
                 <tr>
                   <td><strong>Phone Number:</strong></td>
                   <td class="information">
-                    <input type="text" name="phonenum" value="{{registration.phonenum}}" {{#if user.ptaverified}}readonly{{else}}required{{/if}}>
+                    <input type="text" name="phonenum" id="phonenum" value="{{registration.phonenum}}" {{#if user.ptaverified}}readonly{{else}}required{{/if}}>
                     <button type="button" class="clear-input"
                       onclick="clearInput(this)">x</button>
                   </td>
@@ -252,7 +252,7 @@
                 <tr>
                   <td><strong>Email:</strong></td>
                   <td class="information">
-                    <input type="text" name="email" value="{{registration.email}}" {{#if user.ptaverified}}readonly{{else}}required{{/if}}>
+                    <input type="text" name="email" id="email" value="{{registration.email}}" {{#if user.ptaverified}}readonly{{else}}required{{/if}}>
                     <button type="button" class="clear-input"
                       onclick="clearInput(this)">x</button>
                   </td>
@@ -681,6 +681,57 @@
       window.print();
     }
 
+
+       document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector(".review-form");
+    const phoneInput = document.getElementById("phonenum");
+    const emailInput = document.getElementById("email");
+
+    const phonePattern = /^(09\d{9}|\+63\d{10})$/;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (form) {
+      form.addEventListener("submit", function (event) {
+        let isValid = true;
+
+        // Clear old errors
+        document.querySelectorAll(".error-message").forEach(e => e.remove());
+
+        // PHONE validation
+        if (phoneInput && !phoneInput.hasAttribute("readonly")) {
+          const rawPhone = phoneInput.value.replace(/-/g, '');
+          if (!phonePattern.test(rawPhone)) {
+            showInlineError(phoneInput, "Enter a valid mobile number (09123456789 or +639123456789)");
+            isValid = false;
+          }
+        }
+
+        // EMAIL validation
+        if (emailInput && !emailInput.hasAttribute("readonly")) {
+          if (!emailPattern.test(emailInput.value)) {
+            showInlineError(emailInput, "Please enter a valid email address.");
+            isValid = false;
+          }
+        }
+
+        if (!isValid) {
+          event.preventDefault(); // Block form submission
+          alert("Please fix the errors before submitting.");
+        }
+      });
+    }
+
+    function showInlineError(input, message) {
+      const errorMsg = document.createElement("span");
+      errorMsg.classList.add("error-message");
+      errorMsg.style.color = "red";
+      errorMsg.style.fontSize = "12px";
+      errorMsg.innerText = message;
+      input.parentNode.appendChild(errorMsg);
+      input.setCustomValidity("Invalid");
+      input.reportValidity();
+    }
+  }); 
     function toggleDropdown() {
       document.getElementById("dropdown").classList.toggle("show");
     }
@@ -699,7 +750,62 @@
     function openhelpdialogue(){
       alert("Click the X button beside the fields that you deem as incorrect. After, click 'Confirm Rejections' to finalize the fields you want to reject.");
     }
+
+
   </script>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector(".review-form");
+    const phoneInput = document.getElementById("phonenum");
+    const emailInput = document.getElementById("email");
+
+    const phonePattern = /^(09\d{9}|\+63\d{10})$/;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (form) {
+      form.addEventListener("submit", function (event) {
+        let isValid = true;
+
+        // Clear old errors
+        document.querySelectorAll(".error-message").forEach(e => e.remove());
+
+        // PHONE validation
+        if (phoneInput && !phoneInput.hasAttribute("readonly")) {
+          const rawPhone = phoneInput.value.replace(/-/g, '');
+          if (!phonePattern.test(rawPhone)) {
+            showInlineError(phoneInput, "Enter a valid mobile number (09123456789 or +639123456789)");
+            isValid = false;
+          }
+        }
+
+        // EMAIL validation
+        if (emailInput && !emailInput.hasAttribute("readonly")) {
+          if (!emailPattern.test(emailInput.value)) {
+            showInlineError(emailInput, "Please enter a valid email address.");
+            isValid = false;
+          }
+        }
+
+        if (!isValid) {
+          event.preventDefault(); // Block form submission
+          alert("Please fix the errors before submitting.");
+        }
+      });
+    }
+
+    function showInlineError(input, message) {
+      const errorMsg = document.createElement("span");
+      errorMsg.classList.add("error-message");
+      errorMsg.style.color = "red";
+      errorMsg.style.fontSize = "12px";
+      errorMsg.innerText = message;
+      input.parentNode.appendChild(errorMsg);
+      input.setCustomValidity("");
+      input.reportValidity();
+    }
+  });
+</script>
 </body>
 
 </html>

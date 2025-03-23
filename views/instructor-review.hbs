@@ -76,14 +76,14 @@
                 </tr>
                 <tr>
                   <td><strong>Phone Number:</strong></td>
-                  <td><input type="tel" name="phonenum" value="{{registration.phonenum}}" {{#if user.ptaverified}}readonly{{else}}required{{/if}}>
+                  <td><input type="tel" name="phonenum" id="phonenum" value="{{registration.phonenum}}" {{#if user.ptaverified}}readonly{{else}}required{{/if}}>
                     <button type="button" class="clear-input"
                       onclick="clearInput(this)">x</button>
                   </td>
                 </tr>
                 <tr>
                   <td><strong>Email:</strong></td>
-                  <td><input type="email" name="email" value="{{registration.email}}" {{#if user.ptaverified}}readonly{{else}}required{{/if}}>
+                  <td><input type="email" name="email" id="email" value="{{registration.email}}" {{#if user.ptaverified}}readonly{{else}}required{{/if}}>
                     <button type="button" class="clear-input"
                       onclick="clearInput(this)">x</button>
                   </td>
@@ -476,7 +476,7 @@
       document.body.appendChild(modal);
     }
   </script>
-
+  
   <style>
     /* ID card styles */
     .id-card {
@@ -626,6 +626,68 @@
       }
     }
   </style>
+    <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const phoneInput = document.getElementById("phonenum");
+    const emailInput = document.getElementById("email");
+
+    const phonePattern = /^(09\d{9}|\+63\d{10})$/;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Input mask formatting on input
+    phoneInput.addEventListener("input", function (e) {
+      let value = phoneInput.value.replace(/\D/g, ""); // remove non-digits
+
+      if (value.startsWith("09")) {
+        if (value.length > 11) value = value.slice(0, 11);
+        if (value.length >= 7) {
+          value = value.slice(0, 4) + "-" + value.slice(4, 7) + "-" + value.slice(7);
+        } else if (value.length >= 4) {
+          value = value.slice(0, 4) + "-" + value.slice(4);
+        }
+      }
+
+      phoneInput.value = value;
+    });
+
+    // On form submit, validate phone and email
+    const form = phoneInput.closest("form");
+
+    form.addEventListener("submit", function (e) {
+      let valid = true;
+
+      // Clear previous error messages
+      document.querySelectorAll(".error-message").forEach(el => el.remove());
+
+      const rawPhone = phoneInput.value.replace(/-/g, "");
+      if (!phonePattern.test(rawPhone)) {
+        showError(phoneInput, "Enter a valid mobile number (e.g., 09123456789 or +639123456789)");
+        valid = false;
+      }
+
+      if (!emailPattern.test(emailInput.value)) {
+        showError(emailInput, "Please enter a valid email address.");
+        valid = false;
+      }
+
+      if (!valid) {
+        e.preventDefault();
+        alert("Please fix the errors before submitting.");
+      }
+    });
+
+    function showError(input, message) {
+      const span = document.createElement("span");
+      span.classList.add("error-message");
+      span.style.color = "red";
+      span.style.fontSize = "12px";
+      span.style.display = "block";
+      span.textContent = message;
+      input.parentNode.appendChild(span);
+    }
+  });
+</script>
+
 </body>
 
 </html>
