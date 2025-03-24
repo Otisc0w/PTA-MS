@@ -8091,7 +8091,7 @@ app.get("/analytics", async (req, res) => {
       throw matchHistoryError;
     }
 
-    // Fetch all athletes to map their details to match history rows
+    // Fetch all users to map their details to match history rows
     const { data: athletes, error: athletesError } = await supabase
       .from("athletes")
       .select("*");
@@ -8106,14 +8106,14 @@ app.get("/analytics", async (req, res) => {
       const quarter = `Q${Math.floor(matchDate.getMonth() / 3) + 1} ${matchDate.getFullYear()}`;
 
       if (!acc[quarter]) {
-        acc[quarter] = [];
+      acc[quarter] = [];
       }
 
-      // Map user details to the match history row
-      const user = athletes.find((user) => athlete.id === match.athleteid);
+      // Map athlete details to the match history row
+      const athlete = athletes.find((athlete) => athlete.id === match.athleteid);
       acc[quarter].push({
-        ...match,
-        user: user ? { firstname: user.firstname, lastname: user.lastname } : null,
+      ...match,
+      athlete: athlete ? { name: athlete.name } : null,
       });
 
       return acc;

@@ -647,15 +647,20 @@
           </thead>
           <tbody id="competitions-body">
             {{#each competitionResultsByQuarter}}
-            <tr>
-              <td>{{event}}</td>
-              <td>{{formatDate date "MM/DD/YYYY"}}</td>
-              <td>{{athlete}}</td>
-              <td>{{rank}}</td>
-              <td>{{category}}</td>
-              <td>{{weightClass}}</td>
-              <td>{{club}}</td>
-            </tr>
+              <tr>
+                <td colspan="7" style="font-weight: bold; text-align: center;">{{@key}}</td>
+              </tr>
+              {{#each this}}
+                <tr>
+                  <td>{{eventname}}</td>
+                  <td>{{formatDate created_at "MM/DD/YYYY"}}</td>
+                  <td>{{athlete.name}}</td>
+                  <td>{{#if ranking}}{{ranking}}{{else}}{{dq}}{{/if}}</td>
+                  <td>{{eventlocation}}</td>
+                  <td>{{#if weightclass}}{{weightclass}}{{else}}N/A{{/if}}</td>
+                  <td>{{athlete.club}}</td>
+                </tr>
+              {{/each}}
             {{/each}}
           </tbody>
         </table>
