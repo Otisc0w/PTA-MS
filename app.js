@@ -124,7 +124,7 @@ hbs.registerHelper("formatStatus", function (status) {
     case 5:
       return '<span class="status-expired">Expired</span>';
     case 6:
-      return '<span class="status-verified">Suspended</span>';
+      return '<span class="status-rejected">Suspended</span>';
     default:
       return '<span class="status-unknown">Unknown Status</span>';
       
@@ -8085,7 +8085,8 @@ app.get("/analytics", async (req, res) => {
     // Fetch competition results per quarter from match_history
     const { data: matchHistory, error: matchHistoryError } = await supabase
       .from("match_history")
-      .select("*");
+      .select("*")
+      .eq("ranking", 1);
 
     if (matchHistoryError) {
       throw matchHistoryError;

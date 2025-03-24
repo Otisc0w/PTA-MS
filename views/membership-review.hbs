@@ -435,7 +435,7 @@
       <input type="hidden" name="submittedby" value="{{registration.submittedby}}">
       <section class="application-actions">
         <h1 class="status">
-          <h2>Shipping Status:</h2>
+          <h2>ID Status:</h2>
           {{#if (eq registration.status 1)}}
           <span class="status-under-review">Under Review</span>
           {{else if (eq registration.status 2)}}
@@ -544,11 +544,13 @@
       <div class="action-buttons">
         {{#if user.ptaverified}}
           {{#unless (or thisathlete.athleteverified (eq registration.status 1))}}
+          {{#unless (eq registration.status 5)}}
             <form action="/activate-ncc-membership" method="post">
               <input type="text" name="applicationId" value="{{registration.id}}" hidden>
               <input type="text" name="submittedby" value="{{registration.submittedby}}" hidden>
                 <button type="submit" id="activatebtn" onclick="return confirm('Are you sure you want to activate this membership?')">Activate Membership</button>
             </form>
+          {{/unless}}
           {{/unless}}
         {{/if}}
       </div>
