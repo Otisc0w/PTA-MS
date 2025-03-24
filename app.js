@@ -6041,23 +6041,22 @@ app.get("/events-create/:type", async function (req, res) {
 
     console.log("Fetched data:", data); // Log the data to the console
 
-    const { data: ptaadmins, error: ptaadminsError } = await supabase
+    const { data: allusers, error: allusersError } = await supabase
       .from("users")
       .select("*")
-      .eq("ptaverified", true);
 
-    if (ptaadminsError) {
-      return res.status(400).json({ error: ptaadminsError.message });
+    if (allusersError) {
+      return res.status(400).json({ error: allusersError.message });
     }
 
-    console.log("Fetched verified users:", ptaadmins); // Log the verified users data to the console
+    console.log("Fetched verified users:", allusers); // Log the verified users data to the console
 
     // Render the events-create.hbs template with the fetched data
     res.render("events-create", {
       events: data,
       user: req.session.user,
       eventtype: type,
-      ptaadmins,
+      allusers,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
