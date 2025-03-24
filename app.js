@@ -8146,6 +8146,8 @@ app.get("/analytics", async (req, res) => {
       underReviewClubsCount,
       acceptedClubsCount,
       rejectedClubsCount,
+
+      firstPlacers,
       
       // Add the time-based application data for the line chart
       ...timeApplicationsData
