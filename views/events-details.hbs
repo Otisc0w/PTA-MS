@@ -600,8 +600,8 @@
                 {{#if (orray (and (eq currentUserAthlete.gender event.gender) (eq currentUserAthlete.beltlevel event.beltlevel)) clubMembers)}}
                   {{#unless (or currentregistrant (me registrationcount event.registrationcap))}}
                     {{#if (eq event.status 'Active')}}
-                      {{#isBefore (now) event.backoutdl}}
-                        {{#if (and (ne user.pendingpromo "false") (eq event.eventtype "Promotion"))}} {{!--if guy is pending promotion --}}
+                        {{#isBefore (now) event.backoutdl}}
+                        {{#if (or (not user.pendingpromo) (eq event.eventtype "Promotion"))}}
                           <a href="/events-registration/{{event.id}}" class="register-button">Register</a>
                         {{else}}
                           <a class="grayed-register-button">Pending Promotion</a>
@@ -623,11 +623,11 @@
                           <p>Your check-in code is:</p>
                           <h1 class="pending">pending</h1>
                           {{#isBefore (now) event.backoutdl}}
-                          <form action="/withdraw-from-event" method="post" onsubmit="return confirm('Are you sure you want to withdraw from this event?');">
-                            <input type="hidden" name="eventid" value="{{event.id}}">
-                            <input type="hidden" name="userid" value="{{user.id}}">
-                            <button class="withdraw" type="submit">Withdraw Registration</button>
-                          </form>
+                            <form action="/withdraw-from-event" method="post" onsubmit="return confirm('Are you sure you want to withdraw from this event?');">
+                              <input type="hidden" name="eventid" value="{{event.id}}">
+                              <input type="hidden" name="userid" value="{{user.id}}">
+                              <button class="withdraw" type="submit">Withdraw Registration</button>
+                            </form>
                           {{/isBefore}}
                         {{else}}
                           <h1 class="pending">Registration Limit Reached</h1>

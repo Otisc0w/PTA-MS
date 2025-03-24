@@ -171,6 +171,9 @@ hbs.registerHelper("contains", function (array, value, options) {
     return options.inverse(this); // Render the else block if condition is false
   }
 });
+hbs.registerHelper("not", function (value) {
+  return !value;
+});
 
 app.use( session({
     secret: "your_secret_key", // Replace with a secure secret key
@@ -3697,7 +3700,7 @@ app.post("/conclude-promotion-event/:id", async (req, res) => {
       const { error: updatePendingPromoError } = await supabase
         .from("users")
         .update({ pendingpromo: false })
-        .eq("id", athleteid);
+        .eq("id", player.userid);
 
       if (updatePendingPromoError) {
         console.error("Error updating pendingpromo:", updatePendingPromoError.message);
@@ -4102,13 +4105,13 @@ app.post("/decide-kyorugi-winners/:eventid", async (req, res) => {
       .from("match_history")
       .insert([
       {
-      eventid,
-      athleteid: participant.athleteid,
-      ranking,
-      eventname: event.name,
-      eventlocation: event.location,
-      dq,
-      dqreason: dqreason, // Insert dqreason
+        eventid,
+        athleteid: participant.athleteid,
+        ranking,
+        eventname: event.name,
+        eventlocation: event.location,
+        dq,
+        dqreason: dqreason, // Insert dqreason
       },
       ]);
 
@@ -4133,6 +4136,21 @@ app.post("/decide-kyorugi-winners/:eventid", async (req, res) => {
         if (notificationError) {
           console.error("Error creating notification:", notificationError.message);
           return res.status(500).send("Error creating notification");
+        }
+
+        const { data: deletedRows, error: deleteRegistrationsError } = await supabase
+          .from("events_registrations")
+          .delete()
+          .eq("userid", participant.userid)
+          .neq("eventid", eventid);
+
+        if (deleteRegistrationsError && deleteRegistrationsError.code !== 'PGRST116') {
+          console.error("Error deleting event registrations:", deleteRegistrationsError.message);
+          return res.status(500).send("Error deleting event registrations");
+        }
+
+        if (!deletedRows || deletedRows.length === 0) {
+          console.warn("No event registrations were deleted for the given user ID:", participant.userid);
         }
 
         const { error: updatePendingPromoError } = await supabase
@@ -4453,14 +4471,14 @@ app.post("/decide-poomsae-winners/:eventid", async (req, res) => {
       .from("match_history")
       .insert([
       {
-      eventid,
-      athleteid: player.athleteid,
-      ranking: player.ranking,
-      eventname: events.name,
-      eventlocation: events.location,
-      poomsaefinalscore: player.totalscore,
-      dqreason: player.dqreason,
-      dq: player.totalscore === -1 ? "DQ" : null,
+        eventid,
+        athleteid: player.athleteid,
+        ranking: player.ranking,
+        eventname: events.name,
+        eventlocation: events.location,
+        poomsaefinalscore: player.totalscore,
+        dqreason: player.dqreason,
+        dq: player.totalscore === -1 ? "DQ" : null,
       },
       ]);
 
@@ -4471,15 +4489,31 @@ app.post("/decide-poomsae-winners/:eventid", async (req, res) => {
 
       // If the player is disqualified due to being overqualified, update their pendingpromo to true
       if (player.totalscore === -1 && player.dqreason === "Overqualified") {
-      const { error: updatePendingPromoError } = await supabase
-        .from("users")
-        .update({ pendingpromo: true })
-        .eq("id", player.userid);
+        const { error: updatePendingPromoError } = await supabase
+          .from("users")
+          .update({ pendingpromo: true })
+          .eq("id", player.userid);
 
-      if (updatePendingPromoError) {
-        console.error("Error updating pendingpromo:", updatePendingPromoError.message);
-        return res.status(500).send("Error updating pendingpromo");
-      }
+        if (updatePendingPromoError) {
+          console.error("Error updating pendingpromo:", updatePendingPromoError.message);
+          return res.status(500).send("Error updating pendingpromo");
+        }
+
+        const { data: deletedRows, error: deleteRegistrationsError } = await supabase
+          .from("events_registrations")
+          .delete()
+          .eq("userid", player.userid)
+          .neq("eventid", eventid);
+
+        if (deleteRegistrationsError && deleteRegistrationsError.code !== 'PGRST116') {
+          console.error("Error deleting event registrations:", deleteRegistrationsError.message);
+          return res.status(500).send("Error deleting event registrations");
+        }
+
+        if (!deletedRows || deletedRows.length === 0) {
+          console.warn("No event registrations were deleted for the given user ID:", player.userid);
+        }
+
       }
     }
 
