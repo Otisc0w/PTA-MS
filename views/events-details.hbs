@@ -60,9 +60,9 @@
                  <button class="canceleventbtn" onclick="opencanceleventmodal()">Cancel</button>
               {{/if}}
               {{#contains event.judges user.id}}
-                <p>ID:{{user.id}}. You are a judge for this event.</p>
+                <p>You are a judge for this event.</p>
               {{else}}
-                <p>ID:{{user.id}}. You are not a judge for this event.</p>
+                <p>You are not a judge for this event.</p>
               {{/contains}}
             </div>
           </div>

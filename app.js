@@ -3694,6 +3694,16 @@ app.post("/conclude-promotion-event/:id", async (req, res) => {
         console.error("Error updating belt level:", updateError.message);
       }
 
+      const { error: updatePendingPromoError } = await supabase
+        .from("users")
+        .update({ pendingpromo: false })
+        .eq("id", athleteid);
+
+      if (updatePendingPromoError) {
+        console.error("Error updating pendingpromo:", updatePendingPromoError.message);
+        return res.status(500).send("Error updating pendingpromo");
+      }
+
       console.log("New Belt Level:", newBeltLevel);
     }
 
