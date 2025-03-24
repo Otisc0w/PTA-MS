@@ -35,6 +35,7 @@
       <button class="tablink" onclick="openReport(event, 'membership')">Membership Applications</button>
       <button class="tablink" onclick="openReport(event, 'events')">Events</button>
       <button class="tablink" onclick="openReport(event, 'clubs')">Clubs</button>
+      <button class="tablink" onclick="openReport(event, 'competitions')">Competitions</button>
       <button class="tablink" onclick="openReport(event, 'insights')">Other Insights</button>
     </div>
 
@@ -607,6 +608,247 @@
           </tbody>
         </table>
       </div>
+    </div>
+
+    <div id="competitions" class="report-section" style="display:none">
+      <h2>Competition Results</h2>
+      
+      <div class="date-filter">
+        <select id="time-period" onchange="filterCompetitions()">
+          <option value="all">All Time</option>
+          <option value="month">This Month</option>
+          <option value="quarter">This Quarter</option>
+          <option value="year">This Year</option>
+        </select>
+        
+        <select id="event-type-filter" onchange="filterCompetitions()">
+          <option value="all">All Events</option>
+          <option value="Kyorugi">Kyorugi</option>
+          <option value="Poomsae">Poomsae</option>
+        </select>
+      </div>
+
+      <button class="export-csv-btn" onclick="exportCompetitionsToCSV('competitions.csv')">
+        Export to CSV
+      </button>
+
+      <div class="report-table">
+        <table class="competitions-table">
+          <thead>
+            <tr>
+              <th>Event</th>
+              <th>Date</th>
+              <th>Athlete</th>
+              <th>Rank</th>
+              <th>Category</th>
+              <th>Weight Class</th>
+              <th>Club</th>
+            </tr>
+          </thead>
+          <tbody id="competitions-body">
+            {{#each competitionResultsByQuarter}}
+            <tr>
+              <td>{{event}}</td>
+              <td>{{formatDate date "MM/DD/YYYY"}}</td>
+              <td>{{athlete}}</td>
+              <td>{{rank}}</td>
+              <td>{{category}}</td>
+              <td>{{weightClass}}</td>
+              <td>{{club}}</td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="chart-container" style="width: 800px; height: 400px;">
+        <canvas id="competitionsChart"></canvas>
+      </div>
+      
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          // Initialize with all data visible
+          filterCompetitions();
+          
+          // Create Competition Results Chart
+          renderCompetitionsChart();
+        });
+        
+        function filterCompetitions() {
+          const timePeriod = document.getElementById('time-period').value;
+          const eventType = document.getElementById('event-type-filter').value;
+          const now = new Date();
+          
+          // Get all competition rows
+          const rows = document.querySelectorAll('#competitions-body tr');
+          
+          rows.forEach(row => {
+            const date = new Date(row.cells[1].textContent);
+            const matchesEvent = eventType === 'all' || 
+              row.cells[4].textContent.toLowerCase().includes(eventType.toLowerCase());
+            
+            let matchesPeriod = true;
+            switch(timePeriod) {
+              case 'month':
+                matchesPeriod = date.getMonth() === now.getMonth() && 
+                              date.getFullYear() === now.getFullYear();
+                break;
+              case 'quarter':
+                const currentQuarter = Math.floor(now.getMonth() / 3);
+                matchesPeriod = Math.floor(date.getMonth() / 3) === currentQuarter &&
+                              date.getFullYear() === now.getFullYear();
+                break;
+              case 'year':
+                matchesPeriod = date.getFullYear() === now.getFullYear();
+                break;
+            }
+            
+            row.style.display = (matchesPeriod && matchesEvent) ? '' : 'none';
+          });
+          
+          // Update chart after filtering
+          renderCompetitionsChart();
+        }
+        
+        function renderCompetitionsChart() {
+          const ctx = document.getElementById('competitionsChart').getContext('2d');
+          
+          // Get visible rows after filtering
+          const visibleRows = Array.from(document.querySelectorAll('#competitions-body tr'))
+            .filter(row => row.style.display !== 'none');
+          
+          // Count medals by club
+          const clubMedals = {};
+          visibleRows.forEach(row => {
+            const club = row.querySelector('td:nth-child(7)').textContent;
+            const rank = parseInt(row.querySelector('td:nth-child(4)').textContent) || 0;
+            
+            if (!clubMedals[club]) {
+              clubMedals[club] = { gold: 0, silver: 0, bronze: 0 };
+            }
+            
+            if (rank === 1) clubMedals[club].gold++;
+            else if (rank === 2) clubMedals[club].silver++;
+            else if (rank === 3) clubMedals[club].bronze++;
+          });
+          
+          // Prepare data for chart
+          const labels = Object.keys(clubMedals);
+          const goldData = labels.map(club => clubMedals[club].gold);
+          const silverData = labels.map(club => clubMedals[club].silver);
+          const bronzeData = labels.map(club => clubMedals[club].bronze);
+          
+          // Check if chart already exists and destroy if it does
+          if (window.competitionsChart) {
+            window.competitionsChart.destroy();
+          }
+          
+          // Create chart
+          window.competitionsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: 'Gold',
+                  data: goldData,
+                  backgroundColor: '#FFD700',
+                  borderColor: '#B8860B',
+                  borderWidth: 1
+                },
+                {
+                  label: 'Silver',
+                  data: silverData,
+                  backgroundColor: '#C0C0C0',
+                  borderColor: '#A9A9A9',
+                  borderWidth: 1
+                },
+                {
+                  label: 'Bronze',
+                  data: bronzeData,
+                  backgroundColor: '#CD7F32',
+                  borderColor: '#8B4513',
+                  borderWidth: 1
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                x: {
+                  stacked: false,
+                  title: {
+                    display: true,
+                    text: 'Club'
+                  }
+                },
+                y: {
+                  stacked: false,
+                  beginAtZero: true,
+                  title: {
+                    display: true,
+                    text: 'Medal Count'
+                  }
+                }
+              },
+              plugins: {
+                title: {
+                  display: true,
+                  text: 'Medal Count by Club'
+                },
+                tooltip: {
+                  callbacks: {
+                    afterTitle: function(tooltipItems) {
+                      return 'Total Medals: ' + tooltipItems.reduce((sum, item) => {
+                        return sum + item.parsed.y;
+                      }, 0);
+                    }
+                  }
+                }
+              }
+            }
+          });
+        }
+        
+        function exportCompetitionsToCSV(filename) {
+          const csv = [];
+          const headers = [];
+          const rows = document.querySelectorAll(".competitions-table tr");
+          
+          // Get headers
+          const headerRow = rows[0];
+          const headerCells = headerRow.querySelectorAll("th");
+          headerCells.forEach(cell => {
+            headers.push(cell.textContent);
+          });
+          csv.push(headers.join(","));
+          
+          // Get visible rows
+          for (let i = 1; i < rows.length; i++) {
+            if (rows[i].style.display !== 'none') {
+              const row = [];
+              const cells = rows[i].querySelectorAll("td");
+              cells.forEach(cell => {
+                // Escape commas in cell content
+                row.push(`"${cell.textContent.replace(/"/g, '""')}"`);
+              });
+              csv.push(row.join(","));
+            }
+          }
+          
+          // Download CSV file
+          const csvContent = csv.join("\n");
+          const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+          const link = document.createElement("a");
+          link.href = URL.createObjectURL(blob);
+          link.setAttribute("download", filename);
+          link.style.visibility = 'hidden';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      </script>
     </div>
 
     <div id="insights" class="report-section" style="display:none">
@@ -1389,6 +1631,26 @@
       .event-count-container {
         display: flex;
         justify-content: center;
+      }
+      
+      /* Competitions table styling */
+      .competitions-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      .competitions-table th,
+      .competitions-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #3a3a3a;
+      }
+
+      .competitions-table th {
+        background-color: #2a2a2a;
+        position: sticky;
+        top: 0;
       }
       
       /* Revenue comparison styling */

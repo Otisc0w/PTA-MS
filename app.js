@@ -8082,19 +8082,44 @@ app.get("/analytics", async (req, res) => {
       throw clubsCountError;
     }
 
-    // Fetch all first placers from match_history
-    const { data: firstPlacers, error: firstPlacersError } = await supabase
+    // Fetch competition results per quarter from match_history
+    const { data: matchHistory, error: matchHistoryError } = await supabase
       .from("match_history")
-      .select("*")
-      .eq("ranking", 1);
+      .select("*");
 
-    if (firstPlacersError) {
-      throw firstPlacersError;
+    if (matchHistoryError) {
+      throw matchHistoryError;
     }
 
-    console.log("Fetched first placers:", firstPlacers);
+    // Fetch all athletes to map their details to match history rows
+    const { data: athletes, error: athletesError } = await supabase
+      .from("athletes")
+      .select("*");
 
-    
+    if (athletesError) {
+      throw athletesError;
+    }
+
+    // Group match history by quarter
+    const competitionResultsByQuarter = matchHistory.reduce((acc, match) => {
+      const matchDate = new Date(match.created_at);
+      const quarter = `Q${Math.floor(matchDate.getMonth() / 3) + 1} ${matchDate.getFullYear()}`;
+
+      if (!acc[quarter]) {
+        acc[quarter] = [];
+      }
+
+      // Map user details to the match history row
+      const user = athletes.find((user) => athlete.id === match.athleteid);
+      acc[quarter].push({
+        ...match,
+        user: user ? { firstname: user.firstname, lastname: user.lastname } : null,
+      });
+
+      return acc;
+    }, {});
+
+    console.log("Competition Results by Quarter:", competitionResultsByQuarter);
 
     console.log("Total number of clubs:", clubsCount);
 
@@ -8147,7 +8172,7 @@ app.get("/analytics", async (req, res) => {
       acceptedClubsCount,
       rejectedClubsCount,
 
-      firstPlacers,
+      competitionResultsByQuarter,
       
       // Add the time-based application data for the line chart
       ...timeApplicationsData
