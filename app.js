@@ -8082,6 +8082,18 @@ app.get("/analytics", async (req, res) => {
       throw clubsCountError;
     }
 
+    // Fetch all first placers from match_history
+    const { data: firstPlacers, error: firstPlacersError } = await supabase
+      .from("match_history")
+      .select("*")
+      .eq("ranking", 1);
+
+    if (firstPlacersError) {
+      throw firstPlacersError;
+    }
+
+    console.log("Fetched first placers:", firstPlacers);
+
     
 
     console.log("Total number of clubs:", clubsCount);
