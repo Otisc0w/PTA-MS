@@ -612,6 +612,19 @@
 
     <div id="competitions" class="report-section" style="display:none">
       <h2>Competition Results</h2>
+
+      <div class="summary">
+        <div class="top-players"></div>
+          <h3>Top Players</h3>
+          <ul>
+            {{#each topPlayers}}
+              <li>
+                <strong>{{name}}</strong> - {{club}} ({{points}} points)
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
       
       <div class="date-filter">
         <select id="time-period" onchange="filterCompetitions()">

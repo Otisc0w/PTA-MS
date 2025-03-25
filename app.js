@@ -8120,6 +8120,63 @@ app.get("/analytics", async (req, res) => {
       return acc;
     }, {});
 
+    // Fetch players with the most 1st, 2nd, and 3rd places
+    const fetchTopPlayers = async () => {
+      try {
+        const { data: matchHistory, error: matchHistoryError } = await supabase
+          .from("match_history")
+          .select("athleteid, ranking");
+
+        if (matchHistoryError) {
+          throw matchHistoryError;
+        }
+
+        // Count 1st, 2nd, and 3rd places for each athlete
+        const rankingCounts = matchHistory.reduce((acc, match) => {
+          const { athleteid, ranking } = match;
+          if (!acc[athleteid]) {
+            acc[athleteid] = { first: 0, second: 0, third: 0 };
+          }
+          if (ranking === 1) acc[athleteid].first++;
+          if (ranking === 2) acc[athleteid].second++;
+          if (ranking === 3) acc[athleteid].third++;
+          return acc;
+        }, {});
+
+        // Convert to array and sort by most 1st places, then 2nd, then 3rd
+        const sortedPlayers = Object.entries(rankingCounts)
+          .map(([athleteid, counts]) => ({ athleteid, ...counts }))
+          .sort((a, b) => b.first - a.first || b.second - a.second || b.third - a.third);
+
+        // Fetch athlete details for the top players
+        const topPlayersIds = sortedPlayers.slice(0, 3).map(player => player.athleteid);
+        const { data: athletes, error: athletesError } = await supabase
+          .from("athletes")
+          .select("*")
+          .in("id", topPlayersIds);
+
+        if (athletesError) {
+          throw athletesError;
+        }
+
+        // Map athlete details to the sorted players
+        const topPlayers = sortedPlayers.slice(0, 3).map(player => {
+          const athlete = athletes.find(a => a.id === player.athleteid);
+          return { ...player, name: athlete?.name, portrait: athlete?.portrait };
+        });
+
+        console.log("Top players:", topPlayers);
+        return topPlayers;
+      } catch (error) {
+        console.error("Error fetching top players:", error.message);
+        return [];
+      }
+    };
+
+    const topPlayers = await fetchTopPlayers();
+
+    console.log("topplayers:", topPlayers);
+    
     console.log("Competition Results by Quarter:", competitionResultsByQuarter);
 
     console.log("Total number of clubs:", clubsCount);
@@ -8174,6 +8231,7 @@ app.get("/analytics", async (req, res) => {
       rejectedClubsCount,
 
       competitionResultsByQuarter,
+      topPlayers,
       
       // Add the time-based application data for the line chart
       ...timeApplicationsData
