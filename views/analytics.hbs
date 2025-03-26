@@ -572,11 +572,18 @@
       <!-- Added Club Location Breakdown chart -->
       <h3>Club location breakdown:</h3>
       <div class="chart-table">
-        <div class="chart-container" style="width: 500px; height: 500px;">
+        <div class="chart-container" style="width: 250px; height: 250px;">
           <canvas id="clubsChart"></canvas>
         </div>
         <div class="insights-summary">
           <p data-label="Total Clubs:">{{clubsCount}}</p>
+            <p data-label="Pampanga Clubs:">{{provinceClubCounts.[0].count}}</p>
+            <p data-label="Nueva Ecija Clubs:">{{provinceClubCounts.[1].count}}</p>
+            <p data-label="Tarlac Clubs:">{{provinceClubCounts.[2].count}}</p>
+            <p data-label="Bulacan Clubs:">{{provinceClubCounts.[3].count}}</p>
+            <p data-label="Bataan Clubs:">{{provinceClubCounts.[4].count}}</p>
+            <p data-label="Zambales Clubs:">{{provinceClubCounts.[5].count}}</p>
+            <p data-label="Aurora Clubs:">{{provinceClubCounts.[6].count}}</p>
         </div>
       </div>
       
