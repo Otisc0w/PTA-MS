@@ -614,16 +614,63 @@
       <h2>Competition Results</h2>
 
       <div class="summary">
-        <div class="top-players"></div>
+        <div class="top-players">
           <h3>Top Players</h3>
           <ul>
             {{#each topPlayers}}
               <li>
-                <strong>{{name}}</strong> - {{club}} ({{points}} points)
+                <strong>{{name}}</strong> - {{club}} 
+                ({{first}} Golds, {{second}} Silvers, {{third}} Bronzes)
               </li>
             {{/each}}
           </ul>
         </div>
+        <style>
+          .top-players {
+            background-color: #1E1E1E;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+          }
+
+          .top-players h3 {
+            margin-top: 0;
+            color: #ffffff;
+            font-size: 18px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #3a3a3a;
+          }
+
+          .top-players ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+          }
+
+          .top-players li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #3a3a3a;
+            color: #cccccc;
+          }
+
+          .top-players li:last-child {
+            border-bottom: none;
+          }
+
+          .top-players li strong {
+            color: #ffffff;
+          }
+
+          .top-players li span {
+            font-size: 14px;
+            color: #a0a0a0;
+          }
+        </style>
       </div>
       
       <div class="date-filter">

@@ -8161,8 +8161,8 @@ app.get("/analytics", async (req, res) => {
 
         // Map athlete details to the sorted players
         const topPlayers = sortedPlayers.slice(0, 3).map(player => {
-          const athlete = athletes.find(a => a.id === player.athleteid);
-          return { ...player, name: athlete?.name, portrait: athlete?.portrait };
+          const athlete = athletes.find(a => a.id === parseInt(player.athleteid, 10));
+          return { ...player, name: athlete ? athlete.name : "Unknown", portrait: athlete ? athlete.portrait : null };
         });
 
         console.log("Top players:", topPlayers);
